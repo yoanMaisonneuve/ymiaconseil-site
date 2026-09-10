@@ -225,6 +225,30 @@
   .fade{opacity:0;transform:translateY(14px);transition:opacity .8s ease,transform .8s ease}
   .fade.in{opacity:1;transform:none}
   @media(prefers-reduced-motion:reduce){.fade{opacity:1;transform:none;transition:none}}
+
+  /* --- « Se connecter » : pas un formulaire, un voile. Le bouton dit qu'un portail existe ; le voile dit
+     que l'accès passe encore par une rencontre. Même patron que la fermeture, par-dessus la page. --- */
+  .nav-links a.login{border:1.5px solid var(--navy);color:var(--navy);padding:8px 14px;border-radius:100px;letter-spacing:.08em;white-space:nowrap}
+  .nav-links a.login:hover{background:var(--navy);color:#fff}
+  @media(max-width:760px){.nav-links a.login{display:inline-block}}
+  @media(max-width:520px){.nav-links a.login{padding:7px 11px;font-size:10.5px}}
+  .voile{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(11,31,58,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .voile.open{display:flex}
+  .voile .panneau{position:relative;width:min(560px,100%);text-align:center;color:#fff;padding:52px 36px 40px;border:1px solid rgba(212,168,67,.35);background:linear-gradient(160deg,rgba(19,41,77,.85),rgba(11,31,58,.95));box-shadow:0 30px 80px rgba(0,0,0,.45);opacity:0;transform:translateY(16px) scale(.98);transition:opacity .45s ease,transform .45s ease}
+  .voile.open .panneau{opacity:1;transform:none}
+  .voile .fermer{position:absolute;top:12px;right:12px;width:40px;height:40px;border:0;background:transparent;color:#c8d6e8;font-size:26px;line-height:1;cursor:pointer}
+  .voile .fermer:hover{color:var(--gold)}
+  .voile .kicker{background:rgba(212,168,67,.2);color:var(--gold)}
+  .voile h2{color:#fff;font-size:clamp(24px,3.2vw,32px);margin:0 auto 14px;max-width:18ch}
+  .voile h2 em{color:var(--gold)}
+  .voile p{font-family:var(--soft-serif);font-style:italic;font-size:15.5px;line-height:1.55;color:#c8d6e8;max-width:44ch;margin:0 auto}
+  .voile .tel{display:inline-block;margin-top:28px;background:var(--gold);color:var(--navy);font-family:var(--mono);font-weight:700;font-size:22px;letter-spacing:.08em;padding:16px 36px;border-radius:6px;text-decoration:none}
+  .voile .tel:hover{background:#e0b657}
+  .voile .mail{display:block;margin-top:16px;font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:#fff;text-decoration:none}
+  .voile .mail:hover{color:var(--gold)}
+  .voile .note{margin-top:14px;font-size:13.5px}
+  .voile .fil{margin-top:26px;padding-top:16px;border-top:1px solid rgba(212,168,67,.25);font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#7f97ba}
+  @media(prefers-reduced-motion:reduce){.voile .panneau{transition:none}}
 </style>
 </head>
 <body>
@@ -240,6 +264,7 @@
       <a href="#methode">Méthode</a>
       <a href="#processus">Déroulement</a>
       <a class="tel" href="tel:+15149268633">514 926-8633</a>
+      <a class="login" href="#portail" data-voile>Se connecter</a>
       <a class="cta" href="#contact"><span class="long">Discuter d'un mandat</span><span class="short">Contact</span></a>
     </nav>
   </div>
@@ -472,6 +497,32 @@
   if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches){els.forEach(function(e){e.classList.add('in')});return}
   var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var i=0;els.forEach(function(e){setTimeout(function(){e.classList.add('in')},i*140);i++});io.disconnect()}})},{threshold:.25});
   io.observe(document.querySelector('.outro .wrap'));
+})();
+</script>
+
+<div class="voile" id="portail" role="dialog" aria-modal="true" aria-labelledby="portail-titre" hidden>
+  <div class="panneau">
+    <button class="fermer" type="button" aria-label="Fermer" data-fermer>&times;</button>
+    <div class="kicker">Portail client</div>
+    <h2 id="portail-titre">Vos listes, déposées et rendues <em>dans l'ordre</em>.</h2>
+    <p>Le portail où vous déposerez un fichier de dossiers et récupérerez la même liste, scorée et dans l'ordre d'appel, est en construction. Le premier accès passe par une rencontre.</p>
+    <a class="tel" href="tel:+15149268633">514 926-8633</a>
+    <a class="mail" href="mailto:yoan@ymiaconseil.com?subject=Acc%C3%A8s%20au%20portail%20client">yoan@ymiaconseil.com</a>
+    <p class="note">Première rencontre sans frais · Réponse sous 24 h · Sans engagement</p>
+    <div class="fil">Accès sur invitation · Ouverture aux premiers clients</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var v=document.getElementById('portail'),ouvreurs=document.querySelectorAll('[data-voile]'),dernier=null;
+  function ouvrir(e){if(e)e.preventDefault();dernier=document.activeElement;v.hidden=false;requestAnimationFrame(function(){v.classList.add('open')});document.body.style.overflow='hidden';v.querySelector('.fermer').focus()}
+  function fermer(){v.classList.remove('open');document.body.style.overflow='';setTimeout(function(){v.hidden=true;if(dernier)dernier.focus()},450)}
+  ouvreurs.forEach(function(a){a.addEventListener('click',ouvrir)});
+  v.querySelector('[data-fermer]').addEventListener('click',fermer);
+  v.addEventListener('click',function(e){if(e.target===v)fermer()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!v.hidden)fermer()});
+  if(location.hash==='#portail')ouvrir();
 })();
 </script>
 
