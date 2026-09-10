@@ -1,79 +1,151 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr-CA">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YM IA Conseil — modèles de priorisation mesurés</title>
-<meta name="description" content="Scoring et priorisation. Modèles de priorisation, audit de données, mise en production. Grand Montréal.">
-<meta property="og:title" content="YM IA Conseil">
-<meta property="og:description" content="Des modèles qui décident de l'ordre, et qui se mesurent.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://ymiaconseil.com/">
+<title>YM IA Conseil — Scoring et priorisation pour le recouvrement</title>
+<meta name="description" content="Modèles de priorisation pour agences de recouvrement et services financiers au Québec : qui appeler en premier, mesuré contre votre méthode actuelle. Grand Montréal.">
 <link rel="canonical" href="https://ymiaconseil.com/">
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=Lora:ital,wght@0,400..600;1,400&family=Source+Serif+4:opsz,wght@8..60,300..600&family=JetBrains+Mono:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_CA">
+<meta property="og:site_name" content="YM IA Conseil">
+<meta property="og:title" content="YM IA Conseil — Scoring et priorisation">
+<meta property="og:description" content="Des modèles qui décident de l'ordre, et qui se mesurent. Recouvrement et services financiers, Grand Montréal.">
+<meta property="og:url" content="https://ymiaconseil.com/">
+<meta property="og:image" content="https://ymiaconseil.com/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="YM IA Conseil — Des modèles qui décident de l'ordre, et qui se mesurent.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1f3a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,600;1,6..72,400..600&family=Lora:wght@400..600&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://ymiaconseil.com/#organisation",
+  "name": "YM IA Conseil",
+  "url": "https://ymiaconseil.com/",
+  "email": "yoan@ymiaconseil.com",
+  "telephone": "+1-514-926-8633",
+  "image": "https://ymiaconseil.com/assets/og.png",
+  "logo": "https://ymiaconseil.com/favicon.svg",
+  "description": "Scoring et priorisation : des modèles qui décident de l'ordre de traitement d'un portefeuille, mesurés contre la méthode actuelle du client.",
+  "areaServed": [
+    {"@type": "AdministrativeArea", "name": "Grand Montréal"},
+    {"@type": "AdministrativeArea", "name": "Québec"}
+  ],
+  "availableLanguage": ["fr-CA", "en"],
+  "knowsAbout": ["Scoring", "Priorisation de portefeuille", "Recouvrement", "Services financiers", "Loi 25"],
+  "founder": {
+    "@type": "Person",
+    "@id": "https://ymiaconseil.com/#yoan",
+    "name": "Yoan Maisonneuve",
+    "jobTitle": "Consultant en scoring et priorisation",
+    "email": "yoan@ymiaconseil.com",
+    "worksFor": {"@id": "https://ymiaconseil.com/#organisation"}
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Services",
+    "itemListElement": [
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Audit de données"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Modèle de priorisation"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Mise en production"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Mesure et conformité"}}
+    ]
+  }
+}
+</script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   :root{
     --navy:#0b1f3a;--navy-2:#13294d;--navy-3:#1c3a64;
-    --gold:#d4a843;--gold-text:#a8841f;--red:#d62828;
+    --gold:#d4a843;--gold-text:#a8841f;--gold-small:#8a6b18;--red:#d62828;
     --ink:#1a1a1a;--ink-body:#2a2620;--dim:#5c5c5c;--soft:#8a8a8a;
     --line:#e4e2dd;--paper:#fff;--sand:#f6f4f0;--steel:#eceef1;
     --display:'Newsreader',Georgia,serif;--body:'Lora',Georgia,serif;
     --soft-serif:'Source Serif 4',Georgia,serif;--mono:'JetBrains Mono',monospace;
-    --sans:'Libre Franklin',sans-serif;
     --grad-top:linear-gradient(135deg,#0b1f3a 0%,#13294d 45%,#1c3a64 100%);
     --grad-pill:linear-gradient(135deg,#13294d 0%,#2c5189 100%);
     --wrap:1080px;
   }
   html{scroll-behavior:smooth}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
   body{font-family:var(--body);color:var(--ink-body);background:var(--paper);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
   .wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px}
   a{color:inherit}
 
   /* --- barre permanente. Fond blanc : Yoan la veut blanche, pas navy. --- */
-  .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
   .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px;gap:20px}
   .logo{display:inline-flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
-  .logo .mark{font-family:var(--display);font-weight:600;font-size:16px;border:1.5px solid var(--navy);color:var(--navy);width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;line-height:1}
-  .logo .word{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);font-weight:500;line-height:1.3}
-  .logo .word .sub{display:block;font-size:7.5px;letter-spacing:.16em;color:var(--gold-text);margin-top:2px}
+  .logo .mark{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.02em;border:1.5px solid var(--navy);color:var(--navy);width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0}
+  .logo .word{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);font-weight:500;line-height:1.3}
+  .logo .word .sub{display:block;font-size:8.5px;letter-spacing:.16em;color:var(--gold-small);margin-top:3px}
   .nav-links{display:flex;align-items:center;gap:26px}
-  .nav-links a{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+  .nav-links a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
   .nav-links a:hover{color:var(--navy)}
-  .nav-links a.cta{background:var(--navy);color:#fff;padding:9px 16px;border-radius:100px;letter-spacing:.08em}
+  .nav-links a.tel{color:var(--navy);font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:none}
+  .nav-links a.cta{background:var(--navy);color:#fff;padding:9px 16px;border-radius:100px;letter-spacing:.08em;white-space:nowrap}
   .nav-links a.cta:hover{background:var(--navy-3);color:#fff}
+  .nav-links a.cta .short{display:none}
   @media(max-width:760px){.nav-links a:not(.cta){display:none}}
+  @media(max-width:520px){
+    .wrap{padding:0 20px}
+    .nav-links a.cta{padding:8px 13px}
+    .nav-links a.cta .long{display:none}
+    .nav-links a.cta .short{display:inline}
+  }
 
-  /* --- ouverture --- */
-  .hero{background:var(--grad-top);color:#fff;position:relative;overflow:hidden;padding:86px 0 74px}
+  /* --- ouverture : texte à gauche, courbe à droite --- */
+  .hero{background:var(--grad-top);color:#fff;position:relative;overflow:hidden;padding:76px 0 64px}
   .hero::after{content:'';position:absolute;top:-45%;right:-6%;width:520px;height:520px;background:radial-gradient(circle,rgba(212,168,67,.20) 0%,transparent 70%);pointer-events:none}
-  .hero .wrap{position:relative;z-index:1}
-  .eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px}
+  .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,460px);gap:48px;align-items:center}
+  @media(max-width:960px){.hero .wrap{grid-template-columns:1fr;gap:40px}}
+  @media(max-width:520px){.hero{padding:54px 0 50px}}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px}
   .hero h1{font-family:var(--display);font-size:clamp(34px,5.4vw,56px);font-weight:600;line-height:1.04;letter-spacing:-.02em;max-width:16ch}
   .hero h1 em{font-style:italic;color:var(--gold)}
   .hero .lede{font-family:var(--soft-serif);font-style:italic;font-size:clamp(16px,2vw,19px);line-height:1.55;color:#c8d6e8;margin-top:24px;max-width:56ch}
   .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
+  .hero-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#c8d6e8;margin-top:18px}
+  .hero-note a{color:var(--gold);text-decoration:none;font-weight:600}
+  /* Deux SVG, pas un seul mis à l'échelle : le texte d'un graphique se lit à 1:1, jamais réduit. */
+  .hero-fig{margin:0;justify-self:end;width:100%;max-width:460px}
+  .hero-fig svg{display:block;width:100%;height:auto}
+  .hero-fig .mobile{display:none}
+  @media(max-width:960px){.hero-fig{justify-self:start}}
+  @media(max-width:420px){.hero-fig .bureau{display:none}.hero-fig .mobile{display:block;max-width:335px}}
   .btn{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:14px 26px;border-radius:100px;text-decoration:none;font-weight:600;transition:transform .15s,background .15s;display:inline-block}
   .btn.primary{background:var(--gold);color:var(--navy)}
   .btn.primary:hover{background:#e0b657;transform:translateY(-1px)}
   .btn.ghost{border:1.5px solid rgba(255,255,255,.4);color:#fff}
   .btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .btn.solid{background:var(--navy);color:#fff}
+  .btn.solid:hover{background:var(--navy-3)}
   .accent-strip{height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--gold) 30%,var(--navy) 30%,var(--navy) 100%)}
 
-  /* --- bandeau de repères --- */
-  .trust{background:var(--sand);border-bottom:1px solid var(--line);padding:26px 0}
-  .trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
-  .trust .t{border-left:2px solid var(--gold);padding-left:14px}
-  .trust .t b{display:block;font-family:var(--display);font-size:15px;font-weight:600;color:var(--navy);line-height:1.25}
-  .trust .t span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:5px}
-  @media(max-width:760px){.trust .wrap{grid-template-columns:repeat(2,1fr)}}
+  /* --- bandeau de repères : des garanties d'achat, pas des attributs de méthode --- */
+  .trust{background:var(--sand);border-bottom:1px solid var(--line);padding:30px 0}
+  .trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .trust .t{border-left:2px solid var(--navy);padding-left:14px}
+  .trust .t b{display:block;font-family:var(--display);font-size:18px;font-weight:600;color:var(--navy);line-height:1.2}
+  .trust .t span{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:6px;line-height:1.5}
+  @media(max-width:760px){.trust .wrap{grid-template-columns:repeat(2,1fr);gap:18px}}
+  @media(max-width:520px){.trust .wrap{grid-template-columns:1fr;gap:14px}}
 
   /* --- sections --- */
   .band{padding:76px 0}
   .band.alt{background:var(--sand)}
   .band.deep{background:var(--navy);color:#fff}
   .shead{margin-bottom:34px;max-width:62ch}
-  .kicker{display:inline-block;background:var(--grad-pill);color:#fff;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:6px 13px;border-radius:100px;margin-bottom:16px}
+  .kicker{display:inline-block;background:var(--grad-pill);color:#fff;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:6px 13px;border-radius:100px;margin-bottom:16px}
   .band.deep .kicker{background:rgba(212,168,67,.2);color:var(--gold)}
   h2{font-family:var(--display);font-size:clamp(26px,3.4vw,34px);font-weight:600;color:var(--navy);line-height:1.14;letter-spacing:-.01em}
   .band.deep h2{color:#fff}
@@ -84,85 +156,150 @@
 
   .services{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
   .services .n{background:var(--paper);padding:30px 28px}
-  .band.alt .services .n{background:var(--sand)}
-  .services .n .num{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--gold-text);font-weight:600}
+  .services .n .num{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--gold-small);font-weight:600}
   .services .n h3{font-family:var(--display);font-size:20px;font-weight:600;color:var(--navy);margin:9px 0 10px;line-height:1.2}
   .services .n p{font-size:14.5px;line-height:1.6;color:var(--ink-body)}
   @media(max-width:760px){.services{grid-template-columns:1fr}}
 
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;counter-reset:s}
-  .steps .s{counter-increment:s;border-top:2px solid var(--gold);padding-top:16px}
-  .steps .s::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold-text);letter-spacing:.08em}
-  .steps .s h4{font-family:var(--display);font-size:17px;font-weight:600;color:var(--navy);margin:7px 0 8px;line-height:1.25}
+  .steps .s{counter-increment:s;border-top:2px solid var(--navy);padding-top:16px}
+  .steps .s::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:12px;font-weight:700;color:var(--gold-small);letter-spacing:.08em}
+  .steps .s h3{font-family:var(--display);font-size:17px;font-weight:600;color:var(--navy);margin:7px 0 8px;line-height:1.25}
   .steps .s p{font-size:14px;line-height:1.58;color:var(--dim)}
+  /* Ce que le client tient dans ses mains à la fin de chaque étape. Un CFO achète des objets. */
+  .steps .s .out{display:block;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-family:var(--soft-serif);font-style:italic;font-size:13.5px;line-height:1.5;color:var(--navy)}
+  .steps .s .out b{font-family:var(--mono);font-style:normal;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-small);font-weight:600;display:block;margin-bottom:3px}
   @media(max-width:860px){.steps{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:520px){.steps{grid-template-columns:1fr}}
 
-  .principe{border-left:4px solid var(--gold);background:rgba(255,255,255,.05);padding:26px 30px;margin-top:34px}
-  .principe .cl{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);font-weight:600;display:block;margin-bottom:10px}
+  .principe{border-left:4px solid var(--gold);background:rgba(255,255,255,.05);padding:26px 30px;margin-top:30px}
+  .principe .cl{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);font-weight:600;display:block;margin-bottom:10px}
   .principe .big{font-family:var(--display);font-style:italic;font-size:clamp(18px,2.4vw,23px);line-height:1.42;color:#fff}
 
   ul.bul{list-style:none;margin:18px 0}
   ul.bul li{font-size:15px;line-height:1.62;padding:7px 0 7px 22px;position:relative;color:var(--ink-body)}
   ul.bul li::before{content:'▪';position:absolute;left:0;color:var(--gold-text)}
-  .band.deep ul.bul li{color:#c8d6e8}
-  .band.deep ul.bul li::before{color:var(--gold)}
   ul.bul li b{color:var(--navy);font-weight:600}
+  /* Sur le navy, deux colonnes : 140 caractères par ligne sur toute la largeur, c'est deux fois la mesure lisible. */
+  .band.deep ul.bul{display:grid;grid-template-columns:1fr 1fr;gap:4px 44px;margin:22px 0 0}
+  .band.deep ul.bul li{font-size:14.5px;color:#c8d6e8}
+  .band.deep ul.bul li::before{color:var(--gold)}
   .band.deep ul.bul li b{color:#fff}
+  @media(max-width:860px){.band.deep ul.bul{grid-template-columns:1fr}}
 
   /* --- contact --- */
   .contact .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:start}
   @media(max-width:820px){.contact .wrap{grid-template-columns:1fr;gap:34px}}
   .card{border:1px solid var(--line);background:var(--paper);padding:30px 28px}
-  .card .lab{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-text);font-weight:600;margin-bottom:12px}
+  .card .lab{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-small);font-weight:600;margin-bottom:12px}
   .card .line{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
   .card .line:last-child{border-bottom:0}
-  .card .line span:first-child{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);padding-top:3px;white-space:nowrap}
-  .card .line a{color:var(--navy);font-weight:600;text-decoration:none;word-break:break-word}
+  .card .line span:first-child{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);padding-top:3px;white-space:nowrap}
+  .card .line a{color:var(--navy);font-weight:600;text-decoration:none;word-break:break-word;padding:6px 0;margin:-6px 0;display:inline-block}
   .card .line a:hover{color:var(--gold-text)}
 
   /* --- pied --- */
   .foot{border-top:3px solid var(--navy);padding:26px 0;background:var(--paper)}
   .foot .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-  .foot .pg{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--soft)}
+  .foot .logo .mark{font-size:15px;width:36px;height:36px}
+  .foot .logo .word{font-size:9px}
+  .foot .pg{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+  .foot .conf{flex-basis:100%;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--soft-serif);font-size:12.5px;line-height:1.6;color:var(--dim);max-width:76ch}
+  .foot .conf a{color:var(--navy);text-decoration:none;font-weight:600}
 </style>
 </head>
 <body>
 
 <header class="nav">
   <div class="wrap">
-    <a class="logo" href="#top">
+    <a class="logo" href="#top" aria-label="YM IA Conseil, accueil">
       <span class="mark">YM</span>
       <span class="word">Yoan Maisonneuve<span class="sub">IA Conseil</span></span>
     </a>
-    <nav class="nav-links">
+    <nav class="nav-links" aria-label="Navigation principale">
       <a href="#services">Services</a>
       <a href="#methode">Méthode</a>
       <a href="#processus">Déroulement</a>
-      <a class="cta" href="#contact">Parler du projet</a>
+      <a class="tel" href="tel:+15149268633">514 926-8633</a>
+      <a class="cta" href="#contact"><span class="long">Discuter d'un mandat</span><span class="short">Contact</span></a>
     </nav>
   </div>
 </header>
 
 <section class="hero" id="top">
   <div class="wrap">
-    <div class="eyebrow">Scoring et priorisation · Grand Montréal</div>
-    <h1>Des modèles qui décident de l'ordre, et qui <em>se mesurent</em>.</h1>
-    <p class="lede">Vos équipes ont plus de dossiers que de temps. La question n'est pas de prédire l'avenir — c'est de savoir lequel appeler en premier. Je construis le classement, et je vous montre ce qu'il rapporte contre votre méthode actuelle.</p>
-    <div class="hero-actions">
-      <a class="btn primary" href="#contact">Discuter d'un mandat</a>
-      <a class="btn ghost" href="#methode">Comment je travaille</a>
+    <div>
+      <div class="eyebrow">Scoring et priorisation · Grand Montréal</div>
+      <h1>Des modèles qui décident de l'ordre, et qui <em>se mesurent</em>.</h1>
+      <p class="lede">Recouvrement, crédit, comptes à recevoir : vos équipes ont plus de dossiers que de temps. La question n'est pas de prédire l'avenir — c'est de savoir lequel appeler en premier. Je construis le classement, et je mesure ce qu'il change, ou non, par rapport à votre méthode actuelle.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#contact">Discuter d'un mandat</a>
+        <a class="btn ghost" href="#methode">Comment je travaille</a>
+      </div>
+      <p class="hero-note">Première rencontre sans frais · <a href="tel:+15149268633">514 926-8633</a></p>
     </div>
+    <figure class="hero-fig">
+      <div class="bureau"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 392" width="460" height="392" role="img" aria-labelledby="t-bureau d-bureau">
+<title id="t-bureau">Courbe de captation : score contre montant contre hasard</title>
+<desc id="d-bureau">À effort d'appel égal, la part du recouvrement captée par trois ordres d'appel, sur le premier tiers de l'effort. Illustration calculée sur des données synthétiques.</desc>
+<!-- Généré par produits/YMIAConseil/outils/courbe-captation.py sur le jeu synthétique d'ARY. Aucune donnée client. Courbe entière dans courbe-donnees.json. -->
+<line x1="56" y1="196.7" x2="444" y2="196.7" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="48" y="200.7" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">20</text><line x1="56" y1="109.3" x2="444" y2="109.3" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="48" y="113.3" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">40</text><line x1="56" y1="22.0" x2="444" y2="22.0" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="48" y="26.0" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">60</text>
+<line x1="56" y1="284" x2="444" y2="284" stroke="#7f97ba" stroke-opacity="0.6" stroke-width="1"/>
+<line x1="56" y1="22" x2="56" y2="284" stroke="#7f97ba" stroke-opacity="0.6" stroke-width="1"/>
+<text x="56.0" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">0</text><text x="120.7" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">5</text><text x="185.3" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">10</text><text x="250.0" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">15</text><text x="314.7" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">20</text><text x="379.3" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">25</text><text x="444.0" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">30</text><text x="48" y="288" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">0</text>
+<text x="250" y="322" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#9bb3d4">EFFORT D'APPEL — % DES DOSSIERS</text>
+<text transform="translate(16,153) rotate(-90)" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#9bb3d4">RECOUVREMENT CAPTÉ — %</text>
+<path d="M56.0,284.0 L68.9,267.8 L81.9,243.4 L94.8,228.1 L107.7,222.0 L120.7,213.3 L133.6,207.6 L159.5,189.7 L185.3,177.5 L211.2,160.0 L250.0,137.7 L288.8,128.1 L314.7,114.6 L379.3,87.5 L444.0,67.0 L444.0,69.2 L379.3,93.6 L314.7,121.6 L288.8,139.5 L250.0,163.9 L211.2,185.3 L185.3,205.0 L159.5,218.9 L133.6,228.1 L120.7,239.0 L107.7,251.7 L94.8,251.7 L81.9,271.8 L68.9,284.0 L56.0,284.0 Z" fill="#d4a843" fill-opacity="0.5"/>
+<path d="M56.0,284.0 L68.9,281.4 L81.9,277.9 L94.8,267.4 L107.7,263.0 L120.7,259.5 L133.6,253.9 L159.5,244.7 L185.3,230.7 L211.2,222.4 L250.0,209.3 L288.8,191.0 L314.7,175.7 L379.3,164.4 L444.0,135.5" fill="none" stroke="#7f97ba" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M56.0,284.0 L68.9,284.0 L81.9,271.8 L94.8,251.7 L107.7,251.7 L120.7,239.0 L133.6,228.1 L159.5,218.9 L185.3,205.0 L211.2,185.3 L250.0,163.9 L288.8,139.5 L314.7,121.6 L379.3,93.6 L444.0,69.2" fill="none" stroke="#9bb3d4" stroke-width="2"/>
+<path d="M56.0,284.0 L68.9,267.8 L81.9,243.4 L94.8,228.1 L107.7,222.0 L120.7,213.3 L133.6,207.6 L159.5,189.7 L185.3,177.5 L211.2,160.0 L250.0,137.7 L288.8,128.1 L314.7,114.6 L379.3,87.5 L444.0,67.0" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+<line x1="185.3" y1="177.5" x2="185.3" y2="205.0" stroke="#d4a843" stroke-width="1.5"/>
+<line x1="180.3" y1="177.5" x2="190.3" y2="177.5" stroke="#d4a843" stroke-width="1.5"/>
+<line x1="180.3" y1="205.0" x2="190.3" y2="205.0" stroke="#d4a843" stroke-width="1.5"/>
+<text x="197.3" y="195.2" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#d4a843">GAIN À EFFORT ÉGAL</text>
+<g style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px" fill="#c8d6e8">
+  <line x1="254" y1="32" x2="278" y2="32" stroke="#ffffff" stroke-width="2.5"/><text x="286" y="36">Par score</text>
+  <line x1="254" y1="52" x2="278" y2="52" stroke="#9bb3d4" stroke-width="2"/><text x="286" y="56">Par montant dû</text>
+  <line x1="254" y1="72" x2="278" y2="72" stroke="#7f97ba" stroke-width="1.5" stroke-dasharray="5 5"/><text x="286" y="76">Au hasard</text>
+</g>
+<text x="56" y="362" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">Premier tiers de l'effort — là où la capacité s'épuise.</text><text x="56" y="380" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">Synthétique. Le gain réel se mesure sur vos données.</text>
+</svg></div>
+      <div class="mobile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 335 392" width="335" height="392" role="img" aria-labelledby="t-mobile d-mobile">
+<title id="t-mobile">Courbe de captation : score contre montant contre hasard</title>
+<desc id="d-mobile">À effort d'appel égal, la part du recouvrement captée par trois ordres d'appel, sur le premier tiers de l'effort. Illustration calculée sur des données synthétiques.</desc>
+<!-- Généré par produits/YMIAConseil/outils/courbe-captation.py sur le jeu synthétique d'ARY. Aucune donnée client. Courbe entière dans courbe-donnees.json. -->
+<line x1="48" y1="196.7" x2="323" y2="196.7" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="40" y="200.7" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">20</text><line x1="48" y1="109.3" x2="323" y2="109.3" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="40" y="113.3" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">40</text><line x1="48" y1="22.0" x2="323" y2="22.0" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="40" y="26.0" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">60</text>
+<line x1="48" y1="284" x2="323" y2="284" stroke="#7f97ba" stroke-opacity="0.6" stroke-width="1"/>
+<line x1="48" y1="22" x2="48" y2="284" stroke="#7f97ba" stroke-opacity="0.6" stroke-width="1"/>
+<text x="48.0" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">0</text><text x="139.7" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">10</text><text x="231.3" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">20</text><text x="323.0" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">30</text><text x="40" y="288" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">0</text>
+<text x="186" y="322" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#9bb3d4">EFFORT D'APPEL — % DES DOSSIERS</text>
+<text transform="translate(16,153) rotate(-90)" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#9bb3d4">RECOUVREMENT CAPTÉ — %</text>
+<path d="M48.0,284.0 L57.2,267.8 L66.3,243.4 L75.5,228.1 L84.7,222.0 L93.8,213.3 L103.0,207.6 L121.3,189.7 L139.7,177.5 L158.0,160.0 L185.5,137.7 L213.0,128.1 L231.3,114.6 L277.2,87.5 L323.0,67.0 L323.0,69.2 L277.2,93.6 L231.3,121.6 L213.0,139.5 L185.5,163.9 L158.0,185.3 L139.7,205.0 L121.3,218.9 L103.0,228.1 L93.8,239.0 L84.7,251.7 L75.5,251.7 L66.3,271.8 L57.2,284.0 L48.0,284.0 Z" fill="#d4a843" fill-opacity="0.5"/>
+<path d="M48.0,284.0 L57.2,281.4 L66.3,277.9 L75.5,267.4 L84.7,263.0 L93.8,259.5 L103.0,253.9 L121.3,244.7 L139.7,230.7 L158.0,222.4 L185.5,209.3 L213.0,191.0 L231.3,175.7 L277.2,164.4 L323.0,135.5" fill="none" stroke="#7f97ba" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M48.0,284.0 L57.2,284.0 L66.3,271.8 L75.5,251.7 L84.7,251.7 L93.8,239.0 L103.0,228.1 L121.3,218.9 L139.7,205.0 L158.0,185.3 L185.5,163.9 L213.0,139.5 L231.3,121.6 L277.2,93.6 L323.0,69.2" fill="none" stroke="#9bb3d4" stroke-width="2"/>
+<path d="M48.0,284.0 L57.2,267.8 L66.3,243.4 L75.5,228.1 L84.7,222.0 L93.8,213.3 L103.0,207.6 L121.3,189.7 L139.7,177.5 L158.0,160.0 L185.5,137.7 L213.0,128.1 L231.3,114.6 L277.2,87.5 L323.0,67.0" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+<line x1="139.7" y1="177.5" x2="139.7" y2="205.0" stroke="#d4a843" stroke-width="1.5"/>
+<line x1="134.7" y1="177.5" x2="144.7" y2="177.5" stroke="#d4a843" stroke-width="1.5"/>
+<line x1="134.7" y1="205.0" x2="144.7" y2="205.0" stroke="#d4a843" stroke-width="1.5"/>
+<text x="151.7" y="195.2" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#d4a843">GAIN À EFFORT ÉGAL</text>
+<g style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px" fill="#c8d6e8">
+  <line x1="163" y1="32" x2="187" y2="32" stroke="#ffffff" stroke-width="2.5"/><text x="195" y="36">Par score</text>
+  <line x1="163" y1="52" x2="187" y2="52" stroke="#9bb3d4" stroke-width="2"/><text x="195" y="56">Par montant dû</text>
+  <line x1="163" y1="72" x2="187" y2="72" stroke="#7f97ba" stroke-width="1.5" stroke-dasharray="5 5"/><text x="195" y="76">Au hasard</text>
+</g>
+<text x="48" y="362" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">Premier tiers de l'effort d'appel.</text><text x="48" y="380" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">Synthétique — le gain réel se mesure</text><text x="48" y="398" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">sur vos données.</text>
+</svg></div>
+    </figure>
   </div>
 </section>
 <div class="accent-strip"></div>
 
 <div class="trust">
   <div class="wrap">
-    <div class="t"><b>Sur vos données</b><span>Jamais sur un exemple</span></div>
-    <div class="t"><b>Mesuré, pas projeté</b><span>Chiffre daté et reproductible</span></div>
-    <div class="t"><b>Mis en production</b><span>API, portail, retour système</span></div>
-    <div class="t"><b>Loi 25</b><span>Traçabilité et registre</span></div>
+    <div class="t"><b>Vos données restent chez vous</b><span>Lecture seule, dans votre environnement</span></div>
+    <div class="t"><b>Mesuré contre votre méthode</b><span>Un chiffre daté, reproductible</span></div>
+    <div class="t"><b>Première rencontre sans frais</b><span>Pour savoir s'il y a un mandat, ou non</span></div>
+    <div class="t"><b>Explicable, dossier par dossier</b><span>Facteurs en clair, versions tracées</span></div>
   </div>
 </div>
 
@@ -177,22 +314,22 @@
       <div class="n">
         <div class="num">01</div>
         <h3>Audit de données</h3>
-        <p>Avant de modéliser : ce que votre donnée peut porter, et ce qu'elle ne portera pas. Volumétrie réelle, champs exploitables, fuites temporelles. Un mandat qui se termine parfois par « le signal n'y est pas » — et c'est une réponse qui vaut son prix.</p>
+        <p>Avant de bâtir quoi que ce soit : est-ce que vos données contiennent de quoi prévoir qui va payer ? Je vérifie combien de dossiers sont réellement utilisables, quels champs sont fiables, et quelles informations sont arrivées au dossier après coup — donc inutilisables pour prévoir. Ça se termine parfois par « vos données ne le permettent pas ». Cette réponse-là vous évite de payer les trois étapes suivantes pour rien.</p>
       </div>
       <div class="n">
         <div class="num">02</div>
         <h3>Modèle de priorisation</h3>
-        <p>Ordonner un portefeuille par valeur attendue, pas par probabilité seule ni par montant seul. La sortie n'est pas un score abstrait : c'est votre liste, dans l'ordre où il faut la travailler, avec les raisons en clair pour l'équipe.</p>
+        <p>Classer vos dossiers selon ce que chaque appel peut rapporter : la chance de recouvrer, multipliée par le montant en jeu. Pas le plus gros solde en premier, pas le plus facile en premier — celui qui vaut le plus d'être appelé maintenant. Le résultat n'est pas un score abstrait : c'est votre liste, dans l'ordre où il faut la travailler, avec la raison de chaque rang écrite en clair pour l'équipe.</p>
       </div>
       <div class="n">
         <div class="num">03</div>
         <h3>Mise en production</h3>
-        <p>Un modèle qui vit dans un carnet de notes ne sert personne. API de scoring, portail de consultation, chemin de retour vers vos systèmes existants. Ce qui compte est que la liste arrive là où vos gens travaillent déjà.</p>
+        <p>Un classement qui reste dans un fichier sur mon ordinateur ne sert à personne. La liste arrive dans les outils que vos agents ouvrent déjà le matin, et le résultat de chaque appel revient nourrir le classement suivant. Vos gens n'ont rien de nouveau à apprendre : ils voient la même liste, dans un meilleur ordre.</p>
       </div>
       <div class="n">
         <div class="num">04</div>
         <h3>Mesure et conformité</h3>
-        <p>Protocole de mesure défini avant le déploiement, jamais après. Registre de scoring, variables sensibles désactivables, note de conformité Loi 25. De quoi répondre à un vérificateur sans reconstituer six mois de travail.</p>
+        <p>La façon de mesurer le gain est fixée avant le lancement, jamais après. Registre des versions et des variables, facteurs de décision lisibles pour chaque dossier, variables sensibles désactivables : la matière que la Loi 25 vous demande de pouvoir produire pour une décision fondée sur un traitement automatisé. Je ne rends pas d'avis juridique ; je livre les pièces que votre responsable de la protection des renseignements personnels et votre conseiller juridique demanderont, sans reconstituer six mois de travail.</p>
       </div>
     </div>
   </div>
@@ -202,18 +339,18 @@
   <div class="wrap">
     <div class="shead">
       <div class="kicker">Méthode</div>
-      <h2>Ce qui me distingue est <em>désagréable</em> à entendre</h2>
-      <p>La plupart des modèles présentés en réunion sont plus flatteurs que vrais. Voici les quatre disciplines que j'applique, et chacune fait baisser le chiffre annoncé.</p>
+      <h2>Quatre vérifications que je fais <em>avant</em> de vous annoncer un chiffre</h2>
+      <p>Vous avez sans doute déjà vu un modèle promettre beaucoup en réunion, puis livrer moins sur le terrain. L'écart vient presque toujours d'une des quatre erreurs ci-dessous. Je les cherche avant de vous donner un chiffre, et chaque fois que j'en trouve une, le chiffre baisse. C'est normal : il se rapproche de ce que vous verrez vraiment.</p>
     </div>
     <ul class="bul">
-      <li><b>Jamais mesurer un modèle contre une variable qu'il utilise.</b> C'est de la circularité, et une courbe circulaire flatte toujours. La vérité-terrain est ce qui a été observé après la décision, jamais ce qui était déjà connu avant.</li>
-      <li><b>Chercher la fuite avant de célébrer le résultat.</b> Un résultat spectaculaire du premier coup mérite d'être suspecté, pas fêté. Sur un mandat récent, cinq couches de fuite temporelle séparaient le chiffre présentable du chiffre honnête.</li>
-      <li><b>Montrer toute la traîne des poids.</b> Y compris les variables à zéro. Une liste tronquée cache ce qui n'a pas marché, et ce qui n'a pas marché est exactement ce que le prochain analyste doit savoir.</li>
-      <li><b>Distinguer ce qui est mesuré de ce qui est projeté.</b> Chaque chiffre d'un rapport porte son étiquette. Une projection annoncée comme une mesure est la façon la plus courante de perdre la confiance d'un comité de direction.</li>
+      <li><b>Ne jamais noter le classement avec une information qu'il avait déjà en main.</b> Un modèle qui « prévoit » qu'un dossier paiera parce qu'un paiement y est déjà inscrit n'a rien prévu. Le seul juge valable, c'est ce qui s'est passé après l'appel.</li>
+      <li><b>Chercher la fuite avant de célébrer le résultat.</b> Un résultat spectaculaire du premier coup mérite d'être suspecté, pas fêté. Presque toujours, le modèle a vu quelque chose qu'il n'aurait pas pu savoir au moment de la décision. Je retire ces couches une à une, et le chiffre qui reste est celui que je vous présente.</li>
+      <li><b>Montrer tout ce qui a été essayé, y compris ce qui n'a rien donné.</b> Le rapport liste chaque information testée et son poids réel dans le classement, même quand ce poids est nul. Vous voyez ce qui fait la différence dans vos dossiers et ce qui n'en fait pas, sans avoir à me croire sur parole.</li>
+      <li><b>Distinguer ce qui a été mesuré de ce qui est estimé.</b> Chaque chiffre du rapport porte son étiquette : observé sur vos dossiers, ou projeté. Présenter une projection comme une mesure est la façon la plus courante de perdre la confiance d'une direction.</li>
     </ul>
     <div class="principe">
       <span class="cl">Principe directeur</span>
-      <div class="big">Un chiffre sans source est un mensonge en devenir. Je préfère vous livrer un gain plus petit et défendable qu'un gain plus grand que personne ne pourra reproduire.</div>
+      <div class="big">Un chiffre sans source est un mensonge en devenir. Je préfère vous livrer un chiffre plus petit et défendable qu'un gain plus grand que personne ne pourra reproduire.</div>
     </div>
   </div>
 </section>
@@ -226,20 +363,24 @@
     </div>
     <div class="steps">
       <div class="s">
-        <h4>Cadrage</h4>
-        <p>Une rencontre pour comprendre la décision que vous voulez améliorer et ce que vous mesurez aujourd'hui. Sans frais.</p>
+        <h3>Cadrage</h3>
+        <p>Une rencontre pour comprendre la décision que vous voulez améliorer et ce que vous mesurez aujourd'hui. Sans frais ni engagement, en visioconférence ou sur place dans le Grand Montréal. Tout ce qui suit passe par une proposition écrite avant d'être facturé.</p>
+        <span class="out"><b>Vous recevez</b>Une note de cadrage d'une page : la décision visée, ce que vous mesurez aujourd'hui, le périmètre proposé et son prix.</span>
       </div>
       <div class="s">
-        <h4>Lecture des données</h4>
-        <p>Accès en lecture seule à votre environnement. Rapport d'état : ce qui est exploitable, ce qui manque, et le plafond que la donnée impose.</p>
+        <h3>Lecture des données</h3>
+        <p>Accès en lecture seule à votre environnement, sous l'entente écrite que la Loi 25 impose à toute entreprise qui confie des renseignements personnels à un fournisseur. Rapport d'état : ce qui est exploitable, ce qui manque, et le plafond que la donnée impose.</p>
+        <span class="out"><b>Vous recevez</b>Un rapport d'état écrit et daté : champs exploitables, trous, plafond imposé par la donnée, et la recommandation d'aller plus loin ou d'arrêter là.</span>
       </div>
       <div class="s">
-        <h4>Construction</h4>
+        <h3>Construction</h3>
         <p>Le modèle, sur vos données, dans votre environnement. Protocole de mesure arrêté d'avance, avec la méthode actuelle comme point de comparaison.</p>
+        <span class="out"><b>Vous recevez</b>Le modèle dans votre environnement, le protocole de mesure arrêté d'avance, et le rapport de résultat où chaque chiffre porte son étiquette : mesuré ou projeté.</span>
       </div>
       <div class="s">
-        <h4>Mise en service</h4>
+        <h3>Mise en service</h3>
         <p>Livraison, documentation lisible par votre équipe, et transfert. Rien ne dépend d'une infrastructure que je contrôlerais.</p>
+        <span class="out"><b>Vous recevez</b>La liste branchée sur vos systèmes, la documentation lisible par votre équipe, le registre des versions et les pièces de conformité.</span>
       </div>
     </div>
   </div>
@@ -250,28 +391,35 @@
     <div>
       <div class="kicker">Contact</div>
       <h2>Décrivez la décision que vous voulez <em>améliorer</em></h2>
-      <p style="margin-top:14px;font-size:15px;color:var(--dim);max-width:52ch">La première rencontre sert à savoir s'il y a un mandat ou non. Si vos données ne portent pas ce que vous espérez, je préfère vous le dire à ce moment-là plutôt qu'au troisième mois.</p>
+      <p style="margin-top:14px;font-size:15px;color:var(--dim);max-width:52ch">La première rencontre est sans frais et sans engagement. Elle sert à savoir s'il y a un mandat ou non : si vos données ne portent pas ce que vous espérez, je préfère vous le dire à ce moment-là plutôt qu'après des mois de travail.</p>
+      <ul class="bul" style="max-width:52ch;margin:22px 0 0">
+        <li><b>Entente de confidentialité</b> signée avant tout accès aux données.</li>
+        <li><b>Vos données restent chez vous.</b> Accès en lecture seule, dans votre environnement ; rien n'est copié à l'extérieur.</li>
+        <li><b>Prix fixé par mandat</b>, au cadrage, avant que le travail commence.</li>
+      </ul>
       <div class="hero-actions" style="margin-top:26px">
-        <a class="btn primary" style="background:var(--navy);color:#fff" href="mailto:yoan@ymiaconseil.com?subject=Demande%20de%20rencontre%20%E2%80%94%20YM%20IA%20Conseil">Écrire un courriel</a>
+        <a class="btn solid" href="mailto:yoan@ymiaconseil.com?subject=Demande%20de%20premi%C3%A8re%20rencontre&amp;body=Bonjour%20Yoan%2C%0A%0AD%C3%A9cision%20%C3%A0%20am%C3%A9liorer%20%3A%20%0ANombre%20de%20dossiers%20actifs%20%28approximatif%29%20%3A%20%0AM%C3%A9thode%20de%20priorisation%20actuelle%20%3A%20%0AT%C3%A9l%C3%A9phone%20pour%20vous%20joindre%20%3A%20%0A%0AMerci.">Demander une première rencontre</a>
       </div>
     </div>
     <div class="card">
       <div class="lab">Coordonnées</div>
-      <div class="line"><span>Courriel</span><a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a></div>
-      <div class="line"><span>Établi à</span><a href="#contact" style="font-weight:400;color:var(--ink-body)">Grand Montréal, Québec</a></div>
-      <div class="line"><span>Langues</span><a href="#contact" style="font-weight:400;color:var(--ink-body)">Français · English</a></div>
-      <div class="line"><span>Mandats</span><a href="#contact" style="font-weight:400;color:var(--ink-body)">Sur place ou à distance</a></div>
+      <div class="line"><span>Téléphone</span><a href="tel:+15149268633">514 926-8633</a></div>
+      <div class="line"><span>Courriel</span><a href="mailto:yoan@ymiaconseil.com?subject=Demande%20de%20premi%C3%A8re%20rencontre">yoan@ymiaconseil.com</a></div>
+      <div class="line"><span>Établi à</span><span>Grand Montréal, Québec</span></div>
+      <div class="line"><span>Langues</span><span>Français · English</span></div>
+      <div class="line"><span>Mandats</span><span>Sur place ou à distance</span></div>
     </div>
   </div>
 </section>
 
 <footer class="foot">
   <div class="wrap">
-    <a class="logo" href="#top">
+    <a class="logo" href="#top" aria-label="YM IA Conseil, accueil">
       <span class="mark">YM</span>
       <span class="word">Yoan Maisonneuve<span class="sub">IA Conseil</span></span>
     </a>
-    <span class="pg">© 2026 YM IA Conseil · Yoan Maisonneuve · ymiaconseil.com</span>
+    <span class="pg">© 2026 YM IA Conseil · Yoan Maisonneuve · Grand Montréal, Québec</span>
+    <p class="conf" id="confidentialite">Confidentialité. Ce site ne dépose aucun témoin, ne fait aucune analyse d'audience et ne comporte aucun formulaire ; son seul appel à un serveur tiers est le chargement des polices de caractères. Les seuls renseignements personnels que je reçois sont ceux que vous m'écrivez par courriel ; ils servent à répondre à votre demande et ne sont communiqués à personne. Responsable de la protection des renseignements personnels : Yoan Maisonneuve, <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a>.</p>
   </div>
 </footer>
 

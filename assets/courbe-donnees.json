@@ -1,0 +1,184 @@
+{
+ "provenance": "Jeu synthétique d'ARY — produits/datalake/ARY/scripts/generer_donnees.py. Aucune donnée client.",
+ "verite_terrain": "montant_recouvre (observé après placement), jamais montant_paye (variable du modèle)",
+ "cadrage_hero": "effort 0 à 30 % — le premier tiers, là où la capacité d'appel s'épuise",
+ "croisement": "le tri par montant repasse devant le score à 35 % d'effort ; les deux convergent à 100 %",
+ "n_dossiers": 4000,
+ "graine_hasard": 20260909,
+ "courbe_entiere": [
+  {
+   "effort": 0,
+   "score": 0.0,
+   "montant": 0.0,
+   "hasard": 0.0
+  },
+  {
+   "effort": 1,
+   "score": 3.7,
+   "montant": 0.0,
+   "hasard": 0.6
+  },
+  {
+   "effort": 2,
+   "score": 9.3,
+   "montant": 2.8,
+   "hasard": 1.4
+  },
+  {
+   "effort": 3,
+   "score": 12.8,
+   "montant": 7.4,
+   "hasard": 3.8
+  },
+  {
+   "effort": 4,
+   "score": 14.2,
+   "montant": 7.4,
+   "hasard": 4.8
+  },
+  {
+   "effort": 5,
+   "score": 16.2,
+   "montant": 10.3,
+   "hasard": 5.6
+  },
+  {
+   "effort": 6,
+   "score": 17.5,
+   "montant": 12.8,
+   "hasard": 6.9
+  },
+  {
+   "effort": 8,
+   "score": 21.6,
+   "montant": 14.9,
+   "hasard": 9.0
+  },
+  {
+   "effort": 10,
+   "score": 24.4,
+   "montant": 18.1,
+   "hasard": 12.2
+  },
+  {
+   "effort": 12,
+   "score": 28.4,
+   "montant": 22.6,
+   "hasard": 14.1
+  },
+  {
+   "effort": 15,
+   "score": 33.5,
+   "montant": 27.5,
+   "hasard": 17.1
+  },
+  {
+   "effort": 18,
+   "score": 35.7,
+   "montant": 33.1,
+   "hasard": 21.3
+  },
+  {
+   "effort": 20,
+   "score": 38.8,
+   "montant": 37.2,
+   "hasard": 24.8
+  },
+  {
+   "effort": 25,
+   "score": 45.0,
+   "montant": 43.6,
+   "hasard": 27.4
+  },
+  {
+   "effort": 30,
+   "score": 49.7,
+   "montant": 49.2,
+   "hasard": 34.0
+  },
+  {
+   "effort": 35,
+   "score": 54.1,
+   "montant": 56.4,
+   "hasard": 37.7
+  },
+  {
+   "effort": 40,
+   "score": 57.7,
+   "montant": 62.3,
+   "hasard": 42.1
+  },
+  {
+   "effort": 45,
+   "score": 62.3,
+   "montant": 67.1,
+   "hasard": 46.1
+  },
+  {
+   "effort": 50,
+   "score": 65.7,
+   "montant": 71.1,
+   "hasard": 51.4
+  },
+  {
+   "effort": 55,
+   "score": 67.5,
+   "montant": 75.4,
+   "hasard": 56.4
+  },
+  {
+   "effort": 60,
+   "score": 69.4,
+   "montant": 79.3,
+   "hasard": 61.5
+  },
+  {
+   "effort": 65,
+   "score": 72.0,
+   "montant": 83.2,
+   "hasard": 66.2
+  },
+  {
+   "effort": 70,
+   "score": 74.1,
+   "montant": 86.6,
+   "hasard": 69.1
+  },
+  {
+   "effort": 75,
+   "score": 76.0,
+   "montant": 89.6,
+   "hasard": 73.3
+  },
+  {
+   "effort": 80,
+   "score": 77.9,
+   "montant": 91.7,
+   "hasard": 81.2
+  },
+  {
+   "effort": 85,
+   "score": 82.9,
+   "montant": 94.6,
+   "hasard": 83.6
+  },
+  {
+   "effort": 90,
+   "score": 86.7,
+   "montant": 97.0,
+   "hasard": 89.1
+  },
+  {
+   "effort": 95,
+   "score": 94.0,
+   "montant": 98.8,
+   "hasard": 93.4
+  },
+  {
+   "effort": 100,
+   "score": 100.0,
+   "montant": 100.0,
+   "hasard": 100.0
+  }
+ ]
+}

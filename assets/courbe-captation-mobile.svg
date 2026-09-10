@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 335 392" width="335" height="392" role="img" aria-labelledby="t-mobile d-mobile">
+<title id="t-mobile">Courbe de captation : score contre montant contre hasard</title>
+<desc id="d-mobile">À effort d'appel égal, la part du recouvrement captée par trois ordres d'appel, sur le premier tiers de l'effort. Illustration calculée sur des données synthétiques.</desc>
+<!-- Généré par produits/YMIAConseil/outils/courbe-captation.py sur le jeu synthétique d'ARY. Aucune donnée client. Courbe entière dans courbe-donnees.json. -->
+<line x1="48" y1="196.7" x2="323" y2="196.7" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="40" y="200.7" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">20</text><line x1="48" y1="109.3" x2="323" y2="109.3" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="40" y="113.3" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">40</text><line x1="48" y1="22.0" x2="323" y2="22.0" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/><text x="40" y="26.0" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">60</text>
+<line x1="48" y1="284" x2="323" y2="284" stroke="#7f97ba" stroke-opacity="0.6" stroke-width="1"/>
+<line x1="48" y1="22" x2="48" y2="284" stroke="#7f97ba" stroke-opacity="0.6" stroke-width="1"/>
+<text x="48.0" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">0</text><text x="139.7" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">10</text><text x="231.3" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">20</text><text x="323.0" y="302" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">30</text><text x="40" y="288" text-anchor="end" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">0</text>
+<text x="186" y="322" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#9bb3d4">EFFORT D'APPEL — % DES DOSSIERS</text>
+<text transform="translate(16,153) rotate(-90)" text-anchor="middle" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#9bb3d4">RECOUVREMENT CAPTÉ — %</text>
+<path d="M48.0,284.0 L57.2,267.8 L66.3,243.4 L75.5,228.1 L84.7,222.0 L93.8,213.3 L103.0,207.6 L121.3,189.7 L139.7,177.5 L158.0,160.0 L185.5,137.7 L213.0,128.1 L231.3,114.6 L277.2,87.5 L323.0,67.0 L323.0,69.2 L277.2,93.6 L231.3,121.6 L213.0,139.5 L185.5,163.9 L158.0,185.3 L139.7,205.0 L121.3,218.9 L103.0,228.1 L93.8,239.0 L84.7,251.7 L75.5,251.7 L66.3,271.8 L57.2,284.0 L48.0,284.0 Z" fill="#d4a843" fill-opacity="0.5"/>
+<path d="M48.0,284.0 L57.2,281.4 L66.3,277.9 L75.5,267.4 L84.7,263.0 L93.8,259.5 L103.0,253.9 L121.3,244.7 L139.7,230.7 L158.0,222.4 L185.5,209.3 L213.0,191.0 L231.3,175.7 L277.2,164.4 L323.0,135.5" fill="none" stroke="#7f97ba" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M48.0,284.0 L57.2,284.0 L66.3,271.8 L75.5,251.7 L84.7,251.7 L93.8,239.0 L103.0,228.1 L121.3,218.9 L139.7,205.0 L158.0,185.3 L185.5,163.9 L213.0,139.5 L231.3,121.6 L277.2,93.6 L323.0,69.2" fill="none" stroke="#9bb3d4" stroke-width="2"/>
+<path d="M48.0,284.0 L57.2,267.8 L66.3,243.4 L75.5,228.1 L84.7,222.0 L93.8,213.3 L103.0,207.6 L121.3,189.7 L139.7,177.5 L158.0,160.0 L185.5,137.7 L213.0,128.1 L231.3,114.6 L277.2,87.5 L323.0,67.0" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+<line x1="139.7" y1="177.5" x2="139.7" y2="205.0" stroke="#d4a843" stroke-width="1.5"/>
+<line x1="134.7" y1="177.5" x2="144.7" y2="177.5" stroke="#d4a843" stroke-width="1.5"/>
+<line x1="134.7" y1="205.0" x2="144.7" y2="205.0" stroke="#d4a843" stroke-width="1.5"/>
+<text x="151.7" y="195.2" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;letter-spacing:.06em" fill="#d4a843">GAIN À EFFORT ÉGAL</text>
+<g style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px" fill="#c8d6e8">
+  <line x1="163" y1="32" x2="187" y2="32" stroke="#ffffff" stroke-width="2.5"/><text x="195" y="36">Par score</text>
+  <line x1="163" y1="52" x2="187" y2="52" stroke="#9bb3d4" stroke-width="2"/><text x="195" y="56">Par montant dû</text>
+  <line x1="163" y1="72" x2="187" y2="72" stroke="#7f97ba" stroke-width="1.5" stroke-dasharray="5 5"/><text x="195" y="76">Au hasard</text>
+</g>
+<text x="48" y="362" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">Premier tiers de l'effort d'appel.</text><text x="48" y="380" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">Synthétique — le gain réel se mesure</text><text x="48" y="398" style="font-family:'JetBrains Mono',Consolas,monospace;font-size:12px" fill="#7f97ba">sur vos données.</text>
+</svg>
