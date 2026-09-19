@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Plans d'atelier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14233c">
+<meta name="description" content="Lecteur de dessins d'atelier : un clic sur un mur ouvre sa feuille, un clic sur une coupe ouvre son détail.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root {
+    --navy: #14233c; --navy-2: #1d3252; --ink: #16202e; --paper: #ffffff; --bg: #dcddd8;
+    --gold: #c9a227; --blue: #0a6cff; --orange: #f07800; --green: #0b8a2d; --line: #d5d8de;
+    --top: calc(52px + env(safe-area-inset-top, 0px));
+    --sab: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; background: var(--bg);
+    font: 16px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); }
+  button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+  [hidden] { display: none !important; }
+
+  /* ── Accueil ─────────────────────────────────────────────── */
+  #home { position: fixed; inset: 0; overflow-y: auto; background: #f3f4f1; padding: 0 0 calc(24px + var(--sab)); }
+  .hero { background: var(--navy); color: #fff; padding: calc(22px + env(safe-area-inset-top, 0px)) 20px 22px; }
+  .hero h1 { margin: 0 0 4px; font-size: 22px; letter-spacing: .2px; }
+  .hero p { margin: 0; opacity: .8; font-size: 14.5px; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .import { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin: 18px 0 8px;
+    min-height: 64px; border-radius: 14px; background: var(--gold); color: #1c1603; font-weight: 700; font-size: 18px;
+    box-shadow: 0 2px 0 #8d7115; }
+  .import:active { transform: translateY(1px); box-shadow: 0 1px 0 #8d7115; }
+  .private { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: #3c4656; margin: 10px 2px 22px; }
+  .private svg { flex: none; margin-top: 1px; }
+  h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .9px; color: #5a6475; margin: 0 2px 8px; }
+  .plan { display: flex; align-items: stretch; background: #fff; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .plan .open { flex: 1; text-align: left; padding: 14px 14px; min-height: 64px; }
+  .plan .name { font-weight: 650; word-break: break-word; }
+  .plan .meta { font-size: 13px; color: #5a6475; margin-top: 2px; }
+  .plan .more { width: 52px; color: #7a8494; border-left: 1px solid var(--line); display: grid; place-items: center; }
+  .empty { border: 1.5px dashed #b9bec8; border-radius: 12px; padding: 22px 16px; text-align: center; color: #5a6475; font-size: 14.5px; }
+  .how { margin-top: 26px; font-size: 14.5px; color: #3c4656; }
+  .how ol { padding-left: 20px; margin: 8px 0 0; }
+  .how li { margin-bottom: 6px; }
+  .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; vertical-align: -1px; margin-right: 3px; }
+
+  /* ── Visionneuse ─────────────────────────────────────────── */
+  #viewer { position: fixed; inset: 0; background: var(--bg); }
+  #stage { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; display: block; outline: none; }
+  #topbar { position: absolute; left: 0; right: 0; top: 0; height: var(--top); padding-top: env(safe-area-inset-top, 0px);
+    background: var(--navy); color: #fff; display: flex; align-items: center; box-shadow: 0 1px 6px rgba(0,0,0,.35); }
+  #topbar button { height: 52px; min-width: 52px; display: grid; place-items: center; flex: none; }
+  #topbar button:active { background: var(--navy-2); }
+  #sheetBtn { flex: 1 !important; min-width: 0; justify-items: start !important; padding: 0 6px; text-align: left; }
+  #sheetId { font-weight: 750; font-size: 17px; letter-spacing: .3px; }
+  #sheetTitle { font-size: 12px; opacity: .78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  #sheetBtn > div { min-width: 0; max-width: 100%; }
+
+  #back { position: absolute; left: 12px; bottom: calc(14px + var(--sab)); min-height: 58px; padding: 0 22px 0 14px; border-radius: 29px;
+    background: var(--navy); color: #fff; font-weight: 700; font-size: 17px; display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.4); border: 2px solid #fff; }
+  #back:active { background: var(--navy-2); }
+  #fit { position: absolute; right: 12px; bottom: calc(14px + var(--sab)); width: 52px; height: 52px; border-radius: 50%;
+    background: #fff; color: var(--navy); display: grid; place-items: center; box-shadow: 0 2px 10px rgba(0,0,0,.35); }
+  #prep { position: absolute; right: 74px; bottom: calc(26px + var(--sab)); font-size: 12px; background: rgba(20,35,60,.82); color: #fff;
+    padding: 5px 10px; border-radius: 12px; pointer-events: none; }
+  #busy { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: rgba(20,35,60,.9); color: #fff;
+    padding: 12px 18px; border-radius: 12px; font-size: 15px; display: flex; gap: 10px; align-items: center; pointer-events: none; }
+  .spin { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: sp 0.8s linear infinite; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+  #toast { position: absolute; left: 50%; bottom: calc(86px + var(--sab)); transform: translateX(-50%); max-width: min(92vw, 520px);
+    background: rgba(16,24,38,.94); color: #fff; padding: 10px 16px; border-radius: 12px; font-size: 14.5px; text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,.35); }
+  #toast.warn { background: #8a4b00; }
+
+  /* ── Panneaux ────────────────────────────────────────────── */
+  #scrim { position: fixed; inset: 0; background: rgba(8,14,24,.45); }
+  .panel { position: fixed; background: #fff; box-shadow: 0 0 24px rgba(0,0,0,.35); display: flex; flex-direction: column; }
+  #drawer { left: 0; top: 0; bottom: 0; width: min(88vw, 400px); padding-top: env(safe-area-inset-top, 0px); }
+  #sheet { left: 0; right: 0; bottom: 0; max-height: 72vh; border-radius: 16px 16px 0 0; padding-bottom: var(--sab); }
+  .phead { display: flex; align-items: center; gap: 8px; padding: 10px 8px 10px 16px; border-bottom: 1px solid var(--line); flex: none; }
+  .phead b { flex: 1; font-size: 16px; }
+  .phead button { width: 48px; height: 48px; display: grid; place-items: center; color: #5a6475; }
+  .pbody { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 8px 10px 16px; }
+  #q { width: 100%; height: 48px; border: 1.5px solid #b9bec8; border-radius: 10px; padding: 0 14px; font: inherit; font-size: 17px; margin: 4px 0 10px; outline: none; }
+  #q:focus { border-color: var(--blue); }
+  .grp { font-size: 12px; text-transform: uppercase; letter-spacing: .9px; color: #5a6475; margin: 14px 6px 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 4px; }
+  .chip { min-width: 52px; min-height: 46px; padding: 0 12px; border-radius: 10px; background: #eef1f6; border: 1px solid #d5dae3; font-weight: 650; font-size: 15.5px; }
+  .chip.wall { background: #fff3e4; border-color: #f3cf9f; }
+  .chip:active, .row:active { background: #dfe6f3; }
+  .row { display: flex; width: 100%; align-items: center; gap: 12px; text-align: left; padding: 10px 8px; min-height: 56px; border-radius: 10px; }
+  .row.cur { background: #e8effc; }
+  .row .id { font-weight: 750; min-width: 62px; font-size: 16px; }
+  .row .tt { flex: 1; min-width: 0; font-size: 14px; color: #3c4656; }
+  .row .n { font-size: 12px; color: #6b7587; white-space: nowrap; }
+  .row .tag { flex: none; width: 12px; height: 12px; border-radius: 50%; }
+  .sub { padding: 0 4px 8px 18px; }
+  .sub .chip { min-width: 46px; min-height: 42px; font-size: 15px; }
+  .opt { display: flex; width: 100%; align-items: center; gap: 12px; padding: 14px 10px; min-height: 56px; border-radius: 10px; text-align: left; font-size: 16px; }
+  .opt:active { background: #eef1f6; }
+  .opt small { display: block; color: #5a6475; font-size: 13px; }
+  .opt .big { font-weight: 700; }
+  .danger { color: #a3140f; }
+  .note { font-size: 13px; color: #5a6475; padding: 6px 10px; }
+
+  /* ── Import en cours ─────────────────────────────────────── */
+  #work { position: fixed; inset: 0; background: rgba(20,35,60,.96); color: #fff; display: grid; place-items: center; text-align: center; padding: 24px; }
+  #work .box { max-width: 420px; width: 100%; }
+  #workMsg { font-size: 18px; margin: 16px 0 14px; min-height: 50px; }
+  #workBar { height: 8px; border-radius: 4px; background: rgba(255,255,255,.2); overflow: hidden; }
+  #workBar i { display: block; height: 100%; width: 0%; background: var(--gold); transition: width .2s; }
+  #drop { position: fixed; inset: 0; background: rgba(10,108,255,.18); border: 4px dashed var(--blue); display: grid; place-items: center; font-size: 22px; font-weight: 700; color: var(--navy); pointer-events: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══ Accueil : la bibliothèque de plans ═══ -->
+<main id="home">
+  <div class="hero"><div class="wrap">
+    <h1>Plans d'atelier</h1>
+    <p>Un clic sur un mur ouvre sa feuille. Un clic sur une coupe ouvre son détail.</p>
+  </div></div>
+  <div class="wrap">
+    <button class="import" id="importBtn" type="button">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>
+      Ouvrir un plan PDF
+    </button>
+    <input id="file" type="file" accept="application/pdf,.pdf" hidden>
+    <div class="private">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b8a2d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <span>Le plan reste dans ce téléphone. Rien n'est envoyé sur internet, et l'app fonctionne sans réseau une fois le plan ouvert.</span>
+    </div>
+    <h2 class="sec" id="plansTitle" hidden>Mes plans</h2>
+    <div id="plans"></div>
+    <div class="how">
+      <h2 class="sec">Comment ça marche</h2>
+      <ol>
+        <li>Ouvre le PDF des dessins d'atelier. L'app le lit une fois et repère tous les renvois.</li>
+        <li><span class="dot" style="background:#f07800"></span>Sur la vue d'ensemble, touche un mur (MR03) : tu arrives sur sa feuille.</li>
+        <li><span class="dot" style="background:#0a6cff"></span>Sur l'élévation, touche une coupe (5 / 300) : tu arrives sur le détail 5 de la feuille A-300.</li>
+        <li>Le gros bouton <b>Retour</b> te ramène exactement où tu étais.</li>
+      </ol>
+    </div>
+  </div>
+</main>
+
+<!-- ═══ Visionneuse ═══ -->
+<section id="viewer" hidden>
+  <canvas id="stage" tabindex="0"></canvas>
+  <header id="topbar">
+    <button id="menuBtn" type="button" aria-label="Feuilles et détails">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <button id="sheetBtn" type="button"><div><div id="sheetId">—</div><div id="sheetTitle"></div></div></button>
+    <button id="homeBtn" type="button" aria-label="Vue d'ensemble">
+      <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>
+    </button>
+    <button id="moreBtn" type="button" aria-label="Options">
+      <svg width="25" height="25" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+    </button>
+  </header>
+  <button id="back" type="button" hidden>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    <span id="backLbl">Retour</span>
+  </button>
+  <button id="fit" type="button" aria-label="Voir toute la feuille">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+  </button>
+  <div id="prep" hidden></div>
+  <div id="busy" hidden><span class="spin"></span><span id="busyMsg">Chargement…</span></div>
+  <div id="toast" hidden></div>
+</section>
+
+<!-- ═══ Panneaux ═══ -->
+<div id="scrim" hidden></div>
+<aside id="drawer" class="panel" hidden>
+  <div class="phead"><b>Feuilles et détails</b>
+    <button type="button" data-close aria-label="Fermer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="pbody">
+    <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Chercher : 18, MR03, A-302…">
+    <div id="drawerBody"></div>
+  </div>
+</aside>
+<aside id="sheet" class="panel" hidden>
+  <div class="phead"><b id="sheetHead"></b>
+    <button type="button" data-close aria-label="Fermer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="pbody" id="sheetBody"></div>
+</aside>
+
+<div id="work" hidden><div class="box">
+  <div class="spin" style="width:34px;height:34px;margin:0 auto;border-width:4px"></div>
+  <div id="workMsg">Lecture du plan…</div>
+  <div id="workBar"><i></i></div>
+</div></div>
+<div id="drop" hidden>Dépose le PDF ici</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
