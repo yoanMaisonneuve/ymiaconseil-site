@@ -12,7 +12,7 @@
 
 import * as pdfjsLib from './vendor/pdfjs/pdf.min.mjs';
 import { extractDocument } from './extract.js';
-import { buildIndex, DETECT_VERSION, normKey } from './detect.js';
+import { buildIndex, DETECT_VERSION, normKey, wallKey } from './detect.js';
 import * as store from './store.js';
 
 const VENDOR = new URL('./vendor/pdfjs/', import.meta.url).href;
@@ -78,7 +78,9 @@ async function pdfRender(kind, n, scale, region, onCanvas) {
     canvas.height = Math.max(1, Math.round(r.h * scale));
     const viewport = page.getViewport({ scale, offsetX: -r.x * scale, offsetY: -r.y * scale });
     if (onCanvas) onCanvas(canvas);
-    job.task = page.render({ canvas, viewport, annotationMode: pdfjsLib.AnnotationMode.DISABLE, background: '#ffffff' });
+    // Annotations ACTIVÉES : les tampons de révision et les notes manuscrites font partie du plan.
+    // Mesuré : les commentaires « AutoCAD SHX Text » n'ont pas d'apparence, pdf.js n'en dessine rien.
+    job.task = page.render({ canvas, viewport, annotationMode: pdfjsLib.AnnotationMode.ENABLE, background: '#ffffff' });
     await job.task.promise;
     if (job.cancelled) throw new Error('annulé');
     return canvas;
@@ -94,7 +96,8 @@ const baseScale = (n) => {
   const sh = S.index.sheets[n];
   return Math.min(2.2, Math.sqrt(BASE_PIXELS / (sh.w * sh.h)));
 };
-const bucketOf = (scale) => `b${Math.round(scale * 100)}${ENABLE_HWA ? '' : 's'}`;
+// Préfixe « c » : fonds rendus AVEC les annotations. Les anciens fonds « b » (sans tampons) sont ignorés.
+const bucketOf = (scale) => `c${Math.round(scale * 100)}${ENABLE_HWA ? '' : 's'}`;
 
 function rememberBase(n, bmp, scale) {
   const old = S.bases.get(n);
@@ -744,7 +747,7 @@ function buildBackrefs(ix) {
   ix.pages.forEach((pg, p) => {
     for (const hs of pg.hotspots) {
       const d = hs.alt ? hs.alt.page : hs.page;
-      const k = hs.kind === 'detail' ? `${d}|detail|${hs.detail}` : hs.label ? `${d}|wall|${normKey(hs.label)}` : null;
+      const k = hs.kind === 'detail' ? `${d}|detail|${hs.detail}` : hs.label ? `${d}|wall|${wallKey(hs.label)}` : null;
       if (!k) continue;
       if (!map.has(k)) map.set(k, []);
       map.get(k).push({ page: p, hs });

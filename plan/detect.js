@@ -18,12 +18,13 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 2;
+export const DETECT_VERSION = 3;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
-const DETAIL_RE = /^\d{1,3}[A-Z]?$/;
-// Le haut d'un renvoi peut porter une mention : « 10 INV. » = détail 10, inversé.
-const DETAIL_TOP_RE = /^(\d{1,3}[A-Z]?)\s*(INV|SIM|TYP|OPP|MIR)?\.?$/;
+// Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
+const DETAIL_RE = /^(\d{1,3}[A-Z]?|[A-Z])$/;
+// Le haut d'un renvoi peut porter une mention : « 10 INV. » = détail 10 inversé, « 19-sim » = similaire.
+const DETAIL_TOP_RE = /^(\d{1,3}[A-Z]?|[A-Z])(?:[\s\-–]*(INV|SIM|TYP|OPP|MIR)\.?)?$/;
 const SHORT_RE = /^\d{2,4}$/;
 // Un nom de mur tel qu'écrit dans un cercle de titre : « MR-07B », « MR03 ». Jamais de point (« C.4 » = axe).
 const WALL_RAW_RE = /^([A-Z]{2,4})-?(\d{1,3})[A-Z]?$/;
@@ -33,6 +34,9 @@ const AFTER_TITLE_RE = /(DESSIN[ÉE]\s*PAR|CHARG[ÉE]|DRAWN|CHECKED|V[ÉE]RIFI[�
 
 export const normSheet = (s) => String(s).toUpperCase().replace(/[\s.]/g, '');
 export const normKey = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
+// Clé d'un nom de mur : comme normKey, et les zéros de tête des nombres tombent —
+// vu sur un vrai plan : marqueur « PS-001 », élévation « PS-01 ».
+export const wallKey = (s) => normKey(s).replace(/(^|[A-Z])0+(?=\d)/g, '$1');
 const normDetail = (s) => String(s).toUpperCase().replace(/^0+(?=\d)/, '');
 
 const cx = (it) => (it.x0 + it.x1) / 2;
@@ -90,10 +94,13 @@ function bodySize(items) {
 }
 
 // Partenaire centré juste au-dessus de `b`.
-function findTop(b, items, used) {
+function findTop(b, items, used, isSheetName) {
   let best = null, bestDy = Infinity;
   for (const t of items) {
     if (t === b || !t.horiz || used.has(t)) continue;
+    // Un texte qui nomme lui-même une feuille n'est jamais le « nom » d'un renvoi : dans une
+    // liste de dessins, la ligne du dessus n'est pas l'étiquette de la ligne du dessous.
+    if (isSheetName(t)) continue;
     const m = Math.min(t.size, b.size);
     const ratio = t.size / b.size;
     if (ratio < 0.6 || ratio > 1.7) continue;
@@ -161,7 +168,7 @@ export function buildIndex(doc) {
 
     for (const { b, sheet, short } of refs) {
       if (b.x0 >= me.tzX) continue; // cartouche
-      const t = findTop(b, pg.items, used);
+      const t = findTop(b, pg.items, used, (it) => sheetToPage.has(normSheet(it.s)));
       const dm = t ? t.s.toUpperCase().match(DETAIL_TOP_RE) : null;
       const isDetail = !!dm;
       if (short && !isDetail) {
@@ -228,7 +235,7 @@ export function buildIndex(doc) {
       const top = bestBySize(list);
       // Étiquette retenue si elle est visée par un renvoi et plus grosse que le corps,
       // ou si elle est franchement grosse (≥ 1,8 × le corps) même sans renvoi.
-      const big = top.size >= 1.8 * docBody;
+      const big = top.size >= 1.8 * docBody && /\d/.test(n);
       const okRef = refs > 0 && top.size >= 1.15 * docBody;
       if (!big && !okRef) continue;
       out[i].labels.push({ kind: 'detail', n, refs, ...pad(top, 0.6 * top.size) });
@@ -240,8 +247,8 @@ export function buildIndex(doc) {
   const walls = new Map();
   for (const p of out) for (const hs of p.hotspots) {
     if (hs.kind !== 'sheet' || !hs.label) continue;
-    const k = normKey(hs.label);
-    if (!k) continue;
+    const k = wallKey(hs.label);
+    if (k.length < 2) continue;
     if (!walls.has(k)) walls.set(k, { label: hs.label, targets: new Map() });
     walls.get(k).targets.set(hs.page, hs.sheet);
   }
@@ -259,8 +266,8 @@ export function buildIndex(doc) {
     const byKey = new Map();
     for (const it of pg.items) {
       if (!it.horiz || it.x0 >= me.tzX || tops[pi].has(it) || it.size < 1.3 * docBody) continue;
-      const k = normKey(it.s);
-      if (!k) continue;
+      const k = wallKey(it.s);
+      if (k.length < 2) continue;
       const m = it.s.toUpperCase().trim().match(WALL_RAW_RE);
       if (!walls.has(k) && !(m && families.has(m[1]))) continue;
       if (!byKey.has(k)) byKey.set(k, []);
@@ -280,7 +287,7 @@ export function buildIndex(doc) {
     let tgt = null;
     if (hs.kind === 'detail') tgt = labels.find((l) => l.kind === 'detail' && l.n === hs.detail);
     else if (hs.label) {
-      const k = normKey(hs.label);
+      const k = wallKey(hs.label);
       tgt = labels.find((l) => l.kind === 'wall' && l.n === k);
       if (!tgt) {
         // Absent de la feuille annoncée, présent sur une seule autre : le marqueur se trompe.
