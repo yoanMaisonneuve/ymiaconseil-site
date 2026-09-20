@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 6;
+export const DETECT_VERSION = 7;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -35,11 +35,16 @@ const AFTER_TITLE_RE = /(DESSIN[ÉE]\s*PAR|CHARG[ÉE]|DRAWN|CHECKED|V[ÉE]RIFI[�
 // Une cote : commence par un nombre (ou un préfixe « (MG) »), porte une marque de pied ou de pouce,
 // ou s'écrit « entier fraction » (« 45 3/4 »). Jamais une échelle (« = »), jamais une section de
 // profilé (« 2" X 4" »), jamais une phrase.
-const DIM_MARK_RE = /^(\([A-Z.]{1,4}\)\s*)?\d[\d\s\/\-.,]*('|''|"|′|″|”)/;
+const DIM_MARK_RE = /^(\([A-Z.]{1,4}\)\s*)?\d[\d\s\/\-.,]*('|''|"|′|″|”)[\d\s\/\-.,]*('|''|"|′|″|”)?[\d\s\/\-.,]*/;
 const DIM_FRAC_RE = /^\d+\s+\d+\/\d+$/;
+// Après la mesure : rien, ou au plus deux abréviations de métier (FAB., O.B., DOS/MENEAU) et une
+// conversion entre crochets. Une phrase, non — une note d'atelier n'est pas une cote.
+const DIM_TAIL_RE = /^(\s*\[[^\]]{1,20}\])?(\s*(?:[A-Z]{1,4}|[A-ZÀ-Ü]{1,12}[./-][A-ZÀ-Ü./-]{0,12})\.?){0,2}(\s*\[[^\]]{1,20}\])?\s*$/i;
 export function isDimension(s) {
   if (s.length > 44 || /[=]| X |\bX\b/i.test(s)) return false;
-  return DIM_MARK_RE.test(s) || DIM_FRAC_RE.test(s);
+  if (DIM_FRAC_RE.test(s)) return true;
+  const m = DIM_MARK_RE.exec(s);
+  return !!m && DIM_TAIL_RE.test(s.slice(m[0].length));
 }
 
 export const normSheet = (s) => String(s).toUpperCase().replace(/[\s.]/g, '');
@@ -75,7 +80,10 @@ function findSheetItem(pg) {
 }
 
 function findTitle(pg, tzX, isBoilerplate) {
-  const zone = pg.items.filter((it) => it.x0 >= tzX && it.horiz);
+  let zone = pg.items.filter((it) => it.x0 >= tzX && it.horiz);
+  // Numéro de feuille introuvable au bord droit (cartouche en bandeau bas, ou numérotation que je
+  // ne sais pas lire) : plutôt qu'un titre vide, chercher dans la bande du bas.
+  if (!zone.length) zone = pg.items.filter((it) => it.horiz && cy(it) > 0.8 * pg.h && !SHEET_RE.test(normSheet(it.s)));
   const label = zone.find((it) => TITLE_LABEL_RE.test(it.s));
   if (!label) {
     // Cartouche sans libellé « TITRE » lisible (vu sur le plan 26-018) : le titre est le bloc de
@@ -84,16 +92,21 @@ function findTitle(pg, tzX, isBoilerplate) {
     if (!after) return '';
     // Le nom et l'adresse du projet sont écrits pareil, au même endroit, sur toutes les feuilles :
     // ce n'est pas le titre de CETTE feuille.
-    const above = zone.filter((it) => it.y1 <= after.y0 + 1 && it.size >= 1.2 * after.size && !/:\s*$/.test(it.s) && !isBoilerplate(it))
+    const cands = zone.filter((it) => it.y1 <= after.y0 + 1 && it.size >= 1.2 * after.size && !/:\s*$/.test(it.s))
       .sort((a, b) => b.y0 - a.y0);
-    const lines = [];
-    let edge = after.y0;
-    for (const it of above) {
-      // Premier écart (titre → libellé du dessous) : large. Ensuite : un simple interligne.
-      if (edge - it.y1 > (lines.length ? 0.8 : 2.2) * it.size) break;
-      lines.unshift(it.s); edge = it.y0;
-    }
-    return lines.join(' ').replace(/\s+/g, ' ').trim();
+    const lire = (list) => {
+      const lines = [];
+      let edge = after.y0;
+      for (const it of list) {
+        // Premier écart (titre → libellé du dessous) : large. Ensuite : un simple interligne.
+        if (edge - it.y1 > (lines.length ? 0.8 : 2.2) * it.size) break;
+        lines.unshift(it.s); edge = it.y0;
+      }
+      return lines.join(' ').replace(/\s+/g, ' ').trim();
+    };
+    // Sans le texte répété d'abord ; mais si ce filtre ne laisse rien, mieux vaut un titre répété
+    // qu'aucun titre — un jeu où trente feuilles s'appellent « DÉTAILS TYPIQUES » est ordinaire.
+    return lire(cands.filter((it) => !isBoilerplate(it))) || lire(cands);
   }
   const below = zone
     .filter((it) => it.y0 >= label.y1 - 1 && it !== label)
@@ -161,11 +174,15 @@ export function buildIndex(doc) {
   const sheetToPage = new Map();
   pages.forEach((pg, i) => {
     const si = sheetItems[i];
-    let id = si ? normSheet(si.s) : `P${i + 1}`;
+    // `base` est le numéro tel qu'il est écrit ; `id` le distingue quand deux pages le partagent
+    // (feuille révisée réémise, feuille continuée). Sans `base`, la deuxième page ne se reconnaissait
+    // plus elle-même : ses traits de coupe devenaient des renvois vers la PREMIÈRE page.
+    const base = si ? normSheet(si.s) : `P${i + 1}`;
+    let id = base;
     if (sheetToPage.has(id)) id = `${id} (p.${i + 1})`; // doublon : la première occurrence garde le nom
     else sheetToPage.set(id, i);
     const tzX = si && si.x0 > 0.8 * pg.w ? si.x0 - 0.05 * pg.w : Infinity;
-    sheets.push({ page: i, id, title: findTitle(pg, tzX, isBoilerplate), w: pg.w, h: pg.h, tzX });
+    sheets.push({ page: i, id, base, title: findTitle(pg, tzX, isBoilerplate), w: pg.w, h: pg.h, tzX });
   });
 
   // « 300 » → « A-300 », seulement si non ambigu.
@@ -208,7 +225,7 @@ export function buildIndex(doc) {
         orphans.push({ page: i, s: b.s, x: Math.round(cx(b)), y: Math.round(cy(b)) });
         continue; // « 300 » seul = une cote, pas un renvoi
       }
-      if (!t && sheet === me.id) continue; // la feuille qui se nomme elle-même
+      if (!t && sheet === me.base) continue; // la feuille qui se nomme elle-même
       if (t) used.add(t);
       let box;
       if (t) box = pad(union(t, b), 0.8 * b.size);
@@ -230,7 +247,7 @@ export function buildIndex(doc) {
       if (isDetail) { hs.kind = 'detail'; hs.detail = normDetail(dm[1]); if (dm[2]) hs.note = dm[2]; }
       else { hs.kind = 'sheet'; hs.label = t ? t.s : null; }
       out[i].hotspots.push(hs);
-      if (isDetail && sheet === me.id) selfPairs.push({ hs, t, b });
+      if (isDetail && sheet === me.base) selfPairs.push({ hs, t, b });
     }
 
     // Certains bureaux titrent une vue avec la même écriture qu'un renvoi : « A / A-200 » sous la
@@ -245,7 +262,7 @@ export function buildIndex(doc) {
     }
     // Un titre de vue est accompagné de son échelle ou de sa référence (« ÉCHELLE: 3/16" = 1' »,
     // « RÉF: N/A »), dessous ou à droite. Un trait de coupe ne l'est jamais.
-    const hasRefBelow = (b) => pg.items.some((r) => /^(R[ÉE]F|[ÉE]CH(ELLE)?)\b/i.test(r.s) && r.y0 >= b.y0 - b.size &&
+    const hasRefBelow = (b) => pg.items.some((r) => /^(R[ÉE]F|[ÉE]CH(ELLE)?|SCALE)\b/i.test(r.s) && r.y0 >= b.y0 - b.size &&
       cy(r) - cy(b) < 3 * Math.max(b.size, 8) && cx(r) - cx(b) > -5 * Math.max(b.size, 8) && cx(r) - cx(b) < 12 * Math.max(b.size, 8));
     for (const [n, members] of groups) {
       let title = members.find((m) => hasRefBelow(m.b));
@@ -255,7 +272,11 @@ export function buildIndex(doc) {
         const bigger = pg.items.some((it) => it.horiz && it.x0 < me.tzX && !used.has(it) &&
           DETAIL_RE.test(it.s.toUpperCase()) && normDetail(it.s.toUpperCase()) === n && it.size >= 1.5 * members[0].t.size);
         if (bigger) continue;
-        title = members.reduce((a, m) => (cy(m.b) > cy(a.b) ? m : a));
+        // Une ligne de coupe porte souvent une bulle à CHACUNE de ses deux extrémités. Sans indice
+        // d'échelle, rien ne dit laquelle est le titre : on s'abstient, et l'app dit au poseur que
+        // l'étiquette est introuvable — plutôt que de l'envoyer avec assurance au mauvais endroit.
+        if (members.length > 1) continue;
+        title = members[0];
       }
       out[i].hotspots.splice(out[i].hotspots.indexOf(title.hs), 1);
       const { x0, y0, x1, y1 } = title.hs;
@@ -279,16 +300,18 @@ export function buildIndex(doc) {
   }
   // Un numéro posé juste à gauche d'un titre de vue (« 06  DÉTAIL EN COUPE ») est une étiquette,
   // à coup sûr. Vu sur le plan 26-018 : un gros « 6 » isolé ailleurs sur la feuille gagnait à la taille.
-  const VIEW_TITLE_RE = /^(D[ÉE]TAILS?|COUPES?|SECTIONS?|[ÉE]L[ÉE]VATIONS?|PLANS?|VUES?)\b/i;
-  function titledRight(it, items) {
-    return items.some((tt) => tt !== it && tt.horiz && VIEW_TITLE_RE.test(tt.s) &&
-      Math.abs(cy(tt) - cy(it)) < 1.6 * tt.size && tt.x0 > cx(it) - it.size && tt.x0 - cx(it) < 4 * tt.size);
-  }
-  function bestLabel(list, items) {
-    return list.reduce((a, b) => {
-      const sa = a.size * (titledRight(a, items) ? 1.5 : 1), sb = b.size * (titledRight(b, items) ? 1.5 : 1);
-      return sb > sa ? b : a;
-    }, list[0]);
+  // Un titre de vue ne commence pas toujours par « DÉTAIL » : « TÊTE ET SEUIL », « JAMB DETAIL »,
+  // « JONCTION TYPIQUE ». Le mot peut être n'importe où dans la ligne, et en anglais.
+  const VIEW_TITLE_RE = /(^|[\s(])(D[ÉE]TAIL|COUPE|SECTION|[ÉE]L[ÉE]VATION|PLAN|VUE|VIEW|HEAD|JAMB|SILL|T[ÊE]TE|SEUIL|JONCTION|APPUI)S?\b/i;
+  const viewTitles = (i) => pages[i].items.filter((tt) => tt.horiz && tt.x0 < sheets[i].tzX &&
+    tt.size >= 1.15 * docBody && VIEW_TITLE_RE.test(tt.s));
+  const titledBy = (titles, it) => titles.some((tt) => tt !== it &&
+    Math.abs(cy(tt) - cy(it)) < 1.6 * tt.size && tt.x0 > cx(it) - it.size && tt.x0 - cx(it) < 4 * tt.size);
+  // Un numéro posé juste à gauche d'un titre de vue est une étiquette, à coup sûr : il gagne contre
+  // un chiffre isolé plus gros ailleurs sur la feuille (un fragment de cote, un repère de pièce).
+  function bestLabel(list, titles) {
+    return list.map((it) => ({ it, sc: it.size * (titledBy(titles, it) ? 1.5 : 1) }))
+      .reduce((a, b) => (b.sc > a.sc ? b : a)).it;
   }
 
   const refCount = new Map(); // « page|détail » → nombre de renvois
@@ -311,10 +334,11 @@ export function buildIndex(doc) {
       if (l.kind !== 'detail') continue;
       titled.add(l.n); l.refs = refCount.get(`${i}|${l.n}`) || 0;
     }
+    const vTitles = viewTitles(i);
     for (const [n, list] of byN) {
       if (titled.has(n)) continue;
       const refs = refCount.get(`${i}|${n}`) || 0;
-      const top = bestLabel(list, pg.items);
+      const top = bestLabel(list, vTitles);
       // Étiquette retenue si elle est visée par un renvoi et plus grosse que le corps,
       // ou si elle est franchement grosse (≥ 1,8 × le corps) même sans renvoi.
       const big = top.size >= 1.8 * docBody && /\d/.test(n);
@@ -331,8 +355,7 @@ export function buildIndex(doc) {
       .filter((n) => !have.some((l) => l.n === n));
     if (missing.length === 1 && have.length >= 2) {
       const me = sheets[i];
-      const titles = pg.items.filter((it) => it.horiz && it.x0 < me.tzX && it.size >= 1.15 * docBody &&
-        /^(D[ÉE]TAILS?|COUPES?|SECTIONS?|[ÉE]L[ÉE]VATIONS?|PLANS?|VUES?)\b/i.test(it.s));
+      const titles = vTitles;
       const owner = (tt) => have.find((l) => Math.abs(cy(l) - cy(tt)) < 1.6 * tt.size && cx(l) < tt.x0 + tt.size && tt.x0 - cx(l) < 4 * tt.size);
       const paired = titles.filter((tt) => owner(tt)), orphan = titles.filter((tt) => !owner(tt));
       if (orphan.length === 1 && paired.length >= 2) {
@@ -456,7 +479,7 @@ export function buildIndex(doc) {
   return {
     version: DETECT_VERSION,
     home,
-    sheets: sheets.map(({ tzX, ...rest }) => rest),
+    sheets: sheets.map(({ tzX, base, ...rest }) => rest),
     pages: out,
     walls: wallList,
     stats: {

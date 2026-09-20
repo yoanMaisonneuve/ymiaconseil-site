@@ -345,7 +345,12 @@ function resize() {
   S.vw = window.innerWidth; S.vh = window.innerHeight;
   S.top = $('#topbar').getBoundingClientRect().height || 52;
   stage.width = Math.round(S.vw * DPR); stage.height = Math.round(S.vh * DPR);
-  if (S.index && cx !== null) { S.view.tx = S.vw / 2 - cx * S.view.z; S.view.ty = S.vh / 2 - cy * S.view.z; clampView(); scheduleNet(); }
+  if (S.index && cx !== null) {
+    // Le minimum dépend de l'orientation : sans ce rappel, une vue légale en portrait devient
+    // illégale en paysage, et le premier pincement de dézoom faisait GROSSIR la feuille d'un coup.
+    S.view.z = Math.min(Z_MAX, Math.max(zMin(), S.view.z));
+    S.view.tx = S.vw / 2 - cx * S.view.z; S.view.ty = S.vh / 2 - cy * S.view.z; clampView(); scheduleNet();
+  }
   draw();
 }
 
@@ -392,6 +397,10 @@ function zoomAt(sx, sy, f) {
 }
 
 let anim = null;
+// Atterrissage différé : le fond d'une feuille peut mettre quelques secondes à se calculer sur un
+// téléphone modeste. Si le poseur pose le doigt pendant ce temps, on ne lui arrache pas la vue —
+// mais on n'oublie pas non plus où il allait : on y va dès qu'il lève le doigt.
+let pendingLand = null;
 function stopAnim() { if (anim) { cancelAnimationFrame(anim.raf); anim = null; } }
 function animateTo(to, ms = 300) {
   stopAnim();
@@ -406,7 +415,13 @@ function animateTo(to, ms = 300) {
     S.view.ty = S.vh / 2 - (c0.y + (c1.y - c0.y) * e) * z;
     draw();
     if (u < 1) anim.raf = requestAnimationFrame(step);
-    else { anim = null; S.view = { ...to }; draw(); scheduleNet(60); savePos(); }
+    else {
+      // La cible est reprise par son CENTRE, pas par son tx/ty : si l'écran a tourné pendant
+      // l'animation, le tx/ty calculé au départ ne cadre plus rien. Sans rotation, c'est identique.
+      anim = null;
+      S.view = { z: to.z, tx: S.vw / 2 - c1.x * to.z, ty: S.vh / 2 - c1.y * to.z };
+      clampView(); draw(); scheduleNet(60); savePos();
+    }
   };
   anim = { raf: requestAnimationFrame(step) };
 }
@@ -459,7 +474,12 @@ function endPointer(e) {
   if (gesture.ptrs.size > 0) return;
   gesture.active = false;
   const tap = gesture.tap; gesture.tap = null;
-  if (e.type === 'pointerup' && tap && !tap.moved && now - tap.t < 400) { onTap(tap.x, tap.y); return; }
+  // Un toucher est une intention neuve : elle remplace l'atterrissage qui attendait.
+  if (e.type === 'pointerup' && tap && !tap.moved && now - tap.t < 400) { pendingLand = null; onTap(tap.x, tap.y); return; }
+  if (pendingLand) {
+    const p = pendingLand; pendingLand = null;
+    if (p.page === S.page) { animateTo(p.view, 340); return; }
+  }
   // Lancer : la feuille glisse encore un peu, comme une carte.
   let { x: vx, y: vy } = gesture.vel;
   if (now - gesture.vel.t < 60 && Math.hypot(vx, vy) > 0.25) {
@@ -500,7 +520,12 @@ function onTap(sx, sy) {
   const hits = [];
   if (S.showLinks) {
     for (const hs of pg.hotspots) { const dd = distToRect(x, y, hs); if (dd <= reach) hits.push({ d: dd, hs }); }
-    for (const l of pg.labels) { const dd = distToRect(x, y, l); if (dd <= reach * 0.6) hits.push({ d: dd + 4 / z, label: l }); }
+    for (const l of pg.labels) {
+      // Même seuil que le dessin (paintLinks) : à la feuille entière les bulles ne sont pas peintes,
+      // et une cible invisible mangeait le double-toucher sur ce qui a l'air du papier vide.
+      if (Math.max(l.x1 - l.x0, l.y1 - l.y0) * 0.56 * z < 5) continue;
+      const dd = distToRect(x, y, l); if (dd <= reach * 0.6) hits.push({ d: dd + 4 / z, label: l });
+    }
   }
   hits.sort((a, b) => a.d - b.d);
   const now = performance.now();
@@ -580,6 +605,7 @@ function go(n, rect, kind) {
 
 async function showPage(n, rect, kind, exactView) {
   stopAnim(); cancelAnimationFrame(gesture.fling); clearTimeout(netTimer); cancelRunning(['net', 'prep']);
+  pendingLand = null;
   const samePage = n === S.page && S.bases.has(n);
   S.page = n;
   if (!samePage && S.net) { S.net.bmp.close(); S.net = null; }
@@ -601,7 +627,10 @@ async function showPage(n, rect, kind, exactView) {
   $('#busy').hidden = true;
   if (S.mark) S.mark.t0 = performance.now();
   draw();
-  if (!exactView && rect && !gesture.active) animateTo(target, 340); else scheduleNet(60);
+  if (!exactView && rect) {
+    if (gesture.active) pendingLand = { page: n, view: target };
+    else animateTo(target, 340);
+  } else scheduleNet(60);
   savePos(); kickPrep();
 }
 
@@ -621,13 +650,19 @@ window.addEventListener('popstate', () => {
 });
 
 let saveTimer = 0;
-function savePos() {
+// `tout de suite` quand le téléphone s'apprête à mettre l'app de côté : Android peut la tuer sans
+// prévenir, et un enregistrement différé de 900 ms meurt avec elle. Le poseur rouvrirait alors son
+// plan à la première feuille au lieu du détail qu'il était en train de lire.
+function savePos(tout_de_suite) {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    if (!S.plan) return;
+  const ecrire = () => {
+    // Un plan « éphémère » n'a pas pu être gardé : écrire sa fiche seule mettrait à l'accueil un
+    // plan sans son PDF, que l'ouverture ne saurait pas retrouver.
+    if (!S.plan || S.plan.ephemere) return;
     S.plan.lastPos = { page: S.page, c: { x: (S.vw / 2 - S.view.tx) / S.view.z, y: (S.vh / 2 - S.view.ty) / S.view.z }, zr: S.view.z / zFit(S.page) };
     store.savePlan(S.plan).catch(() => {});
-  }, 900);
+  };
+  if (tout_de_suite) ecrire(); else saveTimer = setTimeout(ecrire, 900);
 }
 
 // ═══ Panneaux ═══════════════════════════════════════════════════════════════
@@ -747,7 +782,7 @@ async function wake() {
     else if (lock) { await lock.release(); lock = null; }
   } catch { /* refusé : sans gravité */ }
 }
-document.addEventListener('visibilitychange', () => { wake(); if (document.visibilityState === 'hidden') savePos(); });
+document.addEventListener('visibilitychange', () => { wake(); if (document.visibilityState === 'hidden') savePos(true); });
 
 // ═══ Ouvrir / importer un plan ══════════════════════════════════════════════
 function work(msg, frac) {
@@ -781,9 +816,16 @@ async function importFile(file) {
     const index = await analyse(pdf);
     const plan = { id, name: file.name.replace(/\.pdf$/i, ''), size: bytes.length, pages: pdf.numPages, addedAt: Date.now(), lastOpenedAt: Date.now(), index, lastPos: null };
     work('Enregistrement dans le téléphone…', 0.97);
-    await store.saveNewPlan(plan, new Blob([bytes], { type: 'application/pdf' }));
-    store.askPersistence();
+    // Le plan est déjà lu et analysé — une minute de travail sur un téléphone modeste. Si le
+    // téléphone refuse de le garder (mémoire pleine, navigation privée, stockage bloqué par
+    // l'employeur), on l'ouvre quand même pour cette séance plutôt que de tout jeter.
+    let garde = true;
+    try { await store.saveNewPlan(plan, new Blob([bytes], { type: 'application/pdf' })); }
+    catch { garde = false; }
+    if (garde) store.askPersistence();
+    plan.ephemere = !garde;   // rien à réécrire plus tard : la fiche n'existe pas dans le téléphone
     startViewer(plan, pdf);
+    if (!garde) toast('Pas de place pour garder ce plan dans le téléphone. Il reste ouvert pour cette séance seulement.', true);
   } catch (e) {
     $('#work').hidden = true;
     const m = e && e.name === 'PasswordException' ? 'Ce PDF est protégé par un mot de passe.' : (e && e.message) || 'Lecture impossible.';
@@ -800,7 +842,7 @@ async function openPlan(id) {
     const pdf = await loadPdf(bytes);
     if (!plan.index || plan.index.version !== DETECT_VERSION) plan.index = await analyse(pdf);  // le détecteur a progressé
     plan.lastOpenedAt = Date.now();
-    await store.savePlan(plan);
+    try { await store.savePlan(plan); } catch { /* horodatage perdu : le plan s'ouvre quand même */ }
     startViewer(plan, pdf);
   } catch (e) {
     $('#work').hidden = true;
@@ -845,6 +887,7 @@ function closePlan() {
   savePos(); prepToken++; cancelRunning(['base', 'net', 'prep']); clearTimeout(netTimer); stopAnim();
   for (const b of S.bases.values()) b.bmp.close && b.bmp.close();
   S.bases.clear(); if (S.net) { S.net.bmp.close(); S.net = null; }
+  pendingLand = null;
   const pdf = S.pdf;
   S.pdf = null; S.index = null; S.plan = null; S.stack = []; S.live = null; pageCache.clear();
   // pdf.js 6 : la libération passe par la tâche de chargement, plus par le document.
@@ -906,7 +949,7 @@ async function takeShared() {
 
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 200));
-window.addEventListener('pagehide', savePos);
+window.addEventListener('pagehide', () => savePos(true));
 
 const secure = location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
 if ('serviceWorker' in navigator && secure && !params.has('nosw')) navigator.serviceWorker.register('sw.js').catch(() => {});

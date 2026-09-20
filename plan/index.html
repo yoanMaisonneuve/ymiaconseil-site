@@ -71,9 +71,11 @@
     padding: 12px 18px; border-radius: 12px; font-size: 15px; display: flex; gap: 10px; align-items: center; pointer-events: none; }
   .spin { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: sp 0.8s linear infinite; }
   @keyframes sp { to { transform: rotate(360deg); } }
+  /* pointer-events: none — sans ça le bandeau fait une bande morte de 60 px en bas de l'écran,
+     là où se pose le pouce, pendant les 3 à 5 s où il s'affiche. Mesuré par la revue du 20 sept. */
   #toast { position: absolute; left: 50%; bottom: calc(86px + var(--sab)); transform: translateX(-50%); max-width: min(92vw, 520px);
     background: rgba(16,24,38,.94); color: #fff; padding: 10px 16px; border-radius: 12px; font-size: 14.5px; text-align: center;
-    box-shadow: 0 3px 12px rgba(0,0,0,.35); }
+    box-shadow: 0 3px 12px rgba(0,0,0,.35); pointer-events: none; }
   #toast.warn { background: #8a4b00; }
 
   /* ── Panneaux ────────────────────────────────────────────── */

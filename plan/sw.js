@@ -6,7 +6,7 @@
 //
 // Les plans eux-mêmes ne passent jamais par ici vers le réseau : ils vivent dans IndexedDB.
 
-const VERSION = 'plans-v4';
+const VERSION = 'plans-v5';
 const SHELL = [
   './', 'index.html', 'app.js', 'detect.js', 'extract.js', 'store.js',
   'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png',
@@ -41,12 +41,26 @@ async function receiveShare(request) {
   return Response.redirect('./?partage=1', 303);
 }
 
-// Servir le cache tout de suite, rafraîchir en arrière-plan : rapide sur mauvais réseau,
-// à jour au lancement suivant.
+// La coquille est servie en CACHE PUR, jamais rafraîchie fichier par fichier. C'est ce qui garantit
+// que `index.html`, `app.js` et `detect.js` viennent toujours de la MÊME publication.
+//
+// Le piège, trouvé par la revue du 20 sept. : rafraîchir chaque fichier séparément peut laisser un
+// app.js neuf appeler un detect.js vieux d'une version. Le premier `import` manquant plante au
+// chargement — écran blanc, et rien ne le répare hors ligne. Une visionneuse de plans qui ne s'ouvre
+// plus sur un chantier sans réseau, c'est la panne la plus grave que cette app puisse avoir.
+//
+// En échange, `VERSION` devient le SEUL déclencheur de mise à jour : elle doit changer à chaque
+// publication, sinon les téléphones déjà installés ne verront jamais le nouveau code.
+// `outils/publier.py` le vérifie et refuse de publier sinon.
+const SHELL_PATHS = new Set(SHELL.map((p) => new URL(p, self.location).pathname));
+
+// Le reste (polices, wasm) : cache d'abord, rafraîchi en arrière-plan.
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(VERSION);
+  const url = new URL(request.url);
   const key = request.mode === 'navigate' ? 'index.html' : request;
   const cached = await cache.match(key, { ignoreSearch: true });
+  if (cached && (request.mode === 'navigate' || SHELL_PATHS.has(url.pathname))) return cached;
   const fresh = fetch(request).then((res) => {
     if (res && res.ok && res.type === 'basic') cache.put(key, res.clone());
     return res;
