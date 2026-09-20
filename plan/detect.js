@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 10;
+export const DETECT_VERSION = 11;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -26,6 +26,11 @@ const DETAIL_RE = /^(\d{1,3}[A-Z]?|[A-Z])$/;
 // Le haut d'un renvoi peut porter une mention : « 10 INV. » = détail 10 inversé, « 19-sim » = similaire.
 const DETAIL_TOP_RE = /^(\d{1,3}[A-Z]?|[A-Z])(?:[\s\-–]*(INV|SIM|TYP|OPP|MIR)\.?)?$/;
 const SHORT_RE = /^\d{2,4}$/;
+// Repère de coupe lettré : « -A- », « -B- ». Vu sur le plan 25-012. L'étiquette est le même texte
+// posé à gauche d'un titre « SECTION » ; le renvoi est le même texte en tête de la ligne de coupe.
+// Les tirets sont gardés dans le nom : « -A- » ne doit pas se confondre avec un détail nommé « A »
+// (qui existe, lui, sur le plan 25-012 : « A / A-208 »).
+const SECTION_MARK_RE = /^-([A-Z])-$/;
 // Un nom de mur tel qu'écrit dans un cercle de titre : « MR-07B », « MR03 ». Jamais de point (« C.4 » = axe).
 const WALL_RAW_RE = /^([A-Z]{2,4})-?(\d{1,3})[A-Z]?$/;
 const PAGE_LABEL_RE = /(N[O°]\.?\s*DE\s*PAGE|N[O°]\.?\s*(DE\s*)?FEUILLE|SHEET\s*(NO|NUM|#)|DWG\.?\s*(NO|NUM|#)|DESSIN\s*N[O°])/i;
@@ -421,6 +426,31 @@ export function buildIndex(doc) {
       }
     }
     out[i].labels.sort((a, b) => (parseInt(a.n, 10) - parseInt(b.n, 10)) || a.n.localeCompare(b.n));
+  });
+
+  // ── Repères de coupe lettrés, entièrement intra-feuille ──────────────────
+  // « -B- » posé à gauche d'un titre « SECTION » est la CIBLE ; le même « -B- » ailleurs sur la
+  // feuille est un RENVOI vers elle. On ne branche que dans la même feuille : sur les vues
+  // d'ensemble, ces mêmes lettres désignent une direction de façade sans dire où aller, et le même
+  // « -A- » y revient plusieurs fois — il n'y a pas de cible unique, donc on ne branche rien.
+  pages.forEach((pg, i) => {
+    const me = sheets[i];
+    const marks = pg.items.filter((it) => it.horiz && it.x0 < me.tzX && SECTION_MARK_RE.test(it.s.trim()) && !tops[i].has(it));
+    if (!marks.length) return;
+    const titres = viewTitles(i);
+    const cibles = new Map();
+    for (const it of marks) {
+      const n = it.s.trim().toUpperCase();
+      if (!titledBy(titres, it) || cibles.has(n)) continue;
+      cibles.set(n, it);
+      out[i].labels.push({ kind: 'detail', n, refs: 0, titleMark: true, ...pad(it, 0.6 * it.size) });
+    }
+    for (const it of marks) {
+      const n = it.s.trim().toUpperCase();
+      const cible = cibles.get(n);
+      if (!cible || it === cible) continue;
+      out[i].hotspots.push({ ...pad(it, 0.8 * it.size), sheet: me.id, page: i, kind: 'detail', detail: n, section: true });
+    }
   });
 
   // Noms de mur : pour chaque renvoi « MR03 → A-201 », chercher « MR-03 » sur A-201.

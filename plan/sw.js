@@ -6,7 +6,7 @@
 //
 // Les plans eux-mêmes ne passent jamais par ici vers le réseau : ils vivent dans IndexedDB.
 
-const VERSION = 'plans-v7';
+const VERSION = 'plans-v8';
 const SHELL = [
   './', 'index.html', 'app.js', 'detect.js', 'extract.js', 'store.js',
   'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png',
