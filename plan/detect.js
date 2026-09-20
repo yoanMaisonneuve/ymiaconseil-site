@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 7;
+export const DETECT_VERSION = 9;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -40,6 +40,13 @@ const DIM_FRAC_RE = /^\d+\s+\d+\/\d+$/;
 // Après la mesure : rien, ou au plus deux abréviations de métier (FAB., O.B., DOS/MENEAU) et une
 // conversion entre crochets. Une phrase, non — une note d'atelier n'est pas une cote.
 const DIM_TAIL_RE = /^(\s*\[[^\]]{1,20}\])?(\s*(?:[A-Z]{1,4}|[A-ZÀ-Ü]{1,12}[./-][A-ZÀ-Ü./-]{0,12})\.?){0,2}(\s*\[[^\]]{1,20}\])?\s*$/i;
+// Cote d'INSTALLATION : elle dit où poser, par rapport à un repère du bâtiment — dos de meneau,
+// face du mur-rideau, fond, pont. Yoan (canal, Q13) : « c'est ça nos mesures d'installation, on se
+// fie aux axes ». Distincte d'une cote de FABRICATION (« FAB. »), qui dit la taille d'une pièce.
+// Sur le plan ALUBASE : 47 cotes sur 1 093.
+const DIM_POSE_RE = /\b(DOS\/MENEAU|F\/M-?RIDEAU|M\/FOND|F\/PONT|AXE)\b/i;
+export const isPose = (s) => DIM_POSE_RE.test(s);
+
 export function isDimension(s) {
   if (s.length > 44 || /[=]| X |\bX\b/i.test(s)) return false;
   if (DIM_FRAC_RE.test(s)) return true;
@@ -48,6 +55,21 @@ export function isDimension(s) {
 }
 
 export const normSheet = (s) => String(s).toUpperCase().replace(/[\s.]/g, '');
+// Clé de feuille : le trait d'union ne compte pas. Un même plan écrit « A-300 » dans son cartouche
+// et « A300 » dans un renvoi ; ce sont la même feuille. `normSheet` reste ce qu'on AFFICHE.
+export const sheetKey = (s) => normSheet(s).replace(/-/g, '');
+// Renvoi écrit sur une seule ligne : « 5/A-300 », « 5 / A300 », « A/A-301 ». Très répandu hors du
+// bureau qui a dessiné nos trois plans — mais AUCUN de ces trois n'en contient un seul.
+//
+// Deux garde-fous, parce que cette écriture est aussi celle du renvoi de l'ARCHITECTE, écrit sous la
+// bulle d'un détail (« 2/A-403 » sous le détail 17, vu sur le plan 25-012) : celui-là désigne le
+// dessin d'origine de l'architecte, pas une destination dans notre jeu. Le suivre enverrait le poseur
+// chercher un détail 2 sur une feuille qui porte les détails 29 à 40.
+//   1. la feuille doit exister dans CE PDF ;
+//   2. le détail doit exister SUR cette feuille — sinon le renvoi est jeté (voir section D).
+// Le deuxième est plus strict que pour les renvois en deux parties, qui sont gardés même sans cible :
+// là, la convention est certaine et l'app peut dire « étiquette introuvable ». Ici elle ne l'est pas.
+const INLINE_RE = /^(\d{1,3}[A-Z]?|[A-Z])\s*\/\s*([A-Z]{0,3}-?\d{2,4}[A-Z]?)$/;
 export const normKey = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
 // Clé d'un nom de mur : comme normKey, et les zéros de tête des nombres tombent —
 // vu sur un vrai plan : marqueur « PS-001 », élévation « PS-01 ».
@@ -171,7 +193,8 @@ export function buildIndex(doc) {
   for (const pg of pages) for (const it of pg.items) if (it.x0 > 0.8 * pg.w) freq.set(sig(it), (freq.get(sig(it)) || 0) + 1);
   const isBoilerplate = (it) => pages.length >= 3 && (freq.get(sig(it)) || 0) >= Math.max(3, 0.6 * pages.length);
   const sheets = [];
-  const sheetToPage = new Map();
+  const sheetToPage = new Map();   // clé de feuille → indice de page
+  const keyToId = new Map();       // clé de feuille → nom affiché
   pages.forEach((pg, i) => {
     const si = sheetItems[i];
     // `base` est le numéro tel qu'il est écrit ; `id` le distingue quand deux pages le partagent
@@ -179,8 +202,9 @@ export function buildIndex(doc) {
     // plus elle-même : ses traits de coupe devenaient des renvois vers la PREMIÈRE page.
     const base = si ? normSheet(si.s) : `P${i + 1}`;
     let id = base;
-    if (sheetToPage.has(id)) id = `${id} (p.${i + 1})`; // doublon : la première occurrence garde le nom
-    else sheetToPage.set(id, i);
+    const bk = sheetKey(base);
+    if (sheetToPage.has(bk)) id = `${id} (p.${i + 1})`; // doublon : la première occurrence garde le nom
+    else { sheetToPage.set(bk, i); keyToId.set(bk, id); }
     const tzX = si && si.x0 > 0.8 * pg.w ? si.x0 - 0.05 * pg.w : Infinity;
     sheets.push({ page: i, id, base, title: findTitle(pg, tzX, isBoilerplate), w: pg.w, h: pg.h, tzX });
   });
@@ -188,11 +212,11 @@ export function buildIndex(doc) {
   // « 300 » → « A-300 », seulement si non ambigu.
   const shortMap = new Map();
   const shortSeen = new Map();
-  for (const id of sheetToPage.keys()) {
-    const m = id.match(/(\d{2,4})[A-Z]?$/);
+  for (const k of sheetToPage.keys()) {
+    const m = k.match(/(\d{2,4})[A-Z]?$/);
     if (!m) continue;
     shortSeen.set(m[1], (shortSeen.get(m[1]) || 0) + 1);
-    shortMap.set(m[1], id);
+    shortMap.set(m[1], k);
   }
   for (const [k, n] of shortSeen) if (n > 1) shortMap.delete(k);
 
@@ -208,24 +232,31 @@ export function buildIndex(doc) {
     const selfPairs = []; // paires « N / cette feuille même » : trait de coupe OU titre de vue
     // Forme pleine d'abord : « A-201 » est un renvoi certain, il choisit son partenaire en premier.
     const refs = [];
+    const inline = [];
     for (const b of pg.items) {
       if (!b.horiz) continue;
-      const full = normSheet(b.s);
-      if (sheetToPage.has(full) && SHEET_RE.test(full)) refs.push({ b, sheet: full, short: false });
-      else if (SHORT_RE.test(b.s) && shortMap.has(b.s)) refs.push({ b, sheet: shortMap.get(b.s), short: true });
+      const full = sheetKey(b.s);
+      if (sheetToPage.has(full) && SHEET_RE.test(normSheet(b.s))) refs.push({ b, key: full, short: false });
+      else if (SHORT_RE.test(b.s) && shortMap.has(b.s)) refs.push({ b, key: shortMap.get(b.s), short: true });
+      else {
+        // « 5/A-300 » : un seul texte porte le détail ET sa feuille.
+        const m = b.s.toUpperCase().trim().match(INLINE_RE);
+        if (m && sheetToPage.has(sheetKey(m[2]))) inline.push({ b, key: sheetKey(m[2]), detail: m[1] });
+      }
     }
     refs.sort((a, b) => Number(a.short) - Number(b.short));
 
-    for (const { b, sheet, short } of refs) {
+    for (const { b, key, short } of refs) {
+      const sheet = keyToId.get(key);
       if (b.x0 >= me.tzX) continue; // cartouche
-      const t = findTop(b, pg.items, used, (it) => sheetToPage.has(normSheet(it.s)));
+      const t = findTop(b, pg.items, used, (it) => sheetToPage.has(sheetKey(it.s)));
       const dm = t ? t.s.toUpperCase().match(DETAIL_TOP_RE) : null;
       const isDetail = !!dm;
       if (short && !isDetail) {
         orphans.push({ page: i, s: b.s, x: Math.round(cx(b)), y: Math.round(cy(b)) });
         continue; // « 300 » seul = une cote, pas un renvoi
       }
-      if (!t && sheet === me.base) continue; // la feuille qui se nomme elle-même
+      if (!t && key === sheetKey(me.base)) continue; // la feuille qui se nomme elle-même
       if (t) used.add(t);
       let box;
       if (t) box = pad(union(t, b), 0.8 * b.size);
@@ -240,14 +271,23 @@ export function buildIndex(doc) {
         }
         box = { x0: row.x0 - 0.8 * b.size, x1: row.x1 + 0.8 * b.size, y0: row.y0 - 0.3 * b.size, y1: row.y1 + 0.3 * b.size };
       }
-      const key = `${Math.round(cx(box) / 4)}:${Math.round(cy(box) / 4)}:${sheet}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      const hs = { ...box, sheet, page: sheetToPage.get(sheet) };
+      const cle = `${Math.round(cx(box) / 4)}:${Math.round(cy(box) / 4)}:${sheet}`;
+      if (seen.has(cle)) continue;
+      seen.add(cle);
+      const hs = { ...box, sheet, page: sheetToPage.get(key) };
       if (isDetail) { hs.kind = 'detail'; hs.detail = normDetail(dm[1]); if (dm[2]) hs.note = dm[2]; }
       else { hs.kind = 'sheet'; hs.label = t ? t.s : null; }
       out[i].hotspots.push(hs);
-      if (isDetail && sheet === me.base) selfPairs.push({ hs, t, b });
+      if (isDetail && key === sheetKey(me.base)) selfPairs.push({ hs, t, b });
+    }
+
+    for (const { b, key, detail } of inline) {
+      const box = pad(b, 0.6 * b.size);
+      const k2 = `${Math.round(cx(box) / 4)}:${Math.round(cy(box) / 4)}:${key}`;
+      if (seen.has(k2)) continue;
+      seen.add(k2);
+      out[i].hotspots.push({ ...box, sheet: keyToId.get(key), page: sheetToPage.get(key),
+        kind: 'detail', detail: normDetail(detail), inline: true });
     }
 
     // Certains bureaux titrent une vue avec la même écriture qu'un renvoi : « A / A-200 » sous la
@@ -412,7 +452,7 @@ export function buildIndex(doc) {
   });
 
   // ── D. brancher chaque renvoi sur sa cible ───────────────────────────────
-  let resolved = 0, unresolved = 0;
+  let resolved = 0, unresolved = 0, jetes = 0;
   for (const p of out) for (const hs of p.hotspots) {
     const labels = out[hs.page].labels;
     let tgt = null;
@@ -432,6 +472,7 @@ export function buildIndex(doc) {
         }
       }
     }
+    if (!tgt && hs.inline) { hs.jeter = true; continue; }   // voir INLINE_RE : sans cible, on n'affirme rien
     if (tgt) {
       hs.target = { x0: tgt.x0, y0: tgt.y0, x1: tgt.x1, y1: tgt.y1 };
       if (tgt.inferred) hs.inferred = true;
@@ -446,12 +487,23 @@ export function buildIndex(doc) {
     const me = sheets[i];
     out[i].dims = pg.items
       .filter((it) => it.x0 < me.tzX && !tops[i].has(it) && isDimension(it.s.trim()))
-      .map((it) => ({ s: it.s.trim(), x: r1(cx(it)), y: r1(cy(it)), a: Math.round((it.ang || 0) * 1000) / 1000, h: r1(it.size) }))
-      // La plus petite d'abord : quand deux cotes se disputent la place, la loupe va à celle qui en a
-      // le plus besoin. Trié ici une fois pour toutes — le rapport des tailles ne change pas avec le
-      // zoom, donc l'ordre reste juste à l'écran sans rien recalculer par image.
-      .sort((a, b) => a.h - b.h);
+      .map((it) => {
+        const d = { s: it.s.trim(), x: r1(cx(it)), y: r1(cy(it)), a: Math.round((it.ang || 0) * 1000) / 1000, h: r1(it.size) };
+        if (isPose(d.s)) d.pose = 1;
+        return d;
+      })
+      // L'ordre décide qui gagne la place quand deux cotes se disputent le même espace :
+      // d'abord les cotes d'installation, puis la plus petite — celle qui a le plus besoin de la
+      // loupe. Trié ici une fois pour toutes : le rapport des tailles ne change pas avec le zoom,
+      // donc l'ordre reste juste à l'écran sans rien recalculer à chaque image.
+      .sort((a, b) => (b.pose || 0) - (a.pose || 0) || a.h - b.h);
   });
+
+  for (const p of out) {
+    const n = p.hotspots.length;
+    p.hotspots = p.hotspots.filter((hs) => !hs.jeter);
+    jetes += n - p.hotspots.length;
+  }
 
   // Où aller pour chaque mur : les feuilles où son nom est réellement dessiné ; à défaut,
   // celles qu'annoncent les marqueurs.
@@ -489,7 +541,7 @@ export function buildIndex(doc) {
       sheetRefs: out.reduce((n, p) => n + p.hotspots.filter((hs) => hs.kind === 'sheet').length, 0),
       labels: out.reduce((n, p) => n + p.labels.length, 0),
       dims: out.reduce((n, p) => n + p.dims.length, 0),
-      resolved, unresolved,
+      resolved, unresolved, jetes,
       orphans,
     },
   };

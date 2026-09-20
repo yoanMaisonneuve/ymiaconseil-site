@@ -254,8 +254,12 @@ function paint(now) {
   }
 }
 
-// La loupe des cotes. Une mesure trop petite pour être lue est redessinée par-dessus, jusqu'à ×2,
-// sur une pastille blanche qui recouvre l'originale. Dès qu'elle est lisible seule, on ne touche à rien.
+// La loupe des cotes. Une mesure trop petite pour être lue est redessinée par-dessus, jusqu'à ×2.
+// Dès qu'elle est lisible seule, on n'y touche pas.
+//
+// PAS de pastille ni de cadre — Yoan, le 20 sept. : « je veux pas de bulles blanches avec contour ».
+// À la place, le texte est posé sur un halo blanc obtenu en le traçant d'abord au trait épais. Ça
+// efface juste ce qu'il faut du dessin dessous pour rester lisible, sans poser de boîte sur le plan.
 const DIM_FONT = '"Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif';
 // Hauteurs de texte, en pixels d'écran. Montées le 20 sept. à la demande de Yoan (canal, Q13) :
 // « ça semble bon mais on pourrait pt grossir encore un peu ».
@@ -300,11 +304,11 @@ function paintDims(d, z, tx, ty) {
     if (font !== lastFont) { ctx.font = font; lastFont = font; }
     ctx.save();
     ctx.translate(sx * d, sy * d); ctx.rotate(m.a);
-    ctx.fillStyle = 'rgba(255,255,255,.94)'; ctx.strokeStyle = 'rgba(20,35,60,.30)'; ctx.lineWidth = d;
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(-w * d / 2, -h * d / 2, w * d, h * d, h * d * 0.28); else ctx.rect(-w * d / 2, -h * d / 2, w * d, h * d);
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#0b1a33'; ctx.fillText(m.s, 0, d * size * 0.04);
+    ctx.lineWidth = size * d * 0.42; ctx.lineJoin = 'round'; ctx.miterLimit = 2;
+    ctx.strokeStyle = 'rgba(255,255,255,.92)';
+    ctx.strokeText(m.s, 0, d * size * 0.04);
+    ctx.fillStyle = m.pose ? '#b34700' : '#0b1a33';   // les cotes d'installation gardent leur orange
+    ctx.fillText(m.s, 0, d * size * 0.04);
     ctx.restore();
     if (++drawn >= 320) break;
   }
