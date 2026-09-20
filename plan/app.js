@@ -562,6 +562,18 @@ const hsSub = (hs) => `Feuille ${hs.alt ? hs.alt.sheet : hs.sheet}${hs.kind === 
 
 function activate(hit) {
   if (hit.hs) {
+    // Plusieurs dessins portent ce numéro sur la feuille visée : on demande plutôt que de deviner.
+    // Deviner, ici, c'est envoyer quelqu'un couper une pièce d'après la mauvaise coupe.
+    if (hit.hs.targets && hit.hs.targets.length > 1) {
+      const hs = hit.hs;
+      openSheet(`Détail ${hs.detail} — il y en a ${hs.targets.length} sur ${hs.sheet}`,
+        hs.targets.map((t, i) => ({
+          dot: '#0a6cff', big: `Le ${i + 1}${i === 0 ? 'er' : 'e'}`,
+          small: `${Math.round(t.x0)}, ${Math.round(t.y0)} sur la feuille`,
+          run: () => go(hs.page, t, 'detail'),
+        })));
+      return;
+    }
     const d = destOf(hit.hs);
     go(d.page, d.rect, d.kind);
     if (d.warn) toast(d.warn, true);

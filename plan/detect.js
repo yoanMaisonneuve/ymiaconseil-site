@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 9;
+export const DETECT_VERSION = 10;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -384,7 +384,20 @@ export function buildIndex(doc) {
       const big = top.size >= 1.8 * docBody && /\d/.test(n);
       const okRef = refs > 0 && top.size >= 1.15 * docBody;
       if (!big && !okRef) continue;
-      out[i].labels.push({ kind: 'detail', n, refs, ...pad(top, 0.6 * top.size) });
+      // Le MÊME numéro peut être dessiné plusieurs fois sur une feuille : sur le plan 25-012, les
+      // détails 38 et 39 de A-403 le sont deux fois (un jambage et son miroir). Ne garder que le
+      // premier envoyait le poseur sur un meneau coté 2 9/16" au lieu de 1 9/16" — un pouce d'écart,
+      // lu avec confiance. On garde donc toutes les bulles de même taille que la meilleure.
+      // Mais pas n'importe laquelle : si la meilleure est posée contre un titre de vue, alors une
+      // vraie bulle jumelle l'est aussi. Sans cette réserve, les trois repères de pièce « 6 100 » du
+      // plan VERDIER — même corps que les vrais numéros — redeviendraient des cibles (P21d).
+      const topTitre = titledBy(vTitles, top);
+      for (const it of list) {
+        if (it !== top) {
+          if (topTitre ? !titledBy(vTitles, it) : it.size < top.size * 0.9) continue;
+        }
+        out[i].labels.push({ kind: 'detail', n, refs, ...pad(it, 0.6 * it.size) });
+      }
     }
     // Bulle de titre laissée VIDE par le dessinateur (vu sur le plan 26-018 : « DÉTAIL EN PLAN »
     // sans son « 01 »). On ne déduit que dans un seul cas, sans ambiguïté possible : sur la feuille,
@@ -456,7 +469,13 @@ export function buildIndex(doc) {
   for (const p of out) for (const hs of p.hotspots) {
     const labels = out[hs.page].labels;
     let tgt = null;
-    if (hs.kind === 'detail') tgt = labels.find((l) => l.kind === 'detail' && l.n === hs.detail);
+    if (hs.kind === 'detail') {
+      const tous = labels.filter((l) => l.kind === 'detail' && l.n === hs.detail);
+      tgt = tous[0];
+      // Deux dessins portent le même numéro sur la feuille visée : rien dans le renvoi ne dit
+      // lequel. On les donne tous les deux plutôt que de choisir — l'app demandera.
+      if (tous.length > 1) hs.targets = tous.map((l) => ({ x0: l.x0, y0: l.y0, x1: l.x1, y1: l.y1 }));
+    }
     else if (hs.label) {
       const k = wallKey(hs.label);
       tgt = labels.find((l) => l.kind === 'wall' && l.n === k);
