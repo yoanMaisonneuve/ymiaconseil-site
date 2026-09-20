@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 5;
+export const DETECT_VERSION = 6;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -423,7 +423,11 @@ export function buildIndex(doc) {
     const me = sheets[i];
     out[i].dims = pg.items
       .filter((it) => it.x0 < me.tzX && !tops[i].has(it) && isDimension(it.s.trim()))
-      .map((it) => ({ s: it.s.trim(), x: r1(cx(it)), y: r1(cy(it)), a: Math.round((it.ang || 0) * 1000) / 1000, h: r1(it.size) }));
+      .map((it) => ({ s: it.s.trim(), x: r1(cx(it)), y: r1(cy(it)), a: Math.round((it.ang || 0) * 1000) / 1000, h: r1(it.size) }))
+      // La plus petite d'abord : quand deux cotes se disputent la place, la loupe va à celle qui en a
+      // le plus besoin. Trié ici une fois pour toutes — le rapport des tailles ne change pas avec le
+      // zoom, donc l'ordre reste juste à l'écran sans rien recalculer par image.
+      .sort((a, b) => a.h - b.h);
   });
 
   // Où aller pour chaque mur : les feuilles où son nom est réellement dessiné ; à défaut,

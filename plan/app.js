@@ -246,7 +246,7 @@ function paint(now) {
   if (S.mark && S.mark.page === S.page) {
     const t = (now - S.mark.t0) / 1000, r = S.mark.rect;
     const cxm = (tx + (r.x0 + r.x1) / 2 * z) * d, cym = (ty + (r.y0 + r.y1) / 2 * z) * d;
-    const rad = Math.max(16 * d, Math.max(r.x1 - r.x0, r.y1 - r.y0) * 0.62 * z * d);
+    const rad = Math.max(30 * d, Math.max(r.x1 - r.x0, r.y1 - r.y0) * 0.62 * z * d);
     const pulse = t < 2.4 ? 1 + 0.35 * Math.abs(Math.sin(t * Math.PI * 1.6)) : 1;
     ctx.lineWidth = (t < 2.4 ? 5 : 3.5) * d; ctx.strokeStyle = '#e1001a';
     ctx.beginPath(); ctx.arc(cxm, cym, rad * pulse, 0, Math.PI * 2); ctx.stroke();
@@ -257,7 +257,9 @@ function paint(now) {
 // La loupe des cotes. Une mesure trop petite pour être lue est redessinée par-dessus, jusqu'à ×2,
 // sur une pastille blanche qui recouvre l'originale. Dès qu'elle est lisible seule, on ne touche à rien.
 const DIM_FONT = '"Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif';
-const DIM_READABLE = 13, DIM_TARGET = 14.5, DIM_USELESS = 8.5;   // hauteurs de texte, en px d'écran
+// Hauteurs de texte, en pixels d'écran. Montées le 20 sept. à la demande de Yoan (canal, Q13) :
+// « ça semble bon mais on pourrait pt grossir encore un peu ».
+const DIM_READABLE = 15.5, DIM_TARGET = 18, DIM_USELESS = 9;
 function paintDims(d, z, tx, ty) {
   const dims = S.index.pages[S.page].dims;
   if (!dims || !dims.length) return;
@@ -278,12 +280,14 @@ function paintDims(d, z, tx, ty) {
     if (sx < -80 || sy < -80 || sx > S.vw + 80 || sy > S.vh + 80) continue;
     if (m._w === undefined) { ctx.font = `600 100px ${DIM_FONT}`; lastFont = ''; m._w = ctx.measureText(m.s).width / 100; }
     const c = Math.abs(Math.cos(m.a)), sn = Math.abs(Math.sin(m.a));
-    // Deux cotes grossies ne se recouvrent jamais. On essaie ×2 ; si ça ne rentre pas, ×1,5 ;
-    // sinon la cote garde sa taille d'origine plutôt que de cacher sa voisine.
+    // Deux cotes grossies ne se recouvrent jamais, et une cote ne bouge JAMAIS de sa place : sur un
+    // plan, un chiffre déplacé ne désigne plus la même mesure. Quand ×2 ne rentre pas, on descend par
+    // paliers — une cote serrée gagne au moins un peu, plutôt que rien. En dessous de ×1,2 ça ne vaut
+    // plus la peine : on laisse le dessin d'origine.
     const full = Math.min(hpx * 2, DIM_TARGET);
     let size = 0, w = 0, h = 0, bw = 0, bh = 0;
-    for (const tryout of [full, (full + hpx) / 2]) {
-      if (tryout < hpx * 1.25) break;
+    for (const tryout of [full, hpx * 1.6, hpx * 1.35]) {
+      if (tryout < hpx * 1.2 || tryout > full) continue;
       w = m._w * tryout + tryout * 0.5; h = tryout * 1.22;
       bw = (w * c + h * sn) / 2 * 0.92; bh = (w * sn + h * c) / 2 * 0.92;
       let hit = false;
@@ -353,15 +357,20 @@ function fitView(n) {
   return { z, tx: (S.vw - sh.w * z) / 2, ty: S.top + (S.vh - S.top - sh.h * z) / 2 };
 }
 
-// Où atterrir pour une cible : assez près pour lire, assez loin pour se situer.
+// Où atterrir pour une cible.
+//
+// UN MUR : la feuille entière. Demandé par Yoan (canal, Q5) : « je veux vraiment voir le mur »,
+// pas un gros plan sur son étiquette. Une élévation se lit d'un bout à l'autre ; c'est le dessin
+// qu'on vient chercher, pas son nom. La surbrillance dit où le mur est nommé.
+//
+// UN DÉTAIL : assez près pour lire. Le numéro est en bas à gauche de son dessin, donc on le place
+// à gauche et un peu bas, et le détail s'étale en haut à droite — vérifié par Yoan (canal, Q4).
 function viewForTarget(n, rect, kind) {
+  if (kind === 'wall') return fitView(n);
   const sh = S.index.sheets[n];
   const cxr = (rect.x0 + rect.x1) / 2, cyr = (rect.y0 + rect.y1) / 2;
-  const span = kind === 'wall' ? 1150 : 620;                 // largeur de feuille visible, en points
-  const z = Math.max(zFit(n), Math.min(2.4, Math.max(S.vw / span, kind === 'wall' ? 0.42 : 0.85)));
-  // Le numéro d'un détail est à gauche de son dessin ; le nom d'un mur, sous son élévation.
-  const ax = kind === 'wall' ? 0.22 : 0.3, ay = kind === 'wall' ? 0.78 : 0.46;
-  const v = { z, tx: S.vw * ax - cxr * z, ty: S.top + (S.vh - S.top) * ay - cyr * z };
+  const z = Math.max(zFit(n), Math.min(2.4, Math.max(S.vw / 620, 0.85)));
+  const v = { z, tx: S.vw * 0.3 - cxr * z, ty: S.top + (S.vh - S.top) * 0.46 - cyr * z };
   return clampTo(v, sh);
 }
 
