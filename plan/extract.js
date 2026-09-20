@@ -42,6 +42,7 @@ function textItemToBox(it, vpTransform) {
     x0: Math.min(...xs), y0: Math.min(...ys),
     x1: Math.max(...xs), y1: Math.max(...ys),
     size, horiz,
+    ang: Math.atan2(uy, ux),   // angle de la ligne de base, repère écran (y vers le bas)
   };
 }
 
@@ -77,7 +78,7 @@ export async function extractPage(page) {
     if (!(x1 > x0) || !(y1 > y0)) continue;
     // Le rectangle d'un commentaire SHX épouse le texte : sa hauteur tient lieu de corps.
     const tall = (y1 - y0) > (x1 - x0) * 1.2 && s.length > 1;
-    items.push({ s, x0, y0, x1, y1, size: tall ? (x1 - x0) : (y1 - y0), horiz: !tall, src: 'a' });
+    items.push({ s, x0, y0, x1, y1, size: tall ? (x1 - x0) : (y1 - y0), horiz: !tall, ang: tall ? -Math.PI / 2 : 0, src: 'a' });
   }
 
   return { w: vp.width, h: vp.height, items };

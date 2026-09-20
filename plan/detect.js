@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 3;
+export const DETECT_VERSION = 5;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -31,6 +31,16 @@ const WALL_RAW_RE = /^([A-Z]{2,4})-?(\d{1,3})[A-Z]?$/;
 const PAGE_LABEL_RE = /(N[O°]\.?\s*DE\s*PAGE|N[O°]\.?\s*(DE\s*)?FEUILLE|SHEET\s*(NO|NUM|#)|DWG\.?\s*(NO|NUM|#)|DESSIN\s*N[O°])/i;
 const TITLE_LABEL_RE = /^(TITRE(\s*DU\s*DESSIN)?|DRAWING\s*TITLE|SHEET\s*TITLE)\s*:?$/i;
 const AFTER_TITLE_RE = /(DESSIN[ÉE]\s*PAR|CHARG[ÉE]|DRAWN|CHECKED|V[ÉE]RIFI[ÉE]|DIMENSION|[ÉE]CHELLE|SCALE)/i;
+
+// Une cote : commence par un nombre (ou un préfixe « (MG) »), porte une marque de pied ou de pouce,
+// ou s'écrit « entier fraction » (« 45 3/4 »). Jamais une échelle (« = »), jamais une section de
+// profilé (« 2" X 4" »), jamais une phrase.
+const DIM_MARK_RE = /^(\([A-Z.]{1,4}\)\s*)?\d[\d\s\/\-.,]*('|''|"|′|″|”)/;
+const DIM_FRAC_RE = /^\d+\s+\d+\/\d+$/;
+export function isDimension(s) {
+  if (s.length > 44 || /[=]| X |\bX\b/i.test(s)) return false;
+  return DIM_MARK_RE.test(s) || DIM_FRAC_RE.test(s);
+}
 
 export const normSheet = (s) => String(s).toUpperCase().replace(/[\s.]/g, '');
 export const normKey = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -64,10 +74,27 @@ function findSheetItem(pg) {
   return pool.reduce((a, b) => (Math.hypot(w - cx(a), h - cy(a)) <= Math.hypot(w - cx(b), h - cy(b)) ? a : b));
 }
 
-function findTitle(pg, tzX) {
+function findTitle(pg, tzX, isBoilerplate) {
   const zone = pg.items.filter((it) => it.x0 >= tzX && it.horiz);
   const label = zone.find((it) => TITLE_LABEL_RE.test(it.s));
-  if (!label) return '';
+  if (!label) {
+    // Cartouche sans libellé « TITRE » lisible (vu sur le plan 26-018) : le titre est le bloc de
+    // texte, plus gros que les libellés, posé juste au-dessus de « Chargé de projet / Dessiné par ».
+    const after = zone.filter((it) => AFTER_TITLE_RE.test(it.s) && cy(it) > 0.8 * pg.h).sort((a, b) => a.y0 - b.y0)[0];
+    if (!after) return '';
+    // Le nom et l'adresse du projet sont écrits pareil, au même endroit, sur toutes les feuilles :
+    // ce n'est pas le titre de CETTE feuille.
+    const above = zone.filter((it) => it.y1 <= after.y0 + 1 && it.size >= 1.2 * after.size && !/:\s*$/.test(it.s) && !isBoilerplate(it))
+      .sort((a, b) => b.y0 - a.y0);
+    const lines = [];
+    let edge = after.y0;
+    for (const it of above) {
+      // Premier écart (titre → libellé du dessous) : large. Ensuite : un simple interligne.
+      if (edge - it.y1 > (lines.length ? 0.8 : 2.2) * it.size) break;
+      lines.unshift(it.s); edge = it.y0;
+    }
+    return lines.join(' ').replace(/\s+/g, ' ').trim();
+  }
   const below = zone
     .filter((it) => it.y0 >= label.y1 - 1 && it !== label)
     .sort((a, b) => a.y0 - b.y0 || a.x0 - b.x0);
@@ -125,6 +152,11 @@ export function buildIndex(doc) {
 
   // ── A. numéro de feuille de chaque page ──────────────────────────────────
   const sheetItems = pages.map(findSheetItem);
+  // Textes de cartouche répétés à l'identique (même texte, même place) sur la plupart des feuilles.
+  const freq = new Map();
+  const sig = (it) => `${it.s}@${Math.round(it.x0 / 6)},${Math.round(it.y0 / 6)}`;
+  for (const pg of pages) for (const it of pg.items) if (it.x0 > 0.8 * pg.w) freq.set(sig(it), (freq.get(sig(it)) || 0) + 1);
+  const isBoilerplate = (it) => pages.length >= 3 && (freq.get(sig(it)) || 0) >= Math.max(3, 0.6 * pages.length);
   const sheets = [];
   const sheetToPage = new Map();
   pages.forEach((pg, i) => {
@@ -133,7 +165,7 @@ export function buildIndex(doc) {
     if (sheetToPage.has(id)) id = `${id} (p.${i + 1})`; // doublon : la première occurrence garde le nom
     else sheetToPage.set(id, i);
     const tzX = si && si.x0 > 0.8 * pg.w ? si.x0 - 0.05 * pg.w : Infinity;
-    sheets.push({ page: i, id, title: findTitle(pg, tzX), w: pg.w, h: pg.h, tzX });
+    sheets.push({ page: i, id, title: findTitle(pg, tzX, isBoilerplate), w: pg.w, h: pg.h, tzX });
   });
 
   // « 300 » → « A-300 », seulement si non ambigu.
@@ -156,6 +188,7 @@ export function buildIndex(doc) {
     const me = sheets[i];
     const used = tops[i];
     const seen = new Set();
+    const selfPairs = []; // paires « N / cette feuille même » : trait de coupe OU titre de vue
     // Forme pleine d'abord : « A-201 » est un renvoi certain, il choisit son partenaire en premier.
     const refs = [];
     for (const b of pg.items) {
@@ -197,6 +230,36 @@ export function buildIndex(doc) {
       if (isDetail) { hs.kind = 'detail'; hs.detail = normDetail(dm[1]); if (dm[2]) hs.note = dm[2]; }
       else { hs.kind = 'sheet'; hs.label = t ? t.s : null; }
       out[i].hotspots.push(hs);
+      if (isDetail && sheet === me.id) selfPairs.push({ hs, t, b });
+    }
+
+    // Certains bureaux titrent une vue avec la même écriture qu'un renvoi : « A / A-200 » sous la
+    // coupe A, sur A-200 même, suivi de « RÉF: ». Le trait de coupe, plus haut, s'écrit pareil.
+    // Le titre est la CIBLE, pas un renvoi. On le reconnaît à son « RÉF: » ; à défaut, c'est la
+    // paire la plus basse (un titre se pose sous sa vue). S'il existe ailleurs sur la feuille une
+    // vraie grosse étiquette du même nom, toutes ces paires sont des renvois et on ne touche à rien.
+    const groups = new Map();
+    for (const sp of selfPairs) {
+      if (!groups.has(sp.hs.detail)) groups.set(sp.hs.detail, []);
+      groups.get(sp.hs.detail).push(sp);
+    }
+    // Un titre de vue est accompagné de son échelle ou de sa référence (« ÉCHELLE: 3/16" = 1' »,
+    // « RÉF: N/A »), dessous ou à droite. Un trait de coupe ne l'est jamais.
+    const hasRefBelow = (b) => pg.items.some((r) => /^(R[ÉE]F|[ÉE]CH(ELLE)?)\b/i.test(r.s) && r.y0 >= b.y0 - b.size &&
+      cy(r) - cy(b) < 3 * Math.max(b.size, 8) && cx(r) - cx(b) > -5 * Math.max(b.size, 8) && cx(r) - cx(b) < 12 * Math.max(b.size, 8));
+    for (const [n, members] of groups) {
+      let title = members.find((m) => hasRefBelow(m.b));
+      if (!title) {
+        // Sans « RÉF: » : on ne conclut que s'il n'existe pas ailleurs une vraie grosse étiquette du
+        // même nom. « Grosse » = nettement plus que le renvoi ; un fragment de cote ne compte pas.
+        const bigger = pg.items.some((it) => it.horiz && it.x0 < me.tzX && !used.has(it) &&
+          DETAIL_RE.test(it.s.toUpperCase()) && normDetail(it.s.toUpperCase()) === n && it.size >= 1.5 * members[0].t.size);
+        if (bigger) continue;
+        title = members.reduce((a, m) => (cy(m.b) > cy(a.b) ? m : a));
+      }
+      out[i].hotspots.splice(out[i].hotspots.indexOf(title.hs), 1);
+      const { x0, y0, x1, y1 } = title.hs;
+      out[i].labels.push({ kind: 'detail', n, refs: 0, titleMark: true, x0, y0, x1, y1 });
     }
   });
 
@@ -214,6 +277,19 @@ export function buildIndex(doc) {
   function bestBySize(list) {
     return list.reduce((a, b) => (b.size > a.size ? b : a), list[0]);
   }
+  // Un numéro posé juste à gauche d'un titre de vue (« 06  DÉTAIL EN COUPE ») est une étiquette,
+  // à coup sûr. Vu sur le plan 26-018 : un gros « 6 » isolé ailleurs sur la feuille gagnait à la taille.
+  const VIEW_TITLE_RE = /^(D[ÉE]TAILS?|COUPES?|SECTIONS?|[ÉE]L[ÉE]VATIONS?|PLANS?|VUES?)\b/i;
+  function titledRight(it, items) {
+    return items.some((tt) => tt !== it && tt.horiz && VIEW_TITLE_RE.test(tt.s) &&
+      Math.abs(cy(tt) - cy(it)) < 1.6 * tt.size && tt.x0 > cx(it) - it.size && tt.x0 - cx(it) < 4 * tt.size);
+  }
+  function bestLabel(list, items) {
+    return list.reduce((a, b) => {
+      const sa = a.size * (titledRight(a, items) ? 1.5 : 1), sb = b.size * (titledRight(b, items) ? 1.5 : 1);
+      return sb > sa ? b : a;
+    }, list[0]);
+  }
 
   const refCount = new Map(); // « page|détail » → nombre de renvois
   for (const p of out) for (const hs of p.hotspots) {
@@ -230,15 +306,43 @@ export function buildIndex(doc) {
       if (!byN.has(n)) byN.set(n, []);
       byN.get(n).push(c);
     }
+    const titled = new Set();
+    for (const l of out[i].labels) {
+      if (l.kind !== 'detail') continue;
+      titled.add(l.n); l.refs = refCount.get(`${i}|${l.n}`) || 0;
+    }
     for (const [n, list] of byN) {
+      if (titled.has(n)) continue;
       const refs = refCount.get(`${i}|${n}`) || 0;
-      const top = bestBySize(list);
+      const top = bestLabel(list, pg.items);
       // Étiquette retenue si elle est visée par un renvoi et plus grosse que le corps,
       // ou si elle est franchement grosse (≥ 1,8 × le corps) même sans renvoi.
       const big = top.size >= 1.8 * docBody && /\d/.test(n);
       const okRef = refs > 0 && top.size >= 1.15 * docBody;
       if (!big && !okRef) continue;
       out[i].labels.push({ kind: 'detail', n, refs, ...pad(top, 0.6 * top.size) });
+    }
+    // Bulle de titre laissée VIDE par le dessinateur (vu sur le plan 26-018 : « DÉTAIL EN PLAN »
+    // sans son « 01 »). On ne déduit que dans un seul cas, sans ambiguïté possible : sur la feuille,
+    // UN seul numéro est appelé sans avoir d'étiquette, et UN seul titre de vue n'a pas de numéro.
+    // L'étiquette est marquée `inferred` : l'app le dira au poseur au lieu de faire comme si de rien.
+    const have = out[i].labels.filter((l) => l.kind === 'detail');
+    const missing = [...refCount.keys()].filter((k) => k.startsWith(`${i}|`)).map((k) => k.slice(String(i).length + 1))
+      .filter((n) => !have.some((l) => l.n === n));
+    if (missing.length === 1 && have.length >= 2) {
+      const me = sheets[i];
+      const titles = pg.items.filter((it) => it.horiz && it.x0 < me.tzX && it.size >= 1.15 * docBody &&
+        /^(D[ÉE]TAILS?|COUPES?|SECTIONS?|[ÉE]L[ÉE]VATIONS?|PLANS?|VUES?)\b/i.test(it.s));
+      const owner = (tt) => have.find((l) => Math.abs(cy(l) - cy(tt)) < 1.6 * tt.size && cx(l) < tt.x0 + tt.size && tt.x0 - cx(l) < 4 * tt.size);
+      const paired = titles.filter((tt) => owner(tt)), orphan = titles.filter((tt) => !owner(tt));
+      if (orphan.length === 1 && paired.length >= 2) {
+        const med = (arr) => arr.sort((a, b) => a - b)[Math.floor(arr.length / 2)];
+        const dx = med(paired.map((tt) => cx(owner(tt)) - tt.x0)), dy = med(paired.map((tt) => cy(owner(tt)) - cy(tt)));
+        const r = med(paired.map((tt) => (owner(tt).x1 - owner(tt).x0) / 2));
+        const ox = orphan[0].x0 + dx, oy = cy(orphan[0]) + dy;
+        out[i].labels.push({ kind: 'detail', n: missing[0], refs: refCount.get(`${i}|${missing[0]}`) || 0,
+          inferred: true, x0: ox - r, y0: oy - r, x1: ox + r, y1: oy + r });
+      }
     }
     out[i].labels.sort((a, b) => (parseInt(a.n, 10) - parseInt(b.n, 10)) || a.n.localeCompare(b.n));
   });
@@ -265,11 +369,15 @@ export function buildIndex(doc) {
     const me = sheets[pi];
     const byKey = new Map();
     for (const it of pg.items) {
-      if (!it.horiz || it.x0 >= me.tzX || tops[pi].has(it) || it.size < 1.3 * docBody) continue;
+      if (!it.horiz || it.x0 >= me.tzX || tops[pi].has(it)) continue;
       const k = wallKey(it.s);
       if (k.length < 2) continue;
       const m = it.s.toUpperCase().trim().match(WALL_RAW_RE);
       if (!walls.has(k) && !(m && families.has(m[1]))) continue;
+      // Gros corps : un cercle de titre, accepté partout. Petit corps (vu sur le plan 26-018, « MR1 »
+      // en corps 13) : accepté seulement sur la feuille qu'un marqueur annonce pour ce mur.
+      const announced = walls.has(k) && walls.get(k).targets.has(pi);
+      if (it.size < 1.3 * docBody && !(announced && it.size >= 0.9 * docBody)) continue;
       if (!byKey.has(k)) byKey.set(k, []);
       byKey.get(k).push(it);
     }
@@ -293,7 +401,8 @@ export function buildIndex(doc) {
         // Absent de la feuille annoncée, présent sur une seule autre : le marqueur se trompe.
         const elsewhere = [];
         out.forEach((op, pi) => { const l = op.labels.find((x) => x.kind === 'wall' && x.n === k); if (l) elsewhere.push([pi, l]); });
-        if (elsewhere.length === 1) {
+        const readable = labels.some((l) => l.kind === 'wall');
+        if (elsewhere.length === 1 && readable) {
           const [pi, l] = elsewhere[0];
           hs.alt = { page: pi, sheet: sheets[pi].id, target: { x0: l.x0, y0: l.y0, x1: l.x1, y1: l.y1 } };
           l.refs++;
@@ -302,10 +411,20 @@ export function buildIndex(doc) {
     }
     if (tgt) {
       hs.target = { x0: tgt.x0, y0: tgt.y0, x1: tgt.x1, y1: tgt.y1 };
+      if (tgt.inferred) hs.inferred = true;
       if (hs.kind === 'sheet') tgt.refs++;
       resolved++;
     } else if (hs.kind === 'detail') unresolved++;
   }
+
+  // ── E. les cotes, pour la loupe : position, angle et corps de chaque mesure ──
+  const r1 = (v) => Math.round(v * 10) / 10;
+  pages.forEach((pg, i) => {
+    const me = sheets[i];
+    out[i].dims = pg.items
+      .filter((it) => it.x0 < me.tzX && !tops[i].has(it) && isDimension(it.s.trim()))
+      .map((it) => ({ s: it.s.trim(), x: r1(cx(it)), y: r1(cy(it)), a: Math.round((it.ang || 0) * 1000) / 1000, h: r1(it.size) }));
+  });
 
   // Où aller pour chaque mur : les feuilles où son nom est réellement dessiné ; à défaut,
   // celles qu'annoncent les marqueurs.
@@ -315,6 +434,9 @@ export function buildIndex(doc) {
       const l = op.labels.find((x) => x.kind === 'wall' && x.n === k);
       if (l) places.push({ page: pi, sheet: sheets[pi].id, target: { x0: l.x0, y0: l.y0, x1: l.x1, y1: l.y1 } });
     });
+    // Un « MR1 » écrit en gros sur la feuille des détails n'est pas l'élévation de MR1.
+    const announced = places.filter((pl) => wl.targets.has(pl.page));
+    if (announced.length) places.splice(0, places.length, ...announced);
     if (!places.length) for (const [page, sheet] of wl.targets) places.push({ page, sheet, target: null });
     const text = places.length && places[0].target
       ? out[places[0].page].labels.find((x) => x.kind === 'wall' && x.n === k).text : wl.label;
@@ -339,6 +461,7 @@ export function buildIndex(doc) {
       detailRefs: out.reduce((n, p) => n + p.hotspots.filter((hs) => hs.kind === 'detail').length, 0),
       sheetRefs: out.reduce((n, p) => n + p.hotspots.filter((hs) => hs.kind === 'sheet').length, 0),
       labels: out.reduce((n, p) => n + p.labels.length, 0),
+      dims: out.reduce((n, p) => n + p.dims.length, 0),
       resolved, unresolved,
       orphans,
     },

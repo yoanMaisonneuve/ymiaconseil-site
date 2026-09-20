@@ -40,7 +40,7 @@ const S = {
   live: null,                // { page, canvas, scale } : fond en cours de calcul, montré tel quel
   stack: [],                 // historique de navigation : { page, view }
   backrefs: new Map(),       // « page|kind|n » → [{ page, hs }]
-  showLinks: true, keepAwake: true,
+  showLinks: true, keepAwake: true, bigDims: true,
   mark: null,                // { page, rect, t0 } cible en surbrillance
   vw: 0, vh: 0, top: 52,
 };
@@ -241,6 +241,7 @@ function paint(now) {
     ctx.drawImage(net.bmp, (tx + net.x * z) * d, (ty + net.y * z) * d, net.w * z * d, net.h * z * d);
   }
 
+  if (S.bigDims) paintDims(d, z, tx, ty);
   if (S.showLinks) paintLinks(d, z, tx, ty);
   if (S.mark && S.mark.page === S.page) {
     const t = (now - S.mark.t0) / 1000, r = S.mark.rect;
@@ -251,6 +252,59 @@ function paint(now) {
     ctx.beginPath(); ctx.arc(cxm, cym, rad * pulse, 0, Math.PI * 2); ctx.stroke();
     if (t < 2.4) { ctx.fillStyle = 'rgba(225,0,26,.10)'; ctx.fill(); draw(); }
   }
+}
+
+// La loupe des cotes. Une mesure trop petite pour être lue est redessinée par-dessus, jusqu'à ×2,
+// sur une pastille blanche qui recouvre l'originale. Dès qu'elle est lisible seule, on ne touche à rien.
+const DIM_FONT = '"Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif';
+const DIM_READABLE = 13, DIM_TARGET = 14.5, DIM_USELESS = 8.5;   // hauteurs de texte, en px d'écran
+function paintDims(d, z, tx, ty) {
+  const dims = S.index.pages[S.page].dims;
+  if (!dims || !dims.length) return;
+  // Une pastille ne couvre jamais un renvoi ni une étiquette : ils occupent leur place d'avance.
+  const placed = [];
+  const pgNow = S.index.pages[S.page];
+  for (const r of [...pgNow.hotspots, ...pgNow.labels]) {
+    const x = tx + (r.x0 + r.x1) / 2 * z, y = ty + (r.y0 + r.y1) / 2 * z;
+    if (x < -60 || y < -60 || x > S.vw + 60 || y > S.vh + 60) continue;
+    placed.push({ x, y, w: (r.x1 - r.x0) / 2 * z * 0.8, h: (r.y1 - r.y0) / 2 * z * 0.8 });
+  }
+  let lastFont = '', drawn = 0;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (const m of dims) {
+    const hpx = m.h * z;
+    if (hpx >= DIM_READABLE || hpx * 2 < DIM_USELESS) continue;
+    const sx = tx + m.x * z, sy = ty + m.y * z;
+    if (sx < -80 || sy < -80 || sx > S.vw + 80 || sy > S.vh + 80) continue;
+    if (m._w === undefined) { ctx.font = `600 100px ${DIM_FONT}`; lastFont = ''; m._w = ctx.measureText(m.s).width / 100; }
+    const c = Math.abs(Math.cos(m.a)), sn = Math.abs(Math.sin(m.a));
+    // Deux cotes grossies ne se recouvrent jamais. On essaie ×2 ; si ça ne rentre pas, ×1,5 ;
+    // sinon la cote garde sa taille d'origine plutôt que de cacher sa voisine.
+    const full = Math.min(hpx * 2, DIM_TARGET);
+    let size = 0, w = 0, h = 0, bw = 0, bh = 0;
+    for (const tryout of [full, (full + hpx) / 2]) {
+      if (tryout < hpx * 1.25) break;
+      w = m._w * tryout + tryout * 0.5; h = tryout * 1.22;
+      bw = (w * c + h * sn) / 2 * 0.92; bh = (w * sn + h * c) / 2 * 0.92;
+      let hit = false;
+      for (const p of placed) if (Math.abs(p.x - sx) < p.w + bw && Math.abs(p.y - sy) < p.h + bh) { hit = true; break; }
+      if (!hit) { size = tryout; break; }
+    }
+    if (!size) continue;
+    placed.push({ x: sx, y: sy, w: bw, h: bh });
+    const font = `600 ${(size * d).toFixed(1)}px ${DIM_FONT}`;
+    if (font !== lastFont) { ctx.font = font; lastFont = font; }
+    ctx.save();
+    ctx.translate(sx * d, sy * d); ctx.rotate(m.a);
+    ctx.fillStyle = 'rgba(255,255,255,.94)'; ctx.strokeStyle = 'rgba(20,35,60,.30)'; ctx.lineWidth = d;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(-w * d / 2, -h * d / 2, w * d, h * d, h * d * 0.28); else ctx.rect(-w * d / 2, -h * d / 2, w * d, h * d);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#0b1a33'; ctx.fillText(m.s, 0, d * size * 0.04);
+    ctx.restore();
+    if (++drawn >= 320) break;
+  }
+  ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
 }
 
 function paintLinks(d, z, tx, ty) {
@@ -474,7 +528,9 @@ function activate(hit) {
     go(d.page, d.rect, d.kind);
     if (d.warn) toast(d.warn, true);
     else if (hit.hs.kind === 'detail' && !hit.hs.target) toast(`Détail ${hit.hs.detail} : étiquette introuvable sur ${hit.hs.sheet}.`, true);
+    else if (hit.hs.inferred) toast(`Détail ${hit.hs.detail} : la bulle est vide sur le dessin. Déduit par élimination — à confirmer.`, true);
     else if (hit.hs.note === 'INV') toast(`Détail ${hit.hs.detail} — INV. : à lire inversé.`);
+    else if (hit.hs.note === 'SIM') toast(`Détail ${hit.hs.detail} — SIM. : détail similaire.`);
   } else showCallers(hit.label);
 }
 
@@ -662,6 +718,7 @@ $('#moreBtn').addEventListener('click', () => {
   const st = S.index.stats;
   openSheet(S.plan.name, [
     { big: S.showLinks ? 'Masquer les renvois' : 'Afficher les renvois', small: `${st.detailRefs} renvois de détail · ${st.sheetRefs} renvois de feuille`, run: () => { S.showLinks = !S.showLinks; draw(); } },
+    { big: S.bigDims ? 'Cotes à leur taille d\'origine' : 'Grossir les cotes', small: `${st.dims || 0} mesures repérées · grossies jusqu'à ×2 quand elles sont trop petites`, run: () => { S.bigDims = !S.bigDims; draw(); } },
     { big: S.keepAwake ? 'Laisser l\'écran s\'éteindre' : 'Garder l\'écran allumé', small: 'Pratique quand on mesure avec les deux mains', run: () => { S.keepAwake = !S.keepAwake; wake(); } },
     { big: 'Changer de plan', small: 'Retour à la liste de mes plans', run: () => closePanelThen(leaveViewer), keepOpen: true },
   ]);
