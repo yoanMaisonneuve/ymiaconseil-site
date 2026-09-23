@@ -1,0 +1,26 @@
+{
+  "name": "Syllabes Faciles",
+  "short_name": "Syllabes",
+  "description": "Les lettres, les syllabes, puis les mots — à la maison, sans compte ni publicité.",
+  "lang": "fr",
+  "start_url": "/easyread/",
+  "scope": "/easyread/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FEF6FF",
+  "theme_color": "#FF6B9D",
+  "icons": [
+    {
+      "src": "/easyread/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/easyread/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
