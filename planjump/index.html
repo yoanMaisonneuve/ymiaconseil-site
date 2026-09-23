@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlanJump — Le GPS des plans de construction</title>
+<meta name="description" content="Touchez un mur sur le plan, arrivez sur son élévation. Touchez une coupe, arrivez sur le détail. Plus de scroll dans un PDF de vingt pages. Gratuit, sans compte, et le plan ne quitte pas le téléphone.">
+<link rel="canonical" href="https://ymiaconseil.com/planjump/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_CA">
+<meta property="og:site_name" content="YM IA Conseil">
+<meta property="og:title" content="PlanJump — Le GPS des plans de construction">
+<meta property="og:description" content="Touchez un mur, arrivez au bon détail. Plus jamais de scroll dans un PDF. Gratuit, sans compte, et le plan reste dans le téléphone.">
+<meta property="og:url" content="https://ymiaconseil.com/planjump/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1f3a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,600;1,6..72,400..600&family=Lora:wght@400..600&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PlanJump",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web, Android, iOS",
+  "url": "https://ymiaconseil.com/planjump/",
+  "description": "Lecture de dessins d'atelier et de plans de construction sur cellulaire : les renvois du dessin deviennent touchables, du mur à l'élévation et de la coupe au détail.",
+  "inLanguage": "fr-CA",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CAD", "description": "Essai gratuit, sans compte"},
+  "publisher": {"@type": "Organization", "name": "YM IA Conseil", "url": "https://ymiaconseil.com/"}
+}
+</script>
+<style>
+:root{
+  --navy:#0b1f3a; --navy-2:#13294d; --navy-3:#1c3a64;
+  --gold:#d4a843; --gold-text:#a8841f; --gold-small:#8a6b18;
+  --red:#d62828;
+  --ink:#1a1a1a; --ink-body:#2a2620; --dim:#5c5c5c; --soft:#8a8a8a;
+  --line:#e4e2dd; --paper:#fff; --sand:#f6f4f0; --steel:#eceef1;
+  --display:'Newsreader',Georgia,serif;
+  --body:'Lora',Georgia,serif;
+  --soft-serif:'Source Serif 4',Georgia,serif;
+  --mono:'JetBrains Mono',Consolas,monospace;
+  --grad-top:linear-gradient(135deg,#0b1f3a 0%,#13294d 45%,#1c3a64 100%);
+  --grad-pill:linear-gradient(135deg,#13294d 0%,#2c5189 100%);
+  --wrap:1080px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink-body);
+  font-family:var(--body);font-size:17px;line-height:1.66;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
+a{color:inherit}
+
+/* ── barre du haut ─────────────────────────────────────── */
+.nav{background:var(--navy);color:#fff;border-bottom:3px solid var(--gold)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:58px;flex-wrap:wrap}
+.nav-mark{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:#fff}
+.nav-mark span{color:var(--gold)}
+.nav a.back{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.45);padding-bottom:1px}
+.nav a.back:hover{color:#fff;border-color:var(--gold)}
+
+/* ── hero ──────────────────────────────────────────────── */
+.hero{background:var(--grad-top);color:#fff;padding:54px 0 48px;position:relative;overflow:hidden}
+.hero::after{
+  content:"";position:absolute;inset:0;opacity:.09;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.55) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.55) 1px,transparent 1px);
+  background-size:54px 54px;
+}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+h1{
+  font-family:var(--display);font-weight:600;color:#fff;
+  font-size:clamp(34px,6.4vw,58px);line-height:1.08;letter-spacing:-.015em;margin:0 0 18px;
+}
+.lede{font-size:clamp(18px,2.4vw,21px);line-height:1.55;color:#dbe4f0;max-width:34em;margin:0 0 10px}
+.lede strong{color:#fff;font-weight:600}
+.hero-note{font-family:var(--soft-serif);font-style:italic;color:#9fb3cd;font-size:16px;margin:16px 0 0;max-width:34em}
+
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 0}
+.btn{
+  display:inline-block;font-family:var(--display);font-weight:600;font-size:16.5px;
+  padding:14px 26px;border-radius:3px;text-decoration:none;border:1px solid transparent;transition:.15s;
+}
+.btn-or{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.btn-or:hover{background:#e0b85a;border-color:#e0b85a}
+.btn-fil{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.btn-fil:hover{border-color:var(--gold);color:var(--gold)}
+.btn small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.06em;opacity:.78;margin-top:3px;text-transform:uppercase}
+
+/* ── bandes ────────────────────────────────────────────── */
+.band{padding:58px 0;border-bottom:1px solid var(--line)}
+.band.sand{background:var(--sand)}
+.band.deep{background:var(--navy);color:#e8edf5;border-bottom:none}
+.band.deep h2{color:#fff}
+.band.deep .kicker{color:var(--gold)}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 12px}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(26px,4vw,38px);line-height:1.16;letter-spacing:-.01em;margin:0 0 20px}
+h3{font-family:var(--display);font-weight:600;color:var(--navy);font-size:20px;line-height:1.3;margin:0 0 8px}
+.band.deep h3{color:#fff}
+p{margin:0 0 16px;max-width:36em}
+.band.deep p{color:#c9d4e4}
+
+/* ── la citation du chantier ───────────────────────────── */
+blockquote{
+  margin:0 0 24px;padding:20px 24px;background:rgba(255,255,255,.05);
+  border-left:3px solid var(--gold);font-family:var(--soft-serif);font-style:italic;
+  font-size:19px;line-height:1.5;color:#e8edf5;max-width:33em;
+}
+blockquote cite{display:block;margin-top:12px;font-family:var(--mono);font-style:normal;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--gold)}
+
+/* ── tableau geste → resultat ──────────────────────────── */
+.gestes{width:100%;border-collapse:collapse;margin:8px 0 0;font-size:16.5px}
+.gestes th{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold-small);text-align:left;font-weight:400;padding:0 0 10px;border-bottom:2px solid var(--navy);
+}
+.gestes td{padding:16px 16px 16px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.gestes td:first-child{font-family:var(--display);font-weight:600;color:var(--navy);width:44%;padding-right:26px}
+.gestes tr:last-child td{border-bottom:none}
+.gestes code{font-family:var(--mono);font-size:.86em;background:var(--steel);padding:1px 5px;border-radius:2px;color:var(--navy)}
+
+/* ── liste de ce que ca ne fait pas ────────────────────── */
+.nofaire{list-style:none;padding:0;margin:0;max-width:38em}
+.nofaire li{position:relative;padding:0 0 16px 30px;margin:0}
+.nofaire li::before{
+  content:"";position:absolute;left:4px;top:11px;width:10px;height:2px;background:var(--gold);
+}
+.nofaire strong{font-family:var(--display);color:var(--navy);font-weight:600}
+.band.deep .nofaire strong{color:#fff}
+
+/* ── grille des metiers ────────────────────────────────── */
+.metiers{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 0;padding:0;list-style:none}
+.metiers li{
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.03em;
+  padding:7px 13px;border:1px solid var(--line);border-radius:2px;background:var(--paper);color:var(--dim);
+}
+
+/* ── ce qui s en vient ─────────────────────────────────── */
+.suite{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:26px;margin:10px 0 0}
+.suite > div{padding:22px;background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--gold)}
+.suite p{font-size:16px;margin-bottom:0}
+.etiquette{
+  display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 8px;border-radius:2px;margin-bottom:12px;
+}
+.et-vivant{background:#e8f0e4;color:#2f5d28}
+.et-venir{background:#f3ece0;color:var(--gold-small)}
+
+.prix{font-family:var(--display);font-weight:600;color:var(--navy);font-size:30px;line-height:1.1;margin:0 0 4px}
+.prix span{font-family:var(--mono);font-size:13px;font-weight:400;color:var(--dim);letter-spacing:.04em}
+
+/* ── contact ───────────────────────────────────────────── */
+.contact-l{font-family:var(--mono);font-size:15px;letter-spacing:.02em;margin:0 0 10px}
+.contact-l a{color:var(--navy);text-decoration:none;border-bottom:1px solid var(--gold)}
+.contact-l a:hover{color:var(--gold-text)}
+.band.deep .contact-l a{color:#fff;border-bottom-color:var(--gold)}
+.band.deep .contact-l a:hover{color:var(--gold)}
+
+/* ── pied ──────────────────────────────────────────────── */
+.foot{background:var(--navy);color:#8ea4c0;padding:30px 0;font-family:var(--mono);font-size:12px;letter-spacing:.03em;border-top:3px solid var(--gold)}
+.foot .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.foot a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
+.foot a:hover{color:var(--gold)}
+
+@media (max-width:640px){
+  body{font-size:16.5px}
+  .band{padding:44px 0}
+  .hero{padding:42px 0 38px}
+  .gestes td:first-child{width:auto;display:block;padding:14px 0 4px;border-bottom:none}
+  .gestes td:last-child{display:block;padding:0 0 15px}
+  .gestes thead{display:none}
+  .btn{width:100%;text-align:center}
+  blockquote{padding:16px 18px;font-size:17.5px}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="nav-mark" href="/">YM <span>IA</span> Conseil</a>
+    <a class="back" href="/plan/">Ouvrir l'app &rarr;</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Lecture de plans · Chantier</p>
+    <h1>Le GPS des plans<br>de construction</h1>
+    <p class="lede">Vous touchez un mur sur la vue d'ensemble, vous arrivez sur son élévation.
+      Vous touchez le cercle d'une coupe, vous arrivez sur le détail, cadré et entouré.
+      <strong>Plus de scroll dans un PDF de vingt pages.</strong></p>
+    <p class="hero-note">L'app lit le dessin, trouve les renvois toute seule, et les rend touchables.
+      Aucune préparation, aucun marquage à la main.</p>
+    <div class="cta-row">
+      <a class="btn btn-or" href="/plan/">Essayer sur votre plan<small>Gratuit &middot; aucun compte</small></a>
+      <a class="btn btn-fil" href="#comment">Voir comment ça marche</a>
+    </div>
+  </div>
+</section>
+
+<section class="band deep">
+  <div class="wrap">
+    <p class="kicker">Le problème</p>
+    <h2>Un plan, c'est vingt pages<br>et un cellulaire</h2>
+    <blockquote>
+      Selon la puissance du cell, la page devient complètement blanche chaque fois qu'il zoome
+      ou qu'il scrolle. C'est vraiment l'enfer.
+      <cite>Un poseur de mur-rideau, septembre 2026</cite>
+    </blockquote>
+    <p>Le dessin dit déjà tout ce qu'il faut savoir : le mur <code>MR03</code> renvoie à la feuille
+      <code>A-203</code>, la coupe <code>5</code> renvoie au détail <code>5</code> de <code>A-300</code>.
+      Ces renvois sont écrits sur chaque feuille, et sur un cellulaire il faut les suivre à la main,
+      en faisant défiler, en pinçant, en se perdant, puis en refaisant le chemin à l'envers.</p>
+    <p>Le dessin porte l'information. C'est le PDF qui ne la rend pas navigable.</p>
+  </div>
+</section>
+
+<section class="band" id="comment">
+  <div class="wrap">
+    <p class="kicker">Ce que ça fait</p>
+    <h2>Un geste, une destination</h2>
+    <table class="gestes">
+      <thead><tr><th>Vous touchez</th><th>Vous arrivez</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Un mur sur la vue d'ensemble</td>
+          <td>Sur sa feuille d'élévation, cadré sur le nom du mur.</td>
+        </tr>
+        <tr>
+          <td>Le cercle d'une coupe sur l'élévation</td>
+          <td>Sur le bon détail de la bonne feuille, zoomé dessus et entouré en rouge.</td>
+        </tr>
+        <tr>
+          <td>L'étiquette d'un détail</td>
+          <td>La liste des feuilles qui l'appellent — le chemin à rebours.</td>
+        </tr>
+        <tr>
+          <td>Le bouton Retour, ou celui d'Android</td>
+          <td>Exactement où vous étiez, au même zoom, au même endroit.</td>
+        </tr>
+        <tr>
+          <td>Le menu, en haut à gauche</td>
+          <td>Toutes les feuilles, tous les murs, tous les détails, avec une recherche.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="band sand">
+  <div class="wrap">
+    <p class="kicker">Ce que ça ne fait pas, exprès</p>
+    <h2>Trois choses qui comptent<br>sur un chantier</h2>
+    <ul class="nofaire">
+      <li><strong>Le plan ne part nulle part.</strong> Il est lu dans le téléphone et il y reste.
+        Aucun téléversement, aucun serveur. Les dessins d'un client restent ceux du client.</li>
+      <li><strong>Ça marche sans réseau.</strong> Une fois la page ouverte, l'app fonctionne hors ligne.
+        Dans un sous-sol de béton, c'est la différence entre un outil et une icône.</li>
+      <li><strong>Ça ne devine pas.</strong> Un renvoi ambigu ouvre un choix au lieu de vous envoyer
+        au mauvais endroit. Un renvoi illisible reste simplement non touchable. Sur un chantier,
+        une mauvaise réponse coûte plus cher que pas de réponse.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="kicker">Pour qui</p>
+    <h2>Ceux qui lisent des dessins<br>debout, avec des gants</h2>
+    <p>Les équipes de pose d'abord. Puis toute personne qui lit des dessins d'atelier suivant la
+      convention « nom du mur / feuille » et « numéro de détail / feuille ».</p>
+    <ul class="metiers">
+      <li>Poseurs</li><li>Chefs d'équipe</li><li>Surintendants</li><li>Entrepreneurs généraux</li>
+      <li>Charpentiers</li><li>Estimateurs</li><li>Bureaux de dessin</li><li>Gestionnaires de projet</li>
+    </ul>
+  </div>
+</section>
+
+<section class="band sand">
+  <div class="wrap">
+    <p class="kicker">Où c'en est</p>
+    <h2>Ce qui marche aujourd'hui,<br>ce qui s'en vient</h2>
+    <div class="suite">
+      <div>
+        <span class="etiquette et-vivant">En ligne maintenant</span>
+        <h3>L'app, gratuite</h3>
+        <p>Vous ouvrez votre PDF, l'app le lit une fois et rend les renvois touchables.
+          Rien à installer, aucun compte, aucun abonnement. C'est la version que vous pouvez
+          essayer tout de suite sur un de vos plans.</p>
+      </div>
+      <div>
+        <span class="etiquette et-venir">À bâtir</span>
+        <h3>Le code QR de chantier</h3>
+        <p>L'entreprise dépose le plan une fois, PlanJump génère un code QR. Imprimé sur le plan,
+          sur la roulotte, sur les panneaux. Les travailleurs scannent et naviguent —
+          rien à installer, rien à expliquer.</p>
+      </div>
+      <div>
+        <span class="etiquette et-venir">À bâtir</span>
+        <h3>La licence par chantier</h3>
+        <p class="prix">199&nbsp;$ <span>/ mois / chantier</span></p>
+        <p>Utilisateurs illimités sur le chantier, mise à jour des plans quand ils changent.
+          Un prix par chantier, pas par personne : le budget existe déjà, et il n'y a personne
+          à convaincre un par un.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band deep">
+  <div class="wrap">
+    <p class="kicker">Essayer</p>
+    <h2>Ouvrez un de vos plans</h2>
+    <p>Ça prend une minute, et vous jugerez sur votre propre dessin plutôt que sur une démo.
+      Si l'app trouve mal un renvoi, c'est exactement ce que je veux savoir.</p>
+    <div class="cta-row">
+      <a class="btn btn-or" href="/plan/">Ouvrir PlanJump<small>ymiaconseil.com/plan</small></a>
+    </div>
+    <p style="margin-top:28px">Une question, un plan qui ne se lit pas bien, un chantier à équiper :</p>
+    <p class="contact-l"><a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a></p>
+    <p class="contact-l"><a href="tel:+15149268633">514&nbsp;926-8633</a></p>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>PlanJump &middot; YM IA Conseil &middot; Grand Montréal</span>
+    <span><a href="/">ymiaconseil.com</a> &nbsp;&middot;&nbsp; <a href="/plan/">l'app</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
