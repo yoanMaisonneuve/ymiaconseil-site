@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page introuvable — YM IA Conseil</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<meta name="theme-color" content="#0b1f3a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=Lora:wght@400..600&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --gold:#d4a843; --gold-small:#8a6b18;
+  --ink-body:#2a2620; --dim:#5c5c5c; --line:#e4e2dd; --paper:#fff;
+  --display:'Newsreader',Georgia,serif; --body:'Lora',Georgia,serif; --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;background:var(--paper);color:var(--ink-body);
+  font-family:var(--body);font-size:17px;line-height:1.66;
+  display:flex;flex-direction:column;
+}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar a{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar span{color:var(--gold)}
+main{flex:1;display:flex;align-items:center;padding:48px 20px}
+.wrap{max-width:640px;margin:0 auto;width:100%}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(28px,6vw,42px);line-height:1.12;margin:0 0 18px;text-wrap:balance}
+p{margin:0 0 14px;max-width:34em}
+.hint{font-family:var(--mono);font-size:13.5px;color:var(--dim);background:#f6f4f0;border-left:3px solid var(--gold);padding:12px 16px;margin:22px 0 28px}
+.liens{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line)}
+.liens li{border-bottom:1px solid var(--line)}
+.liens a{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;padding:16px 2px;text-decoration:none;color:var(--navy)}
+.liens a:hover{background:#faf9f6}
+.liens b{font-family:var(--display);font-weight:600;font-size:18px}
+.liens em{font-style:normal;color:var(--dim);font-size:15px}
+.liens code{font-family:var(--mono);font-size:12.5px;color:var(--gold-small);margin-left:auto}
+footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:18px 20px;border-top:3px solid var(--gold)}
+footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
+@media (max-width:560px){ .liens code{margin-left:0;width:100%} }
+</style>
+</head>
+<body>
+
+<div class="bar"><a href="/">YM <span>IA</span> Conseil</a></div>
+
+<main>
+  <div class="wrap">
+    <p class="code">Erreur 404</p>
+    <h1>Cette adresse ne mène nulle part</h1>
+    <p>Soit elle a été mal recopiée, soit la page a changé de place. Rien n'est perdu —
+      voici tout ce qui est en ligne.</p>
+
+    <p class="hint">Les adresses distinguent les majuscules des minuscules :
+      <code>/EasyRead/</code> et <code>/easyread/</code> ne sont pas la même chose.</p>
+
+    <ul class="liens">
+      <li><a href="/"><b>L'accueil</b> <em>YM IA Conseil</em> <code>/</code></a></li>
+      <li><a href="/plan/"><b>PlanJump</b> <em>lire un plan sur le chantier</em> <code>/plan/</code></a></li>
+      <li><a href="/planjump/"><b>PlanJump — le produit</b> <em>ce que c'est, pour qui</em> <code>/planjump/</code></a></li>
+      <li><a href="/easyread/"><b>Syllabes Faciles</b> <em>les lettres, les syllabes, les mots</em> <code>/easyread/</code></a></li>
+    </ul>
+  </div>
+</main>
+
+<footer>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a></footer>
+
+</body>
+</html>

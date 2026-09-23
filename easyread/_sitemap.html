@@ -1,4 +1,18 @@
-<!DOCTYPE html><html  lang="fr" style="height:100%"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><link rel="manifest" href="/easyread/manifest.webmanifest"/><meta name="theme-color" content="#FF6B9D"/><link rel="apple-touch-icon" href="/easyread/icons/apple-touch-icon.png"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-title" content="Syllabes"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
+<!DOCTYPE html><html  lang="fr" style="height:100%"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Syllabes Faciles</title><meta name="description" content="Les lettres, les syllabes, puis les mots — à la maison, sans compte ni publicité."/><meta property="og:type" content="website"/><meta property="og:locale" content="fr_CA"/><meta property="og:title" content="Syllabes Faciles"/><meta property="og:description" content="Les lettres, les syllabes, puis les mots — à la maison, sans compte ni publicité."/><meta property="og:url" content="https://ymiaconseil.com/easyread/"/><meta property="og:image" content="https://ymiaconseil.com/easyread/icons/icon-512.png"/><meta name="twitter:card" content="summary"/><link rel="manifest" href="/easyread/manifest.webmanifest"/><meta name="theme-color" content="#FF6B9D"/><link rel="apple-touch-icon" href="/easyread/icons/apple-touch-icon.png"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-title" content="Syllabes"/><script>
+(function () {
+  // /easyread/index.html repond 200 mais affiche "Unmatched Route" : le routeur d'Expo ne
+  // reconnait pas la forme longue. Quiconque copie l'adresse depuis l'explorateur de fichiers,
+  // ou la tape par vieux reflexe, tombait sur un ecran d'erreur en anglais sans retour vers
+  // l'app. On ramene simplement au dossier parent avant que le routeur regarde.
+  try {
+    if (location.protocol === 'file:') return;
+    var p = location.pathname;
+    if (/\/(index|_sitemap|\+not-found)\.html$/.test(p)) {
+      location.replace(p.replace(/[^\/]+\.html$/, '') + location.search + location.hash);
+    }
+  } catch (e) {}
+})();
+</script><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
               body > div:first-child { position: fixed !important; top: 0; left: 0; right: 0; bottom: 0; }
               [role="tablist"] [role="tab"] * { overflow: visible !important; }
               [role="heading"], [role="heading"] * { overflow: visible !important; }
@@ -340,6 +354,7 @@ input::-webkit-search-cancel-button,input::-webkit-search-decoration,input::-web
 .r-9aw3ui{gap:4px;}
 .r-9daxd3{animation-duration:250ms;}
 .r-9tfo2e{background-color:rgba(255,255,255,0.30);}
+.r-a023e6{font-size:15px;}
 .r-adyw6z{font-size:20px;}
 .r-agouwx{transform:translateZ(0);}
 .r-ah5dr5>* {pointer-events:none;}
@@ -437,6 +452,7 @@ input::-webkit-search-cancel-button,input::-webkit-search-decoration,input::-web
 .r-vw2c0b{font-weight:bold;}
 .r-wf0mho{width:106px;}
 .r-wfqgy4{transition-duration:100ms;}
+.r-wij57u{text-shadow:0px 1px 3px rgba(0,0,0,0.38);}
 .r-ws9h79{left:4px;}
 .r-x11e5r{font-family:SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
 .r-x3cy2q{background-size:100% 100%;}
@@ -464,5 +480,19 @@ input::-webkit-search-cancel-button,input::-webkit-search-decoration,input::-web
 @keyframes r-1pzkwqh{0%{transform:translateY(100%);}100%{transform:translateY(0%);}}
 @keyframes r-imtty0{0%{opacity:0;}100%{opacity:1;}}
 @keyframes r-q67da2{0%{transform:translateX(-100%);}100%{transform:translateX(400%);}}
-@keyframes r-t2lo5v{0%{opacity:1;}100%{opacity:0;}}</style><script type="module">globalThis.__EXPO_ROUTER_HYDRATE__=true;</script><link rel="icon" href="/easyread/favicon.ico" /></head><body  style="margin:0;height:100%;overflow:hidden;display:flex;flex-direction:column"><div id="root"><div class="css-g5y9jx r-13awgt0"></div></div><script src="/easyread/_expo/static/js/web/entry-9f0d20db26765c20a36087df9ba9ed5e.js" defer></script>
+@keyframes r-t2lo5v{0%{opacity:1;}100%{opacity:0;}}</style><script type="module">globalThis.__EXPO_ROUTER_HYDRATE__=true;</script><link rel="icon" href="/easyread/favicon.ico" /></head><body  style="margin:0;height:100%;overflow:hidden;display:flex;flex-direction:column"><div id="root"><div class="css-g5y9jx r-13awgt0"></div></div><script>
+(function () {
+  // Sans service worker, l'icone posee sur l'ecran d'accueil donne le dinosaure de Chrome des
+  // que le wifi tombe — en plein ecran, sans barre d'adresse. C'est la raison meme de la
+  // publication qui echouait. Le fichier est dans public/sw.js, donc servi a cote de la page.
+  try {
+    if (!('serviceWorker' in navigator)) return;
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost'
+        && location.hostname !== '127.0.0.1') return;
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  } catch (e) {}
+})();
+</script><script src="/easyread/_expo/static/js/web/entry-74734fa20890ff11a7db83de3b6e17c3.js" defer></script>
 </body></html>
