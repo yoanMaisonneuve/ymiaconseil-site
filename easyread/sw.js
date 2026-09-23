@@ -19,7 +19,7 @@
 // A CHAQUE PUBLICATION : changer VERSION. Sinon les tablettes qui ont deja l'app gardent
 // l'ancien cache. C'est la panne P27 de l'app de plans, apprise a la dure le 20 septembre.
 
-const VERSION = 'syllabes-2026-09-22c';
+const VERSION = 'syllabes-2026-09-22d';
 const COQUILLE = VERSION + '-coquille';
 
 // Relatif au sw.js lui-meme : marche a /easyread/ en ligne comme a / en local, sans rien coder en dur.
