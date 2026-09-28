@@ -159,6 +159,58 @@ function analyseReport(name, bytes, doc, ix) {
   return L.join('\n');
 }
 
+// ── Sonde : ce que pdf.js reçoit AVANT extract.js ─────────────────────────────
+// Un plan où Ctrl+F trouve « A-202 » mais où l'app ne lit aucun texte : il faut savoir si pdf.js
+// voit des opérations de texte (police illisible ?), du dessin seul (texte vectorisé), une image
+// (scan), ou des calques éteints. Trois premières pages : assez pour conclure, pas trop long.
+async function probe(pdf) {
+  const L = ['── SONDE pdf.js ──'];
+  try {
+    const meta = await pdf.getMetadata();
+    const inf = (meta && meta.info) || {};
+    L.push(`Producteur : ${inf.Producer || '?'} · Créateur : ${inf.Creator || '?'} · PDF ${inf.PDFFormatVersion || '?'}` +
+      `${inf.IsAcroFormPresent ? ' · formulaire' : ''}${inf.IsXFAPresent ? ' · XFA' : ''}`);
+  } catch (e) { L.push(`Métadonnées illisibles : ${e.message}`); }
+  try {
+    const oc = await pdf.getOptionalContentConfig();
+    const groups = oc ? [...oc] : [];
+    const off = groups.filter(([, g]) => !g.visible).length;
+    L.push(`Calques : ${groups.length}${groups.length ? ` (${off} éteints)` : ''}`);
+  } catch (e) { L.push(`Calques illisibles : ${e.message}`); }
+
+  const OPS = pdfjsLib.OPS;
+  const TEXT_OPS = new Set([OPS.showText, OPS.showSpacedText, OPS.nextLineShowText, OPS.nextLineSetSpacingShowText]);
+  const IMG_OPS = new Set([OPS.paintImageXObject, OPS.paintInlineImageXObject, OPS.paintImageMaskXObject]);
+  for (let n = 1; n <= Math.min(3, pdf.numPages); n++) {
+    try {
+      const page = await pdf.getPage(n);
+      const vp = page.getViewport({ scale: 1 });
+      const tc = await page.getTextContent({ includeMarkedContent: true });
+      const texts = tc.items.filter((it) => typeof it.str === 'string');
+      const nonEmpty = texts.filter((it) => it.str.trim());
+      const fonts = Object.values(tc.styles || {}).map((s) => s.fontFamily);
+      const ol = await page.getOperatorList();
+      let nText = 0, nImg = 0, nPath = 0, nForm = 0;
+      for (const fn of ol.fnArray) {
+        if (TEXT_OPS.has(fn)) nText++;
+        else if (IMG_OPS.has(fn)) nImg++;
+        else if (fn === OPS.constructPath) nPath++;
+        else if (fn === OPS.paintFormXObjectBegin) nForm++;
+      }
+      const ann = await page.getAnnotations({ intent: 'display' }).catch(() => []);
+      const kinds = {};
+      for (const a of ann) kinds[a.subtype] = (kinds[a.subtype] || 0) + 1;
+      L.push(`p${n} ${Math.round(vp.width)}×${Math.round(vp.height)} rot ${page.rotate} | textContent ${texts.length} (non vides ${nonEmpty.length})` +
+        ` · polices ${fonts.length} | ops texte ${nText} · tracés ${nPath} · images ${nImg} · formes ${nForm}` +
+        ` | annotations ${ann.length}${ann.length ? ` ${JSON.stringify(kinds)}` : ''}`);
+      if (texts.length) L.push(`   échantillon : ${JSON.stringify(texts.slice(0, 8).map((it) => it.str))}`);
+      if (fonts.length) L.push(`   polices : ${[...new Set(fonts)].slice(0, 4).join(', ')}`);
+      page.cleanup();
+    } catch (e) { L.push(`p${n} sonde impossible : ${e.message}`); }
+  }
+  return L.join('\n');
+}
+
 // Données texte : tout ce que detect.js reçoit, pour le rejouer ailleurs sans le PDF.
 async function exportGz(name, doc) {
   const r3 = (v) => Math.round(v * 1000) / 1000;
@@ -202,7 +254,8 @@ async function run(file) {
     work('Repérage des renvois…', 0.93);
     const ix = buildIndex(doc);
     current = { name: file.name, doc };
-    show(analyseReport(file.name, size, doc, ix));
+    work('Sonde pdf.js…', 0.96);
+    show(`${analyseReport(file.name, size, doc, ix)}\n\n${await probe(pdf)}`);
     work('Terminé.', 1);
     $('#actions').style.display = 'flex';
     $('#dlNote').hidden = false;
