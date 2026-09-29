@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 12;
+export const DETECT_VERSION = 13;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -183,7 +183,9 @@ function bodySize(items) {
   const hist = new Map();
   for (const it of items) {
     if (it.src !== 't' || !it.horiz) continue;
-    const k = Math.round(it.size * 2) / 2;
+    // Plan passé à l'OCR : l'étalon reste la hauteur lue (`raw`, voir extract.js). Tous les seuils
+    // gardent leur échelle ; seuls les mots courts, redressés, grandissent par rapport à lui.
+    const k = Math.round((it.raw || it.size) * 2) / 2;
     hist.set(k, (hist.get(k) || 0) + 1);
   }
   let best = 0, bestN = 0;
@@ -417,7 +419,9 @@ export function buildIndex(doc) {
       const top = bestLabel(list, vTitles);
       // Étiquette retenue si elle est visée par un renvoi et plus grosse que le corps,
       // ou si elle est franchement grosse (≥ 1,8 × le corps) même sans renvoi.
-      const big = top.size >= 1.8 * docBody && /\d/.test(n);
+      // Sur un plan passé à l'OCR, avec la hauteur de boîte d'origine (`raw`, voir extract.js) : corrigée,
+      // un numéro de local de la vue d'ensemble passait pour une grosse étiquette (plan d'essai, A-100).
+      const big = (top.raw || top.size) >= 1.8 * docBody && /\d/.test(n);
       const okRef = refs > 0 && top.size >= 1.15 * docBody;
       if (!big && !okRef) continue;
       // Le MÊME numéro peut être dessiné plusieurs fois sur une feuille : sur le plan 25-012, les
@@ -504,20 +508,28 @@ export function buildIndex(doc) {
   // tromper de feuille (vu sur le même plan : « MR02B → A-200 », dessiné sur A-201).
   pages.forEach((pg, pi) => {
     const me = sheets[pi];
-    const byKey = new Map();
+    const byKey = new Map(), weak = new Map(), count = new Map();
     for (const it of pg.items) {
       if (!it.horiz || it.x0 >= me.tzX || tops[pi].has(it)) continue;
       const k = wallKey(it.s);
       if (k.length < 2) continue;
       const m = it.s.toUpperCase().trim().match(WALL_RAW_RE);
       if (!walls.has(k) && !(m && families.has(m[1]))) continue;
+      count.set(k, (count.get(k) || 0) + 1);
       // Gros corps : un cercle de titre, accepté partout. Petit corps (vu sur le plan 26-018, « MR1 »
       // en corps 13) : accepté seulement sur la feuille qu'un marqueur annonce pour ce mur.
       const announced = walls.has(k) && walls.get(k).targets.has(pi);
-      if (it.size < 1.3 * docBody && !(announced && it.size >= 0.9 * docBody)) continue;
+      if (it.size < 1.3 * docBody && !(announced && it.size >= 0.9 * docBody)) {
+        if (announced && it.size >= 0.6 * docBody) weak.set(k, [...(weak.get(k) || []), it]);
+        continue;
+      }
       if (!byKey.has(k)) byKey.set(k, []);
       byKey.get(k).push(it);
     }
+    // Plus petit encore (plan Westbury : « MR6 », « MR5.1 » dans la bulle-titre d'une élévation, écrits
+    // dans le corps des notes, sous celui des cotes) : sur la feuille annoncée, s'il est le SEUL texte
+    // de ce nom, c'est lui. Deux mentions ou plus : rien ne dit laquelle est le titre, on s'abstient.
+    for (const [k, list] of weak) if (!byKey.has(k) && count.get(k) === 1) byKey.set(k, list);
     for (const [k, list] of byKey) {
       const top = bestBySize(list);
       out[pi].labels.push({ kind: 'wall', n: k, text: top.s, refs: 0, ...pad(top, 0.6 * top.size) });
@@ -606,9 +618,10 @@ export function buildIndex(doc) {
     const dense = surs.filter((c) => c.m.dec).length >= 3;
     // Un gros numéro isolé est une étiquette de détail, pas une cote : les cotes d'une feuille
     // sont écrites dans le même corps.
-    const tailles = surs.map((c) => c.it.size).sort((a, b) => a - b);
+    const sz = (it) => it.raw || it.size;   // hauteur lue, comme au réglage (voir extract.js)
+    const tailles = surs.map((c) => sz(c.it)).sort((a, b) => a - b);
     const corps = tailles.length ? tailles[Math.floor(tailles.length / 2)] : docBody;
-    return cands.filter((c) => sure(c) || (c.m.mm >= 10 && c.it.size <= 1.2 * corps &&
+    return cands.filter((c) => sure(c) || (c.m.mm >= 10 && sz(c.it) <= 1.2 * corps &&
       (dense || surs.some((o) => aligned(c.it, o.it)))));
   }
 

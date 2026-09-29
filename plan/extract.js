@@ -46,16 +46,56 @@ function textItemToBox(it, vpTransform) {
   };
 }
 
+// Texte posé par l'OCR de PlanJump (planjump/ocr/pdftext.js) sur un plan imprimé en image. Sa
+// « taille » est la hauteur de la boîte que le détecteur DB a trouvée, pas un corps de police. Or ce
+// détecteur décolle la boîte du noyau de texte d'une distance d = aire × 1,6 / périmètre : pour un
+// mot long, d ≈ 0,8 × la hauteur du noyau ; pour une lettre seule, bien moins. Résultat mesuré sur
+// le plan Westbury : la lettre d'une bulle de coupe (« D » au-dessus de « A-203 ») sort à 0,36–0,58
+// fois le corps du numéro de feuille qu'elle surmonte, écrit pourtant à la même hauteur. detect.js
+// la rejetait (il exige 0,6), et les noms de mur courts (« MR6 ») passaient sous son seuil.
+//
+// On refait donc le calcul du moteur à l'envers : la boîte (longueur L, hauteur H) donne d, puis la
+// hauteur du noyau h = H − 2d, et on rend h × 2,6 — la hauteur qu'aurait la boîte d'un mot long de
+// même noyau. Un mot long garde sa taille ; un mot court retrouve la sienne.
+//   L = l + 2d, H = h + 2d, d = r·l·h / 2(l + h)  ⇒  (8 + 4r)d² − 2(1 + r)(L + H)d + r·L·H = 0
+const OCR_UNCLIP = 1.6;   // planjump/ocr/engine.js, DEFAULTS.unclipRatio
+export function ocrTextSize(len, size) {
+  const r = OCR_UNCLIP, a = 8 + 4 * r, b = 2 * (1 + r) * (len + size), c = r * len * size;
+  const disc = b * b - 4 * a * c;
+  if (!(len > 0) || !(size > 0) || disc < 0) return size;
+  const d = (b - Math.sqrt(disc)) / (2 * a);
+  const h = size - 2 * d;
+  return h > 0 ? Math.max(size, h * (1 + r)) : size;
+}
+
 export async function extractPage(page) {
   const vp = page.getViewport({ scale: 1 });
   const items = [];
 
-  const tc = await page.getTextContent();
+  // Un mot de l'OCR est seul dans une séquence marquée « /Span BMC » sans propriétés (pdftext.js) ;
+  // un PDF natif n'en a pas (mesuré : 0 sur nos plans vectoriels). La page doit en être faite
+  // presque entièrement : un Span isolé dans un PDF balisé ne suffit pas.
+  const tc = await page.getTextContent({ includeMarkedContent: true });
+  const open = [];
+  const texts = [];
   for (const it of tc.items) {
+    if (it.type === 'beginMarkedContent' || it.type === 'beginMarkedContentProps') {
+      open.push(it.type === 'beginMarkedContent' && it.tag === 'Span');
+      continue;
+    }
+    if (it.type === 'endMarkedContent') { open.pop(); continue; }
     if (!it.str) continue;
     const s = it.str.trim();
     if (!s) continue;
+    texts.push({ s, it, span: open.length > 0 && open[open.length - 1] });
+  }
+  const ocr = texts.length > 0 && texts.filter((t) => t.span).length >= 0.9 * texts.length;
+  for (const { s, it, span } of texts) {
     const b = textItemToBox(it, vp.transform);
+    // `raw` garde la hauteur de la boîte lue. L'étalon du document (bodySize), la grosse étiquette
+    // sans renvoi et le filtre des cotes métriques, réglés sur elle, s'y tiennent : la correction ne
+    // sert qu'à comparer un mot court à ses voisins (bulle de coupe, nom de mur).
+    if (ocr && span) { b.raw = b.size; b.size = ocrTextSize(it.width || 0, b.size); }
     items.push({ s, ...b, src: 't' });
   }
 
