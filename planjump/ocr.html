@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#14233c">
+<title>Préparer un plan — Plans d'atelier</title>
+<style>
+  :root { --navy: #14233c; --ink: #16202e; --bg: #f3f4f1; --gold: #c9a227; --line: #d5d8de; --green: #0b8a2d; --red: #b3261e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { background: var(--navy); color: #fff; padding: 20px 16px; }
+  header h1 { margin: 0 0 4px; font-size: 21px; }
+  header p { margin: 0; opacity: .8; font-size: 14.5px; }
+  main { max-width: 960px; margin: 0 auto; padding: 16px; }
+  .intro { font-size: 15px; margin: 0 0 14px; }
+  .intro li { margin: 2px 0; }
+  #drop { display: block; border: 2px dashed #9aa3b2; border-radius: 14px; background: #fff; padding: 28px 16px; text-align: center; cursor: pointer; }
+  #drop.over { border-color: var(--gold); background: #fffbea; }
+  #drop.busy { opacity: .55; pointer-events: none; }
+  #drop strong { display: block; font-size: 18px; margin-bottom: 4px; }
+  #drop input { display: none; }
+  .safe { color: var(--green); font-size: 14.5px; margin: 10px 0 0; }
+  #work { margin: 16px 0; display: none; }
+  #workMsg { font-weight: 600; }
+  #workSub { font-size: 14px; color: #4a5566; margin-top: 2px; min-height: 1.4em; }
+  #bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+  #bar > div { height: 100%; width: 0; background: var(--gold); transition: width .2s; }
+  .actions { display: none; gap: 10px; flex-wrap: wrap; margin: 16px 0 10px; }
+  .actions button, .actions a { font: inherit; font-weight: 600; border: 0; border-radius: 10px; padding: 12px 16px; background: var(--navy); color: #fff; cursor: pointer; text-decoration: none; }
+  .actions .alt { background: #fff; color: var(--navy); border: 1px solid var(--navy); }
+  .actions .stop { background: #fff; color: var(--red); border: 1px solid var(--red); }
+  #msg { display: none; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 10px; padding: 12px 14px; margin: 12px 0; }
+  #msg.ok { border-left-color: var(--green); }
+  #msg.err { border-left-color: var(--red); color: var(--red); font-weight: 600; }
+  #pages { display: none; white-space: pre-wrap; word-break: break-word; background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 12px; font: 12.5px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; max-height: 40vh; overflow: auto; margin: 10px 0; }
+  #report { display: none; white-space: pre-wrap; word-break: break-word; background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px; font: 12.5px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; max-height: 70vh; overflow: auto; }
+  .note { font-size: 14px; color: #4a5566; }
+  a { color: var(--navy); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Préparer un plan imprimé en image</h1>
+  <p>Pour un PDF dont les feuilles sont des images : on y lit le texte, et on écrit un nouveau PDF que « Plans d'atelier » sait naviguer.</p>
+</header>
+<main>
+  <ul class="intro">
+    <li>Pour un plan « imprimé » en PDF (par exemple avec PDF-XChange) : chaque feuille n'y est qu'une photo, l'app n'y trouve aucun renvoi.</li>
+    <li>Ici, chaque feuille est lue (reconnaissance de caractères), puis un <strong>nouveau PDF</strong> est enregistré :
+      les mêmes feuilles, au pixel près, avec un texte invisible posé sur chaque mot lu. C'est ce PDF-là qu'on importe dans l'app.</li>
+    <li>À faire sur un <strong>ordinateur</strong>, pas sur le téléphone : compter de une à cinq minutes par feuille selon sa densité.
+      La page doit rester ouverte.</li>
+    <li class="note">Pour essayer d'abord sur quelques feuilles, ajouter à l'adresse <code>?pages=1-3</code>.
+      Plus rapide mais moins sûr pour les petites bulles : <code>?dpi=450</code> (600 par défaut).</li>
+  </ul>
+  <label id="drop">
+    <strong>Glisse le plan PDF ici, ou clique pour le choisir</strong>
+    <span class="note">Les feuilles qui contiennent déjà du texte sont laissées telles quelles.</span>
+    <input id="file" type="file" accept="application/pdf,.pdf">
+  </label>
+  <p class="safe">🔒 Le plan est lu dans ce navigateur. Rien n'est envoyé sur internet : seuls les modèles de lecture (30 Mo) viennent de ce site.</p>
+
+  <div id="work"><div id="workMsg"></div><div id="workSub"></div><div id="bar"><div></div></div></div>
+  <div class="actions" id="running"><button id="cancel" class="stop">Annuler</button></div>
+  <div id="msg"></div>
+  <div class="actions" id="actions">
+    <a id="save" href="#" download>Télécharger le PDF préparé</a>
+    <button id="force" class="alt" hidden>Lire quand même toutes les feuilles</button>
+    <button id="copy" class="alt">Copier le rapport</button>
+  </div>
+  <pre id="pages"></pre>
+  <pre id="report"></pre>
+  <p class="note"><a href="../plan/">← Ouvrir l'app</a> · <a href="diag.html">Diagnostic d'un PDF</a></p>
+</main>
+<script type="module" src="ocr.js"></script>
+</body>
+</html>
