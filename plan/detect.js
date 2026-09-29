@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 13;
+export const DETECT_VERSION = 14;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -179,13 +179,19 @@ function findTitle(pg, tzX, isBoilerplate) {
 }
 
 // Taille de texte la plus fréquente : l'étalon « corps » de la page.
+// Plan passé à l'OCR : la taille d'un mot court y est redressée (extract.js), `raw` garde la hauteur
+// lue. Ce qui mesure le corps d'une LIGNE ou d'un texte long — l'étalon du document, les titres de vue,
+// la ligne d'une liste de dessins, la grosse étiquette sans renvoi, le filtre des cotes — reste sur la
+// hauteur lue, comme au réglage : un mot moyen redressé de 7 % faisait d'une note « PORTE VOIR
+// ÉLÉVATION » un titre de vue (vrai plan Westbury, A-400). Le redressement ne sert qu'à comparer un mot
+// court à ses voisins : bulle de coupe, nom de mur, numéro d'étiquette visé par un renvoi.
+const lu = (it) => it.raw || it.size;
+
 function bodySize(items) {
   const hist = new Map();
   for (const it of items) {
     if (it.src !== 't' || !it.horiz) continue;
-    // Plan passé à l'OCR : l'étalon reste la hauteur lue (`raw`, voir extract.js). Tous les seuils
-    // gardent leur échelle ; seuls les mots courts, redressés, grandissent par rapport à lui.
-    const k = Math.round((it.raw || it.size) * 2) / 2;
+    const k = Math.round(lu(it) * 2) / 2;
     hist.set(k, (hist.get(k) || 0) + 1);
   }
   let best = 0, bestN = 0;
@@ -303,8 +309,8 @@ export function buildIndex(doc) {
         // sur la même ligne fait partie de la cible — une ligne large se touche mieux qu'un numéro.
         let row = b;
         for (const it of pg.items) {
-          if (it === b || !it.horiz || it.x0 < b.x1 || it.x0 - b.x1 > 12 * b.size) continue;
-          if (Math.abs(cy(it) - cy(b)) > 0.4 * b.size || Math.abs(it.size - b.size) > 0.2 * b.size) continue;
+          if (it === b || !it.horiz || it.x0 < b.x1 || it.x0 - b.x1 > 12 * lu(b)) continue;
+          if (Math.abs(cy(it) - cy(b)) > 0.4 * lu(b) || Math.abs(lu(it) - lu(b)) > 0.2 * lu(b)) continue;
           row = union(row, it);
         }
         box = { x0: row.x0 - 0.8 * b.size, x1: row.x1 + 0.8 * b.size, y0: row.y0 - 0.3 * b.size, y1: row.y1 + 0.3 * b.size };
@@ -382,7 +388,7 @@ export function buildIndex(doc) {
   // « JONCTION TYPIQUE ». Le mot peut être n'importe où dans la ligne, et en anglais.
   const VIEW_TITLE_RE = /(^|[\s(])(D[ÉE]TAIL|COUPE|SECTION|[ÉE]L[ÉE]VATION|PLAN|VUE|VIEW|HEAD|JAMB|SILL|T[ÊE]TE|SEUIL|JONCTION|APPUI)S?\b/i;
   const viewTitles = (i) => pages[i].items.filter((tt) => tt.horiz && tt.x0 < sheets[i].tzX &&
-    tt.size >= 1.15 * docBody && VIEW_TITLE_RE.test(tt.s));
+    lu(tt) >= 1.15 * docBody && VIEW_TITLE_RE.test(tt.s));
   const titledBy = (titles, it) => titles.some((tt) => tt !== it &&
     Math.abs(cy(tt) - cy(it)) < 1.6 * tt.size && tt.x0 > cx(it) - it.size && tt.x0 - cx(it) < 4 * tt.size);
   // Un numéro posé juste à gauche d'un titre de vue est une étiquette, à coup sûr : il gagne contre
@@ -419,9 +425,9 @@ export function buildIndex(doc) {
       const top = bestLabel(list, vTitles);
       // Étiquette retenue si elle est visée par un renvoi et plus grosse que le corps,
       // ou si elle est franchement grosse (≥ 1,8 × le corps) même sans renvoi.
-      // Sur un plan passé à l'OCR, avec la hauteur de boîte d'origine (`raw`, voir extract.js) : corrigée,
-      // un numéro de local de la vue d'ensemble passait pour une grosse étiquette (plan d'essai, A-100).
-      const big = (top.raw || top.size) >= 1.8 * docBody && /\d/.test(n);
+      // Hauteur lue (voir `lu`) : redressée, un numéro de local de la vue d'ensemble passait pour une
+      // grosse étiquette (plan d'essai, A-100).
+      const big = lu(top) >= 1.8 * docBody && /\d/.test(n);
       const okRef = refs > 0 && top.size >= 1.15 * docBody;
       if (!big && !okRef) continue;
       // Le MÊME numéro peut être dessiné plusieurs fois sur une feuille : sur le plan 25-012, les
@@ -618,10 +624,9 @@ export function buildIndex(doc) {
     const dense = surs.filter((c) => c.m.dec).length >= 3;
     // Un gros numéro isolé est une étiquette de détail, pas une cote : les cotes d'une feuille
     // sont écrites dans le même corps.
-    const sz = (it) => it.raw || it.size;   // hauteur lue, comme au réglage (voir extract.js)
-    const tailles = surs.map((c) => sz(c.it)).sort((a, b) => a - b);
+    const tailles = surs.map((c) => lu(c.it)).sort((a, b) => a - b);
     const corps = tailles.length ? tailles[Math.floor(tailles.length / 2)] : docBody;
-    return cands.filter((c) => sure(c) || (c.m.mm >= 10 && sz(c.it) <= 1.2 * corps &&
+    return cands.filter((c) => sure(c) || (c.m.mm >= 10 && lu(c.it) <= 1.2 * corps &&
       (dense || surs.some((o) => aligned(c.it, o.it)))));
   }
 

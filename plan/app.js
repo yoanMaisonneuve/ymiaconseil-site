@@ -408,22 +408,28 @@ function fitView(n) {
 // Où atterrir pour une cible : directement au zoom de lecture. Yoan, le 29 sept., sur le plan
 // Westbury : « je dois zoomer par deux fois à chaque fois que je change de détail ou de page […]
 // j'aime mieux bouger l'écran que devoir zoomer ». Zoom et cadrage = la moyenne de ses 13 captures
-// après réglage à la main (téléphone de 411 px de large ; feuilles de 2592 × 1728 pt).
+// après réglage à la main, mesurée sur les positions exactes des textes du plan.
 //
-// UN DÉTAIL : zoom 0,83. Le numéro est sous son dessin, en bas à gauche : on le pose à gauche et
-// bas (37 % de la largeur, 67 % de la hauteur sous la barre), et le dessin remplit le haut de l'écran.
+// Le zoom se compte en LARGEURS DE FEUILLE sur le petit côté de l'écran, pas en unités de page : le
+// plan Westbury est une impression A4 (595 × 841, dessin en bande au milieu), un plan natif fait
+// 2592 × 1728. Un zoom absolu (0,85, réglé sur les plans natifs) tombait sur Westbury à 1,25 × la
+// page entière — les « pages pleines » dont se plaignait Yoan. En largeurs de feuille, les deux plans
+// s'accordent : 5,5 × donne 0,86 sur une feuille native, le réglage validé avec Yoan (canal, Q4).
 //
-// UN MUR : zoom 0,67 sur son élévation. Avant : la feuille entière (Yoan, canal, Q5 : « je veux
-// vraiment voir le mur »), valable quand une feuille = un mur. Sur Westbury, une feuille en porte
-// trois : entière, rien ne se lit. Le nom est sous l'élévation : posé à (39 %, 60 %), le mur s'étale
-// au-dessus. Plus large que l'écran, il se parcourt au doigt — c'est ce que Yoan préfère.
-const LAND = { detail: { z: 0.83, x: 0.37, y: 0.67 }, wall: { z: 0.67, x: 0.39, y: 0.60 } };
+// UN DÉTAIL : 5,5 × (captures : 4,2 à 6,4). Le numéro est sous son dessin, en bas à gauche : on le
+// pose à gauche et bas (37 % de la largeur, 67 % de la hauteur sous la barre), le dessin au-dessus.
+//
+// UN MUR : 4,1 × (captures : 3,4 à 5,3), sur son élévation. Avant : la feuille entière (Yoan, canal,
+// Q5 : « je veux vraiment voir le mur »), valable quand une feuille = un mur. Sur Westbury, une feuille
+// en porte trois : entière, rien ne se lit. Le nom est sous l'élévation : posé à (39 %, 60 %), le
+// mur s'étale au-dessus. Plus large que l'écran, il se parcourt au doigt — ce que Yoan préfère.
+const LAND = { detail: { k: 5.5, x: 0.37, y: 0.67 }, wall: { k: 4.1, x: 0.39, y: 0.60 } };
 function viewForTarget(n, rect, kind) {
   const L = kind === 'wall' ? LAND.wall : LAND.detail;
   const sh = S.index.sheets[n];
   const cxr = (rect.x0 + rect.x1) / 2, cyr = (rect.y0 + rect.y1) / 2;
-  // Mesuré sur un téléphone ; une tablette, plus large, garde la même part de dessin à l'écran.
-  const z = Math.max(zFit(n), Math.min(2.4, L.z * Math.max(1, S.vw / 500)));
+  // Petit côté de l'écran : le texte garde la même taille en portrait et en paysage.
+  const z = Math.max(zFit(n), Math.min(Z_MAX, L.k * Math.min(S.vw, S.vh) / sh.w));
   const v = { z, tx: S.vw * L.x - cxr * z, ty: S.top + (S.vh - S.top) * L.y - cyr * z };
   return clampTo(v, sh);
 }
