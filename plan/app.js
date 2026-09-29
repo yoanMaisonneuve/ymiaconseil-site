@@ -405,20 +405,26 @@ function fitView(n) {
   return { z, tx: (S.vw - sh.w * z) / 2, ty: S.top + (S.vh - S.top - sh.h * z) / 2 };
 }
 
-// Où atterrir pour une cible.
+// Où atterrir pour une cible : directement au zoom de lecture. Yoan, le 29 sept., sur le plan
+// Westbury : « je dois zoomer par deux fois à chaque fois que je change de détail ou de page […]
+// j'aime mieux bouger l'écran que devoir zoomer ». Zoom et cadrage = la moyenne de ses 13 captures
+// après réglage à la main (téléphone de 411 px de large ; feuilles de 2592 × 1728 pt).
 //
-// UN MUR : la feuille entière. Demandé par Yoan (canal, Q5) : « je veux vraiment voir le mur »,
-// pas un gros plan sur son étiquette. Une élévation se lit d'un bout à l'autre ; c'est le dessin
-// qu'on vient chercher, pas son nom. La surbrillance dit où le mur est nommé.
+// UN DÉTAIL : zoom 0,83. Le numéro est sous son dessin, en bas à gauche : on le pose à gauche et
+// bas (37 % de la largeur, 67 % de la hauteur sous la barre), et le dessin remplit le haut de l'écran.
 //
-// UN DÉTAIL : assez près pour lire. Le numéro est en bas à gauche de son dessin, donc on le place
-// à gauche et un peu bas, et le détail s'étale en haut à droite — vérifié par Yoan (canal, Q4).
+// UN MUR : zoom 0,67 sur son élévation. Avant : la feuille entière (Yoan, canal, Q5 : « je veux
+// vraiment voir le mur »), valable quand une feuille = un mur. Sur Westbury, une feuille en porte
+// trois : entière, rien ne se lit. Le nom est sous l'élévation : posé à (39 %, 60 %), le mur s'étale
+// au-dessus. Plus large que l'écran, il se parcourt au doigt — c'est ce que Yoan préfère.
+const LAND = { detail: { z: 0.83, x: 0.37, y: 0.67 }, wall: { z: 0.67, x: 0.39, y: 0.60 } };
 function viewForTarget(n, rect, kind) {
-  if (kind === 'wall') return fitView(n);
+  const L = kind === 'wall' ? LAND.wall : LAND.detail;
   const sh = S.index.sheets[n];
   const cxr = (rect.x0 + rect.x1) / 2, cyr = (rect.y0 + rect.y1) / 2;
-  const z = Math.max(zFit(n), Math.min(2.4, Math.max(S.vw / 620, 0.85)));
-  const v = { z, tx: S.vw * 0.3 - cxr * z, ty: S.top + (S.vh - S.top) * 0.46 - cyr * z };
+  // Mesuré sur un téléphone ; une tablette, plus large, garde la même part de dessin à l'écran.
+  const z = Math.max(zFit(n), Math.min(2.4, L.z * Math.max(1, S.vw / 500)));
+  const v = { z, tx: S.vw * L.x - cxr * z, ty: S.top + (S.vh - S.top) * L.y - cyr * z };
   return clampTo(v, sh);
 }
 
@@ -440,10 +446,6 @@ function zoomAt(sx, sy, f) {
 }
 
 let anim = null;
-// Atterrissage différé : le fond d'une feuille peut mettre quelques secondes à se calculer sur un
-// téléphone modeste. Si le poseur pose le doigt pendant ce temps, on ne lui arrache pas la vue —
-// mais on n'oublie pas non plus où il allait : on y va dès qu'il lève le doigt.
-let pendingLand = null;
 function stopAnim() { if (anim) { cancelAnimationFrame(anim.raf); anim = null; } }
 function animateTo(to, ms = 300) {
   stopAnim();
@@ -517,12 +519,7 @@ function endPointer(e) {
   if (gesture.ptrs.size > 0) return;
   gesture.active = false;
   const tap = gesture.tap; gesture.tap = null;
-  // Un toucher est une intention neuve : elle remplace l'atterrissage qui attendait.
-  if (e.type === 'pointerup' && tap && !tap.moved && now - tap.t < 400) { pendingLand = null; onTap(tap.x, tap.y); return; }
-  if (pendingLand) {
-    const p = pendingLand; pendingLand = null;
-    if (p.page === S.page) { animateTo(p.view, 340); return; }
-  }
+  if (e.type === 'pointerup' && tap && !tap.moved && now - tap.t < 400) { onTap(tap.x, tap.y); return; }
   // Lancer : la feuille glisse encore un peu, comme une carte.
   let { x: vx, y: vy } = gesture.vel;
   if (now - gesture.vel.t < 60 && Math.hypot(vx, vy) > 0.25) {
@@ -669,7 +666,6 @@ function go(n, rect, kind) {
 
 async function showPage(n, rect, kind, exactView) {
   stopAnim(); cancelAnimationFrame(gesture.fling); clearTimeout(netTimer); cancelRunning(['net', 'prep']);
-  pendingLand = null;
   const samePage = n === S.page && S.bases.has(n);
   S.page = n;
   if (!samePage && S.net) { S.net.bmp.close(); S.net = null; }
@@ -679,8 +675,11 @@ async function showPage(n, rect, kind, exactView) {
   updateBack();
   const target = exactView ? { ...exactView } : rect ? viewForTarget(n, rect, kind) : fitView(n);
   if (samePage) { animateTo(target, 320); return; }
-  // Nouvelle feuille : on la montre entière, puis on descend vers la cible — on sait où on est.
-  S.view = exactView ? { ...exactView } : fitView(n);
+  // Nouvelle feuille : on arrive DIRECTEMENT sur la cible. Avant, la feuille s'affichait entière, puis
+  // l'app descendait vers la cible une fois le fond calculé. Sur un plan en images (Westbury), ce
+  // calcul prend des secondes au téléphone ; un doigt posé entre-temps annulait la descente, et le
+  // poseur restait devant la feuille entière — à zoomer deux fois, à chaque saut.
+  S.view = target;
   draw();
   const ready = S.bases.has(n);
   if (!ready) { $('#busyMsg').textContent = `Feuille ${sh.id}…`; $('#busy').hidden = false; }
@@ -690,11 +689,7 @@ async function showPage(n, rect, kind, exactView) {
   if (S.page !== n) return;
   $('#busy').hidden = true;
   if (S.mark) S.mark.t0 = performance.now();
-  draw();
-  if (!exactView && rect) {
-    if (gesture.active) pendingLand = { page: n, view: target };
-    else animateTo(target, 340);
-  } else scheduleNet(60);
+  draw(); scheduleNet(60);
   savePos(); kickPrep();
 }
 
@@ -969,7 +964,6 @@ function closePlan() {
   savePos(); prepToken++; cancelRunning(['base', 'net', 'prep']); clearTimeout(netTimer); stopAnim();
   for (const b of S.bases.values()) b.bmp.close && b.bmp.close();
   S.bases.clear(); if (S.net) { S.net.bmp.close(); S.net = null; }
-  pendingLand = null;
   const pdf = S.pdf;
   S.pdf = null; S.index = null; S.plan = null; S.stack = []; S.live = null; pageCache.clear();
   // pdf.js 6 : la libération passe par la tâche de chargement, plus par le document.
