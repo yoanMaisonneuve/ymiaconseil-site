@@ -269,6 +269,41 @@ const DIM_READABLE = 15.5, DIM_TARGET = 18, DIM_USELESS = 9;
 // pouces à sa place, même quand elle est déjà lisible. Couleur à part : le poseur voit que ce chiffre
 // vient de l'app, pas du dessinateur.
 const DIM_CONV = '#0b5d2c';
+// Une cote écrite en ROUGE sur le dessin le reste, grossie ou convertie. Yoan, le 29 sept. : « laisse
+// le rouge en rouge avec les cotes en pouces » (Westbury : 324.0, 1924.0, 2405.5 — les cotes de verre).
+// Le texte lu par l'OCR n'a pas de couleur : on la lit dans le fond rendu de la feuille, une fois par
+// feuille, sous la boîte de chaque cote.
+const DIM_RED = '#d0021b';
+const inkChecked = new Set();   // feuilles déjà lues, pour le plan ouvert
+function tagDimColors(n) {
+  const base = S.bases.get(n), dims = S.index && S.index.pages[n].dims;
+  if (!base || !dims || !dims.length || inkChecked.has(n)) return;
+  inkChecked.add(n);
+  const k = base.scale, c = document.createElement('canvas'), cx = c.getContext('2d', { willReadFrequently: true });
+  for (const m of dims) {
+    const L = (m.l || m.s.length * 0.6 * m.h) + 0.2 * m.h, T = m.h;
+    const ca = Math.abs(Math.cos(m.a)), sa = Math.abs(Math.sin(m.a));
+    const w = (ca * L + sa * T) * k, h = (sa * L + ca * T) * k;
+    const sx = Math.max(0, Math.round(m.x * k - w / 2)), sy = Math.max(0, Math.round(m.y * k - h / 2));
+    const sw = Math.min(Math.round(w), base.bmp.width - sx), sh = Math.min(Math.round(h), base.bmp.height - sy);
+    if (sw < 2 || sh < 2) continue;
+    c.width = sw; c.height = sh;
+    cx.drawImage(base.bmp, sx, sy, sw, sh, 0, 0, sw, sh);
+    const d = cx.getImageData(0, 0, sw, sh).data;
+    let ink = 0, red = 0;
+    for (let i = 0; i < d.length; i += 4) {
+      const r = d[i], g = d[i + 1], b = d[i + 2];
+      if (Math.min(r, g, b) > 170 && Math.max(r, g, b) - Math.min(r, g, b) < 60) continue;   // papier
+      ink++;
+      // Un trait rouge fin sort rosé du rendu (224, 160, 160) : on juge la teinte, pas la saturation.
+      if (r >= 120 && r - Math.max(g, b) >= 40) red++;
+    }
+    // Rouge si c'est la couleur de la moitié de l'encre au moins (un trait noir peut traverser la cote),
+    // ou de TOUTE l'encre d'une cote minuscule : un texte noir laisse toujours des pixels noirs.
+    m.red = (ink >= 3 && red >= 0.5 * ink) || (ink >= 2 && red === ink) ? 1 : 0;
+  }
+  c.width = c.height = 0;
+}
 function paintDims(d, z, tx, ty) {
   const dims = S.index.pages[S.page].dims;
   if (!dims || !dims.length) return;
@@ -346,7 +381,8 @@ function paintDims(d, z, tx, ty) {
     ctx.lineWidth = size * d * 0.42; ctx.lineJoin = 'round'; ctx.miterLimit = 2;
     ctx.strokeStyle = 'rgba(255,255,255,.92)';
     ctx.strokeText(text, 0, d * size * 0.04);
-    ctx.fillStyle = m.pose ? '#b34700' : conv ? DIM_CONV : '#0b1a33';   // les cotes d'installation gardent leur orange
+    // Le rouge du dessin d'abord, puis l'orange des cotes d'installation, puis le vert de la conversion.
+    ctx.fillStyle = m.red ? DIM_RED : m.pose ? '#b34700' : conv ? DIM_CONV : '#0b1a33';
     ctx.fillText(text, 0, d * size * 0.04);
     ctx.restore();
     drawn++;
@@ -691,6 +727,7 @@ async function showPage(n, rect, kind, exactView) {
   if (!ready) { $('#busyMsg').textContent = `Feuille ${sh.id}…`; $('#busy').hidden = false; }
   const tick = setInterval(draw, 250);   // montrer le fond qui se dessine, plutôt qu'attendre devant du vide
   try { await ensureBase(n, 'base'); } catch { /* l'utilisateur est déjà ailleurs */ }
+  tagDimColors(n);
   clearInterval(tick);
   if (S.page !== n) return;
   $('#busy').hidden = true;
@@ -830,7 +867,7 @@ $('#moreBtn').addEventListener('click', () => {
     { big: S.bigDims ? 'Cotes à leur taille d\'origine' : 'Grossir les cotes', small: `${st.dims || 0} mesures repérées · grossies jusqu'à ×2 quand elles sont trop petites`, run: () => { S.bigDims = !S.bigDims; draw(); } },
     ...(S.index.unit === 'mm' ? [{
       big: S.inches ? 'Cotes en millimètres' : 'Cotes en pouces',
-      small: S.inches ? 'Revenir aux cotes du plan' : 'Ce plan est en mm · converties au 1/16 po près, en vert',
+      small: S.inches ? 'Revenir aux cotes du plan' : 'Ce plan est en mm · converties au 1/16 po près, en vert (le rouge du plan reste rouge)',
       run: () => setInches(!S.inches),
     }] : []),
     { big: S.keepAwake ? 'Laisser l\'écran s\'éteindre' : 'Garder l\'écran allumé', small: 'Pratique quand on mesure avec les deux mains', run: () => { S.keepAwake = !S.keepAwake; wake(); } },
@@ -842,7 +879,7 @@ function setInches(on) {
   S.inches = on;
   if (S.plan) { S.plan.inches = on; savePos(true); }   // gardé avec le plan : il se rouvre en pouces
   draw();
-  if (on) toast('Cotes en pouces, au 1/16 près. Touche une cote verte pour voir sa valeur en mm.');
+  if (on) toast('Cotes en pouces, au 1/16 près. Touche une cote convertie pour voir sa valeur en mm.');
 }
 
 let toastTimer = 0;
@@ -943,6 +980,7 @@ function buildBackrefs(ix) {
 
 function startViewer(plan, pdf) {
   S.plan = plan; S.pdf = pdf; S.index = plan.index; S.stack = []; S.net = null; S.mark = null;
+  inkChecked.clear();
   S.backrefs = buildBackrefs(plan.index);
   pageCache.clear();
   $('#work').hidden = true; $('#home').hidden = true; $('#viewer').hidden = false;
