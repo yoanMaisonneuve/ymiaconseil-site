@@ -47,6 +47,7 @@ export function analyseReport(name, bytes, doc, ix) {
   L.push(`DIAGNOSTIC Plans d'atelier — détecteur v${DETECT_VERSION}`);
   L.push(`Fichier : ${name} (${f1(bytes / 1e6)} Mo), ${st.pages} pages`);
   L.push(`Renvois : ${st.hotspots} (détail ${st.detailRefs}, feuille ${st.sheetRefs}) · étiquettes ${st.labels} · résolus ${st.resolved} · non résolus ${st.unresolved} · jetés ${st.jetes}`);
+  L.push(`Cotes : ${st.dims || 0} pour la loupe · unité ${ix.unit === 'mm' ? 'mm (option « Cotes en pouces » offerte)' : st.dims ? 'pieds-pouces' : '—'}`);
   L.push('');
 
   // Feuilles connues du document, comme detect.js les indexe (clé sans trait d'union).
