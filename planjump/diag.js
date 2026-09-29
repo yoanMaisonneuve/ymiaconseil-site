@@ -87,11 +87,12 @@ async function probe(pdf) {
 async function exportGz(name, doc) {
   const r3 = (v) => Math.round(v * 1000) / 1000;
   const data = {
-    v: 1, fichier: name, detecteur: DETECT_VERSION,
-    champs: ['s', 'x0', 'y0', 'x1', 'y1', 'size', 'horiz', 'ang', 'src'],
+    // v2 : `raw`, la hauteur de boîte lue par l'OCR avant redressement (0 hors OCR, voir extract.js).
+    v: 2, fichier: name, detecteur: DETECT_VERSION,
+    champs: ['s', 'x0', 'y0', 'x1', 'y1', 'size', 'horiz', 'ang', 'src', 'raw'],
     pages: doc.pages.map((p) => ({
       w: r3(p.w), h: r3(p.h),
-      items: p.items.map((it) => [it.s, r3(it.x0), r3(it.y0), r3(it.x1), r3(it.y1), r3(it.size), it.horiz ? 1 : 0, r3(it.ang || 0), it.src]),
+      items: p.items.map((it) => [it.s, r3(it.x0), r3(it.y0), r3(it.x1), r3(it.y1), r3(it.size), it.horiz ? 1 : 0, r3(it.ang || 0), it.src, r3(it.raw || 0)]),
     })),
   };
   const blob = new Blob([JSON.stringify(data)]);
