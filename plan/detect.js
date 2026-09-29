@@ -18,7 +18,7 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 11;
+export const DETECT_VERSION = 12;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -58,6 +58,37 @@ export function isDimension(s) {
   const m = DIM_MARK_RE.exec(s);
   return !!m && DIM_TAIL_RE.test(s.slice(m[0].length));
 }
+
+// Plan MÉTRIQUE (vu sur le plan Westbury, cartouche « DIMENSION : MÉTRIQUE ») : une cote y est un
+// nombre nu, en millimètres — « 1873.2 », « 65 », « OB 1800 », « FAB 2698.6 », « OB PORTE 1828.8 ».
+// Aucune marque d'unité : hors contexte, rien ne distingue « 175 » d'un numéro de local. D'où deux
+// étages : le DOCUMENT doit d'abord se déclarer métrique (voir section E), puis chaque nombre doit
+// avoir l'air d'une cote sur SA feuille.
+const METRIC_WORD_RE = /M[ÉE]TRIQUE|\bMETRIC\b|MILLIM[ÈE]TRE/i;
+const IMPERIAL_WORD_RE = /IMP[ÉE]RIAL|PIEDS?\s*-?\s*POUCES/i;
+const MM_DEC_RE = /^\d{1,5}[.,]\d{1,2}$/;
+// L'OCR colle souvent le préfixe au nombre : « OB1800 », « FAB2698.6 », « OBPORTE1828.8 ».
+const MM_RE = /^(?:((?:O\.?\s?B|F\.?\s?A\.?\s?B)\.?(?:\s*PORTE)?)\s*)?(\d{1,5}(?:[.,]\d{1,2})?)(?:\s*(mm|TYP\.?|\(TYP\.?\)))?$/i;
+export function parseMm(s) {
+  const m = MM_RE.exec(s);
+  if (!m) return null;
+  const dec = /[.,]/.test(m[2]);
+  if (!dec && m[2].length > 1 && m[2][0] === '0') return null;   // « 06 », « 01 » : numéros de détail
+  const pre = m[1] ? m[1].toUpperCase().replace(/[.\s]/g, '').replace('PORTE', ' PORTE') : '';
+  const post = m[3] && !/^mm$/i.test(m[3]) ? m[3].toUpperCase() : '';
+  return { mm: Number(m[2].replace(',', '.')), dec, pre, post };
+}
+
+// Millimètres → pouces, au 1/16 près : la graduation d'un ruban à mesurer.
+export function inches(mm) {
+  const n = Math.round(mm / 25.4 * 16);
+  const whole = Math.floor(n / 16);
+  let f = n % 16, den = 16;
+  while (f && f % 2 === 0) { f /= 2; den /= 2; }
+  if (!f) return `${whole}"`;
+  return whole ? `${whole} ${f}/${den}"` : `${f}/${den}"`;
+}
+export const dimInches = (d) => [d.pre, inches(d.mm), d.post].filter(Boolean).join(' ');
 
 export const normSheet = (s) => String(s).toUpperCase().replace(/[\s.]/g, '');
 // Clé de feuille : le trait d'union ne compte pas. Un même plan écrit « A-300 » dans son cartouche
@@ -531,13 +562,71 @@ export function buildIndex(doc) {
   }
 
   // ── E. les cotes, pour la loupe : position, angle et corps de chaque mesure ──
+  // Le document est-il en millimètres ? Le cartouche le dit parfois (« DIMENSION : MÉTRIQUE ») ;
+  // sinon, les nombres à décimale le trahissent : un plan en pieds-pouces n'en a presque pas.
+  let motMetrique = false, motImperial = false, nImp = 0, nDec = 0;
+  pages.forEach((pg, i) => {
+    for (const it of pg.items) {
+      const s = it.s.trim();
+      if (METRIC_WORD_RE.test(s)) motMetrique = true;
+      if (IMPERIAL_WORD_RE.test(s)) motImperial = true;
+      if (it.x0 >= sheets[i].tzX) continue;
+      if (isDimension(s)) nImp++;
+      else if (MM_DEC_RE.test(s)) nDec++;
+    }
+  });
+  const unit = (motMetrique && !motImperial ? nImp <= Math.max(3, nDec / 3) : nDec >= 10 && nDec > 3 * nImp) ? 'mm' : 'in';
+
   const r1 = (v) => Math.round(v * 10) / 10;
+  // Deux textes sur la même ligne de cote : même direction, décalage de côté inférieur à une
+  // demi-hauteur, pas trop loin l'un de l'autre.
+  const aligned = (p, q) => {
+    const a = p.horiz ? 0 : p.ang || 0, b = q.horiz ? 0 : q.ang || 0;
+    if (Math.abs(Math.sin(a - b)) > 0.1) return false;
+    const dx = cx(q) - cx(p), dy = cy(q) - cy(p), h = Math.min(p.size, q.size);
+    return Math.abs(-Math.sin(a) * dx + Math.cos(a) * dy) < 0.6 * h && Math.abs(Math.cos(a) * dx + Math.sin(a) * dy) < 25 * h;
+  };
+  function metricDims(pg, i) {
+    const me = sheets[i];
+    // Un nombre posé dans une bulle ou une étiquette déjà reconnue n'est pas une cote.
+    const occupied = [...out[i].hotspots, ...out[i].labels];
+    const inside = (it) => occupied.some((r) => cx(it) >= r.x0 && cx(it) <= r.x1 && cy(it) >= r.y0 && cy(it) <= r.y1);
+    const cands = [];
+    for (const it of pg.items) {
+      if (it.x0 >= me.tzX || tops[i].has(it)) continue;
+      const m = parseMm(it.s.trim());
+      if (m && !inside(it)) cands.push({ it, m });
+    }
+    // Certain : une décimale, un préfixe de métier, ou quatre chiffres et plus (≥ 1 m).
+    const sure = (c) => c.m.dec || !!c.m.pre || c.m.mm >= 1000;
+    const surs = cands.filter(sure);
+    // Feuille d'élévation ou de détails : les cotes à décimale abondent, un entier y est une cote
+    // (« 65 », « 127 »). Vue d'ensemble : les numéros de local (« 171 », « 183 ») ressemblent à
+    // des cotes ; un entier court n'y passe que s'il est dans une chaîne de cotes certaines.
+    const dense = surs.filter((c) => c.m.dec).length >= 3;
+    // Un gros numéro isolé est une étiquette de détail, pas une cote : les cotes d'une feuille
+    // sont écrites dans le même corps.
+    const tailles = surs.map((c) => c.it.size).sort((a, b) => a - b);
+    const corps = tailles.length ? tailles[Math.floor(tailles.length / 2)] : docBody;
+    return cands.filter((c) => sure(c) || (c.m.mm >= 10 && c.it.size <= 1.2 * corps &&
+      (dense || surs.some((o) => aligned(c.it, o.it)))));
+  }
+
   pages.forEach((pg, i) => {
     const me = sheets[i];
-    out[i].dims = pg.items
-      .filter((it) => it.x0 < me.tzX && !tops[i].has(it) && isDimension(it.s.trim()))
-      .map((it) => {
-        const d = { s: it.s.trim(), x: r1(cx(it)), y: r1(cy(it)), a: Math.round((it.ang || 0) * 1000) / 1000, h: r1(it.size) };
+    const found = pg.items.filter((it) => it.x0 < me.tzX && !tops[i].has(it) && isDimension(it.s.trim())).map((it) => ({ it, d: { s: it.s.trim() } }));
+    if (unit === 'mm') {
+      for (const { it, m } of metricDims(pg, i)) {
+        // `l` : longueur du texte d'origine, pour l'effacer sous sa conversion en pouces.
+        const d = { s: it.s.trim(), mm: m.mm, l: r1(it.horiz ? it.x1 - it.x0 : Math.hypot(it.x1 - it.x0, it.y1 - it.y0)) };
+        if (m.pre) d.pre = m.pre;
+        if (m.post) d.post = m.post;
+        found.push({ it, d });
+      }
+    }
+    out[i].dims = found
+      .map(({ it, d }) => {
+        Object.assign(d, { x: r1(cx(it)), y: r1(cy(it)), a: Math.round((it.ang || 0) * 1000) / 1000, h: r1(it.size) });
         if (isPose(d.s)) d.pose = 1;
         return d;
       })
@@ -580,6 +669,7 @@ export function buildIndex(doc) {
   return {
     version: DETECT_VERSION,
     home,
+    unit,
     sheets: sheets.map(({ tzX, base, ...rest }) => rest),
     pages: out,
     walls: wallList,

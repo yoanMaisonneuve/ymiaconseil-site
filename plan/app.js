@@ -12,7 +12,7 @@
 
 import * as pdfjsLib from './vendor/pdfjs/pdf.min.mjs';
 import { extractDocument } from './extract.js';
-import { buildIndex, DETECT_VERSION, normKey, wallKey } from './detect.js';
+import { buildIndex, DETECT_VERSION, normKey, wallKey, dimInches } from './detect.js';
 import * as store from './store.js';
 
 const VENDOR = new URL('./vendor/pdfjs/', import.meta.url).href;
@@ -41,6 +41,7 @@ const S = {
   stack: [],                 // historique de navigation : { page, view }
   backrefs: new Map(),       // « page|kind|n » → [{ page, hs }]
   showLinks: true, keepAwake: true, bigDims: true,
+  inches: false,             // plan en mm : cotes affichées en pouces (choix gardé avec le plan)
   mark: null,                // { page, rect, t0 } cible en surbrillance
   vw: 0, vh: 0, top: 52,
 };
@@ -241,7 +242,7 @@ function paint(now) {
     ctx.drawImage(net.bmp, (tx + net.x * z) * d, (ty + net.y * z) * d, net.w * z * d, net.h * z * d);
   }
 
-  if (S.bigDims) paintDims(d, z, tx, ty);
+  if (S.bigDims || S.inches) paintDims(d, z, tx, ty);
   if (S.showLinks) paintLinks(d, z, tx, ty);
   if (S.mark && S.mark.page === S.page) {
     const t = (now - S.mark.t0) / 1000, r = S.mark.rect;
@@ -264,6 +265,10 @@ const DIM_FONT = '"Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, s
 // Hauteurs de texte, en pixels d'écran. Montées le 20 sept. à la demande de Yoan (canal, Q13) :
 // « ça semble bon mais on pourrait pt grossir encore un peu ».
 const DIM_READABLE = 15.5, DIM_TARGET = 18, DIM_USELESS = 9;
+// Plan en millimètres, option « Cotes en pouces » : chaque cote en mm est effacée et réécrite en
+// pouces à sa place, même quand elle est déjà lisible. Couleur à part : le poseur voit que ce chiffre
+// vient de l'app, pas du dessinateur.
+const DIM_CONV = '#0b5d2c';
 function paintDims(d, z, tx, ty) {
   const dims = S.index.pages[S.page].dims;
   if (!dims || !dims.length) return;
@@ -275,42 +280,76 @@ function paintDims(d, z, tx, ty) {
     if (x < -60 || y < -60 || x > S.vw + 60 || y > S.vh + 60) continue;
     placed.push({ x, y, w: (r.x1 - r.x0) / 2 * z * 0.8, h: (r.y1 - r.y0) / 2 * z * 0.8 });
   }
-  let lastFont = '', drawn = 0;
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  let lastFont = '', drawn = 0, nConv = 0;
+  // Candidates, dans l'ordre de l'index : d'abord l'installation, puis la plus petite.
+  const todo = [];
   for (const m of dims) {
     const hpx = m.h * z;
-    if (hpx >= DIM_READABLE || hpx * 2 < DIM_USELESS) continue;
-    const sx = tx + m.x * z, sy = ty + m.y * z;
-    if (sx < -80 || sy < -80 || sx > S.vw + 80 || sy > S.vh + 80) continue;
-    if (m._w === undefined) { ctx.font = `600 100px ${DIM_FONT}`; lastFont = ''; m._w = ctx.measureText(m.s).width / 100; }
-    const c = Math.abs(Math.cos(m.a)), sn = Math.abs(Math.sin(m.a));
+    const conv = S.inches && m.mm != null;
+    if (!conv && (!S.bigDims || hpx >= DIM_READABLE)) continue;
     // Deux cotes grossies ne se recouvrent jamais, et une cote ne bouge JAMAIS de sa place : sur un
     // plan, un chiffre déplacé ne désigne plus la même mesure. Quand ×2 ne rentre pas, on descend par
     // paliers — une cote serrée gagne au moins un peu, plutôt que rien. En dessous de ×1,2 ça ne vaut
-    // plus la peine : on laisse le dessin d'origine.
-    const full = Math.min(hpx * 2, DIM_TARGET);
-    let size = 0, w = 0, h = 0, bw = 0, bh = 0;
-    for (const tryout of [full, hpx * 1.6, hpx * 1.35]) {
-      if (tryout < hpx * 1.2 || tryout > full) continue;
-      w = m._w * tryout + tryout * 0.5; h = tryout * 1.22;
-      bw = (w * c + h * sn) / 2 * 0.92; bh = (w * sn + h * c) / 2 * 0.92;
+    // plus la peine : on laisse le dessin d'origine. Une cote convertie, elle, descend jusqu'à sa
+    // taille d'origine : la laisser en mm au milieu des pouces tromperait.
+    const full = conv && !S.bigDims ? hpx : Math.max(conv ? hpx : 0, Math.min(hpx * 2, DIM_TARGET));
+    // Trop petite même doublée : illisible, sur le dessin comme ici. Une cote convertie suit la même
+    // règle avec ou sans loupe — sinon, loupe coupée, les petites resteraient en mm parmi les pouces.
+    if (hpx * 2 < DIM_USELESS) continue;
+    const sx = tx + m.x * z, sy = ty + m.y * z;
+    if (sx < -80 || sy < -80 || sx > S.vw + 80 || sy > S.vh + 80) continue;
+    if (conv && ++nConv > 320) continue;
+    const text = conv ? dimInches(m) : m.s;
+    const wKey = conv ? '_wi' : '_w';
+    if (m[wKey] === undefined) { ctx.font = `600 100px ${DIM_FONT}`; lastFont = ''; m[wKey] = ctx.measureText(text).width / 100; }
+    todo.push({ m, conv, hpx, sx, sy, full, text, wu: m[wKey] });
+  }
+  const extent = (t, size) => {
+    const c = Math.abs(Math.cos(t.m.a)), sn = Math.abs(Math.sin(t.m.a));
+    const w = t.wu * size + size * 0.5, h = size * 1.22;
+    return { w: (w * c + h * sn) / 2 * 0.92, h: (w * sn + h * c) / 2 * 0.92 };
+  };
+  // Cotes converties, en deux temps. D'abord chacune réserve sa place d'origine — une voisine
+  // grossie ne peut pas la lui prendre — et le chiffre en mm est effacé dessous. Sans contour, juste
+  // la place du texte d'origine : un « 12.6 » qui dépasse de sous un « 1/2" » se lirait. Tout est
+  // effacé AVANT d'écrire : un effacement tardif rognerait le texte d'une voisine déjà écrite.
+  for (const t of todo) {
+    if (!t.conv) continue;
+    t.own = { x: t.sx, y: t.sy, ...extent(t, t.hpx) };
+    placed.push(t.own);
+    const L = ((t.m.l || 0) * z + t.hpx * 0.5) * d, H = t.hpx * 1.7 * d;
+    ctx.save();
+    ctx.translate(t.sx * d, t.sy * d); ctx.rotate(t.m.a);
+    ctx.fillStyle = 'rgba(255,255,255,.96)';
+    ctx.fillRect(-L / 2, -H / 2, L, H);
+    ctx.restore();
+  }
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (const t of todo) {
+    const { m, conv, hpx, sx, sy, full, text } = t;
+    if (!conv && drawn >= 320) continue;
+    const floor = conv ? hpx : hpx * 1.2;
+    let size = 0, box = null;
+    for (const tryout of [full, hpx * 1.6, hpx * 1.35, hpx]) {
+      if (tryout < floor || tryout > full) continue;
+      const b = extent(t, tryout);
       let hit = false;
-      for (const p of placed) if (Math.abs(p.x - sx) < p.w + bw && Math.abs(p.y - sy) < p.h + bh) { hit = true; break; }
-      if (!hit) { size = tryout; break; }
+      for (const p of placed) if (p !== t.own && Math.abs(p.x - sx) < p.w + b.w && Math.abs(p.y - sy) < p.h + b.h) { hit = true; break; }
+      if (!hit || (conv && tryout === hpx)) { size = tryout; box = b; break; }   // sa place d'origine lui revient
     }
     if (!size) continue;
-    placed.push({ x: sx, y: sy, w: bw, h: bh });
+    if (t.own) Object.assign(t.own, box); else placed.push({ x: sx, y: sy, ...box });
     const font = `600 ${(size * d).toFixed(1)}px ${DIM_FONT}`;
     if (font !== lastFont) { ctx.font = font; lastFont = font; }
     ctx.save();
     ctx.translate(sx * d, sy * d); ctx.rotate(m.a);
     ctx.lineWidth = size * d * 0.42; ctx.lineJoin = 'round'; ctx.miterLimit = 2;
     ctx.strokeStyle = 'rgba(255,255,255,.92)';
-    ctx.strokeText(m.s, 0, d * size * 0.04);
-    ctx.fillStyle = m.pose ? '#b34700' : '#0b1a33';   // les cotes d'installation gardent leur orange
-    ctx.fillText(m.s, 0, d * size * 0.04);
+    ctx.strokeText(text, 0, d * size * 0.04);
+    ctx.fillStyle = m.pose ? '#b34700' : conv ? DIM_CONV : '#0b1a33';   // les cotes d'installation gardent leur orange
+    ctx.fillText(text, 0, d * size * 0.04);
     ctx.restore();
-    if (++drawn >= 320) break;
+    drawn++;
   }
   ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
 }
@@ -533,6 +572,15 @@ function onTap(sx, sy) {
   }
   hits.sort((a, b) => a.d - b.d);
   const now = performance.now();
+  if (!hits.length && S.inches) {
+    let best = null, bd = Infinity;
+    for (const m of pg.dims || []) {
+      if (m.mm == null) continue;
+      const dd = Math.hypot(m.x - x, m.y - y);
+      if (dd < bd && dd <= Math.max(reach, (m.l || 0) / 2 + m.h)) { bd = dd; best = m; }
+    }
+    if (best) toast(`${best.s} mm sur le plan = ${dimInches(best)}`);
+  }
   if (!hits.length) {
     // Double-toucher dans le vide : zoomer, ou revenir à la feuille entière.
     const lt = gesture.lastTap;
@@ -779,10 +827,22 @@ $('#moreBtn').addEventListener('click', () => {
   openSheet(S.plan.name, [
     { big: S.showLinks ? 'Masquer les renvois' : 'Afficher les renvois', small: `${st.detailRefs} renvois de détail · ${st.sheetRefs} renvois de feuille`, run: () => { S.showLinks = !S.showLinks; draw(); } },
     { big: S.bigDims ? 'Cotes à leur taille d\'origine' : 'Grossir les cotes', small: `${st.dims || 0} mesures repérées · grossies jusqu'à ×2 quand elles sont trop petites`, run: () => { S.bigDims = !S.bigDims; draw(); } },
+    ...(S.index.unit === 'mm' ? [{
+      big: S.inches ? 'Cotes en millimètres' : 'Cotes en pouces',
+      small: S.inches ? 'Revenir aux cotes du plan' : 'Ce plan est en mm · converties au 1/16 po près, en vert',
+      run: () => setInches(!S.inches),
+    }] : []),
     { big: S.keepAwake ? 'Laisser l\'écran s\'éteindre' : 'Garder l\'écran allumé', small: 'Pratique quand on mesure avec les deux mains', run: () => { S.keepAwake = !S.keepAwake; wake(); } },
     { big: 'Changer de plan', small: 'Retour à la liste de mes plans', run: () => closePanelThen(leaveViewer), keepOpen: true },
   ]);
 });
+
+function setInches(on) {
+  S.inches = on;
+  if (S.plan) { S.plan.inches = on; savePos(true); }   // gardé avec le plan : il se rouvre en pouces
+  draw();
+  if (on) toast('Cotes en pouces, au 1/16 près. Touche une cote verte pour voir sa valeur en mm.');
+}
 
 let toastTimer = 0;
 function toast(msg, warn) {
@@ -891,10 +951,16 @@ function startViewer(plan, pdf) {
   const n = lp && lp.page < plan.index.sheets.length ? lp.page : plan.index.home;
   let view = null;
   if (lp && lp.c) { const z = Math.min(Z_MAX, zFit(n) * (lp.zr || 1)); view = clampTo({ z, tx: S.vw / 2 - lp.c.x * z, ty: S.vh / 2 - lp.c.y * z }, plan.index.sheets[n]); }
+  S.inches = plan.index.unit === 'mm' && !!plan.inches;
   showPage(n, null, null, view);
   wake();
   const st = plan.index.stats;
-  if (!lp) toast(st.hotspots ? `${st.hotspots} renvois repérés. Touche un mur ou une coupe.` : 'Aucun renvoi repéré dans ce plan. Navigation par feuille seulement.', !st.hotspots);
+  // Plan en mm jamais réglé : le dire une fois. Le choix « non » s'enregistre avec la position.
+  const mmHint = plan.index.unit === 'mm' && plan.inches === undefined;
+  if (mmHint) plan.inches = false;
+  const hint = 'Plan en millimètres : menu ⋮ → « Cotes en pouces ».';
+  if (!lp) toast(`${st.hotspots ? `${st.hotspots} renvois repérés. Touche un mur ou une coupe.` : 'Aucun renvoi repéré dans ce plan. Navigation par feuille seulement.'}${mmHint ? ` ${hint}` : ''}`, !st.hotspots);
+  else if (mmHint) toast(hint);
 }
 
 function leaveViewer() { history.go(-(S.stack.length + 1)); S.stack = []; closePlan(); }
