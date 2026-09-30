@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La méthode, sur une page — YM IA Conseil</title>
+<meta name="description" content="Une méthode d'utilisation de l'IA qui survit à six mois : où vit l'état, un seul test, deux pièges mesurés. Recto unique.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1f3a">
+<meta property="og:title" content="La méthode, sur une page">
+<meta property="og:description" content="Ce qui s'écrit sans geste humain survit. Ce qui exige un rituel meurt.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ymiaconseil.com/methode/">
+<link rel="canonical" href="https://ymiaconseil.com/methode/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Lora:ital,wght@0,400..600;1,400..500&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --gold:#d4a843; --gold-small:#8a6b18;
+  --ink-body:#2a2620; --dim:#5c5c5c; --line:#e4e2dd; --paper:#fff; --tint:#f6f4f0;
+  --display:'Newsreader',Georgia,serif; --body:'Lora',Georgia,serif; --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;background:var(--paper);color:var(--ink-body);
+  font-family:var(--body);font-size:17px;line-height:1.66;
+  display:flex;flex-direction:column;
+}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar a{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar span{color:var(--gold)}
+main{flex:1;padding:44px 20px 8px}
+.wrap{max-width:660px;margin:0 auto;width:100%}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(30px,7vw,46px);line-height:1.1;margin:0 0 16px;text-wrap:balance}
+.chapeau{font-size:18.5px;color:#3c3830;margin:0 0 6px;max-width:34em}
+.meta{font-family:var(--mono);font-size:12.5px;color:var(--dim);margin:14px 0 0;padding-bottom:30px;border-bottom:1px solid var(--line);max-width:none}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(22px,4.4vw,28px);line-height:1.2;margin:42px 0 4px;text-wrap:balance}
+.sous{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-small);margin:0 0 16px;max-width:none}
+h3{font-family:var(--display);font-weight:600;color:var(--navy);font-size:19.5px;line-height:1.3;margin:26px 0 6px}
+p{margin:0 0 15px;max-width:34em}
+strong{font-weight:600;color:#1a1814}
+em{font-style:italic}
+.loi{margin:26px 0;padding:20px 22px;background:var(--navy);border-left:5px solid var(--gold)}
+.loi p{margin:0;max-width:30em;font-family:var(--display);font-size:clamp(19px,3.8vw,23px);line-height:1.35;color:#fff}
+.loi .src{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:#a8bad0;margin-top:12px;max-width:none}
+.test{margin:26px 0;padding:22px;background:var(--tint);border-left:5px solid var(--gold);text-align:center}
+.test p{margin:0 auto;max-width:26em;font-family:var(--display);font-weight:700;color:var(--navy);font-size:clamp(20px,4.2vw,25px);line-height:1.3}
+.test .rep{font-family:var(--body);font-weight:400;font-size:17px;color:var(--ink-body);margin-top:14px}
+.couches{list-style:none;padding:0;margin:22px 0;counter-reset:c}
+.couches li{counter-increment:c;position:relative;padding:0 0 22px 52px;margin:0}
+.couches li::before{
+  content:counter(c);position:absolute;left:0;top:1px;
+  width:34px;height:34px;border-radius:50%;background:var(--navy);color:var(--gold);
+  font-family:var(--display);font-weight:700;font-size:17px;
+  display:flex;align-items:center;justify-content:center;
+}
+.couches b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18.5px;display:block;margin-bottom:4px;line-height:1.3}
+.couches p{margin:0}
+.piege{border-top:1px solid var(--line);padding-top:20px;margin-top:24px}
+.mesure{font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#3c3830;background:var(--tint);border-left:3px solid var(--gold);padding:13px 16px;margin:14px 0;max-width:none}
+.fin{margin:46px 0 0;padding:22px 0 0;border-top:3px solid var(--gold)}
+.fin p{font-size:15.5px;color:var(--dim)}
+.fin a{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
+.fin a:hover{background:var(--tint)}
+footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
+footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
+@media print{.bar,footer{background:none;color:#000;border-color:#000}.loi{background:none;border-left:4px solid #000}.loi p,.loi .src{color:#000}}
+</style>
+</head>
+<body>
+
+<div class="bar"><a href="/">YM <span>IA</span> Conseil</a></div>
+
+<main>
+<article class="wrap">
+
+  <p class="code">Méthode &middot; recto unique</p>
+  <h1>La méthode, sur une page</h1>
+  <p class="chapeau">Il n'y a rien à retenir par cœur. Le test de la fin suffit, et il tranche
+    aussi bien une règle d'équipe qu'un écran de tableau de bord.</p>
+  <p class="meta">Tiré de huit mois de travail quotidien avec un agent, janvier — septembre 2026.
+    Les chiffres cités sont mesurés, pas estimés.</p>
+
+  <h2>Ce qu'on n'enseigne pas</h2>
+  <p class="sous">Des prompts</p>
+  <p>Un prompt est un rituel. Il exige qu'une personne se souvienne de le faire, au bon moment,
+    avec le bon texte. C'est exactement ce qui ne survit pas.</p>
+  <p>Sept outils construits sur le même dépôt entre janvier et septembre 2026, jugés un par un.
+    Sept fois la même loi, trouvée indépendamment :</p>
+
+  <div class="loi">
+    <p>Ce qui s'écrit sans geste humain survit.<br>Ce qui exige un rituel meurt.</p>
+    <p class="src">Inventaire des sept briques &middot; 22 septembre 2026</p>
+  </div>
+
+  <p>Le crochet qui lit l'heure tourne encore après huit mois : personne n'a à le lancer. Les
+    quatre organes du système de perception sont morts en avril : ils demandaient une mise à jour
+    à la main. Ce n'est pas un jugement sur la discipline des gens. C'est une mesure.</p>
+
+  <h2>Ce qu'on enseigne</h2>
+  <p class="sous">Où vit l'état</p>
+  <p>Trois couches. Toute la méthode est là.</p>
+
+  <ol class="couches">
+    <li>
+      <b>Ce que la machine relit à chaque fois sans qu'on le demande.</b>
+      <p>Un fichier d'instructions chargé au départ de chaque session. Un crochet automatique pour
+        les faits qui changent — l'heure, l'état du dépôt. <strong>Si une règle n'est pas dans
+        cette couche, elle n'existe pas</strong> : elle existe seulement les jours où quelqu'un
+        s'en souvient, ce qui n'est pas exister.</p>
+    </li>
+    <li>
+      <b>Ce qui s'écrit au moment du geste, pas au moment où on y repense.</b>
+      <p>Le fichier d'état d'un dossier est modifié dans le même envoi que l'action posée. Pas de
+        séance de mise à jour le vendredi : la séance du vendredi n'arrive jamais. Le corollaire
+        est dur, et c'est le plus utile — <strong>si une trace demande une deuxième action pour
+        exister, elle n'existera pas</strong>.</p>
+    </li>
+    <li>
+      <b>Ce qu'un humain juge.</b>
+      <p>La machine calcule l'état, l'humain tranche. Le jugement ne s'automatise pas, et essayer
+        est la faute classique : on obtient un système qui décide mal, vite, et sans personne à
+        qui demander pourquoi.</p>
+    </li>
+  </ol>
+
+  <h2>Le test</h2>
+  <p class="sous">Il n'y en a qu'un</p>
+
+  <div class="test">
+    <p>Si la personne oublie,<br>est-ce que ça arrive quand même&nbsp;?</p>
+    <p class="rep">Non → ce n'est pas une méthode, c'est une bonne intention.</p>
+  </div>
+
+  <p>Un débutant peut l'appliquer le premier jour. Il ne se périme pas. Et il sert de filtre à la
+    construction autant qu'à l'organisation : <strong>ce qui ne passe pas le test n'a pas à être
+    bâti</strong>.</p>
+
+  <h2>Scaler</h2>
+  <p class="sous">Le même test, déplacé d'un cran</p>
+
+  <div class="test">
+    <p>Une méthode scale si elle survit<br>à l'absence de celui qui l'enseigne.</p>
+  </div>
+
+  <p>Ce qui veut dire qu'une formation livre des <strong>fichiers</strong>, pas des habitudes.
+    L'élève repart avec son fichier d'instructions et son crochet qui tourne, ou il repart avec
+    rien. Une habitude enseignée le lundi est morte le jeudi ; un fichier chargé automatiquement
+    est encore là dans huit mois.</p>
+
+  <h2>Les deux pièges</h2>
+  <p class="sous">À nommer explicitement, parce qu'on s'y est fait prendre</p>
+
+  <div class="piege">
+    <h3>La doctrine gonfle, l'apprentissage non</h3>
+    <p class="mesure">Mesuré le 22 septembre 2026 sur notre propre dépôt :<br>
+      181,6 Ko de méthode écrite &mdash; pour 29 règles réellement vivantes,<br>
+      dont 27 Ko dupliqués mot pour mot.</p>
+    <p>On accumule du texte en croyant apprendre. Le garde-fou qui marche :
+      <strong>le niveau qui révise la méthode a le droit de retirer une règle, et jamais d'en
+      ajouter.</strong> Sans lui, le système s'étouffe seul, et plus personne ne lit sa propre
+      doctrine &mdash; y compris celui qui l'a écrite.</p>
+  </div>
+
+  <div class="piege">
+    <h3>Vérifier la personne auprès de la personne, pas auprès du dépôt</h3>
+    <p>Le 29 septembre au soir, l'agent a livré trois affirmations fausses sur son coéquipier
+      humain en une heure : un crochet qui « injectait » des données (il n'injectait rien, son
+      fichier de configuration était invalide) ; des boucles « en panne » (elles venaient d'être
+      arrêtées volontairement, et un fichier le disait noir sur blanc) ; des écrans « jamais
+      ouverts » (ils étaient consultés tous les jours).</p>
+    <p><strong>Les trois venaient d'un rapport, d'un symptôme ou d'une note. Aucune ne venait de
+      la personne concernée.</strong> Et les trois fois, la vérité était à une question de
+      distance. Un agent qui décrit quelqu'un doit le vérifier auprès de lui.</p>
+  </div>
+
+  <div class="fin">
+    <p>Cette page est le recto d'une méthode en usage, pas une théorie. Elle changera quand une
+      mesure la contredira &mdash; et la mesure qui la contredit sera écrite ici.</p>
+    <p><a href="/">Retour à l'accueil</a></p>
+  </div>
+
+</article>
+</main>
+
+<footer>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a></footer>
+
+</body>
+</html>
