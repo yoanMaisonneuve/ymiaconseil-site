@@ -71,6 +71,9 @@ a.lien:hover{background:var(--tint)}
 .btn:hover{background:var(--navy-3)}
 .tel{display:block;font-family:var(--display);font-size:20px;color:var(--navy);text-decoration:none;margin:16px 0 0}
 footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
+footer .plan{margin:0 0 10px;line-height:2}
+footer .plan b{color:var(--gold);font-weight:400}
+footer p{margin:0;max-width:none}
 footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
 @media (max-width:480px){.bar .in{flex-direction:column;align-items:flex-start;gap:8px}}
 </style>
@@ -189,7 +192,10 @@ footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168
 </article>
 </main>
 
-<footer>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a></footer>
+<footer>
+  <nav class="plan" aria-label="Plan du site"><a href="/">Accueil</a> &middot; <a href="/methode/">La méthode</a> &middot; <b>Formation</b> &middot; <a href="/plan/">PlanJump</a> &middot; <a href="/easyread/">Syllabes Faciles</a></nav>
+  <p>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a> &middot; <a href="tel:+15149268633">514 926-8633</a></p>
+</footer>
 
 </body>
 </html>

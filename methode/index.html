@@ -67,10 +67,22 @@ em{font-style:italic}
 .piege{border-top:1px solid var(--line);padding-top:20px;margin-top:24px}
 .mesure{font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#3c3830;background:var(--tint);border-left:3px solid var(--gold);padding:13px 16px;margin:14px 0;max-width:none}
 .fin{margin:46px 0 0;padding:22px 0 0;border-top:3px solid var(--gold)}
-.fin p{font-size:15.5px;color:var(--dim)}
+.fin .note{font-size:15.5px;color:var(--dim)}
+.fin h2{margin-top:30px}
+.btn{display:inline-block;background:var(--navy);color:#fff;font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;padding:14px 22px;border-radius:100px;text-decoration:none;margin:10px 0 0}
+.btn:hover{background:#16355e}
+.tel{display:block;font-family:var(--display);font-size:19px;color:var(--navy);text-decoration:none;margin:16px 0 0}
+.apres{margin-top:20px;font-size:15.5px;color:var(--dim)}
+.lien{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
+.lien:hover{background:var(--tint)}
 .fin a{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
+.fin a.btn{color:#fff;border-bottom:0}
+.fin a.tel{border-bottom:0}
 .fin a:hover{background:var(--tint)}
 footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
+footer .plan{margin:0 0 10px;line-height:2}
+footer .plan b{color:var(--gold);font-weight:400}
+footer p{margin:0;max-width:none}
 footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
 @media (max-width:480px){.bar .in{flex-direction:column;align-items:flex-start;gap:8px}}
 @media print{.bar,footer{background:none;color:#000;border-color:#000}.loi{background:none;border-left:4px solid #000}.loi p,.loi .src{color:#000}}
@@ -187,15 +199,29 @@ footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168
   </div>
 
   <div class="fin">
-    <p>Cette page est le recto d'une méthode en usage, pas une théorie. Elle changera quand une
-      mesure la contredira &mdash; et la mesure qui la contredit sera écrite ici.</p>
-    <p><a href="/">Retour à l'accueil</a></p>
+    <p class="note">Cette page est le recto d'une méthode en usage, pas une théorie. Elle
+      changera quand une mesure la contredira &mdash; et la mesure qui la contredit sera écrite
+      ici.</p>
+
+    <h2 style="margin-top:30px">Et maintenant, la même chose chez vous</h2>
+    <p>Lire la méthode ne l'installe pas. Ce qui l'installe, c'est une journée où on écrit
+      ensemble vos fichiers et où on branche ce qui doit se charger tout seul — avec votre
+      équipe, un groupe, ou vous seul.</p>
+
+    <a class="btn" href="/formation/">Voir les trois formats</a>
+    <a class="tel" href="tel:+15149268633">ou appelez-moi : 514 926-8633</a>
+
+    <p class="apres"><a class="lien" href="/formation/">Demander un format et un prix</a>
+      &middot; <a class="lien" href="/">Retour à l'accueil</a></p>
   </div>
 
 </article>
 </main>
 
-<footer>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a></footer>
+<footer>
+  <nav class="plan" aria-label="Plan du site"><a href="/">Accueil</a> &middot; <b>La méthode</b> &middot; <a href="/formation/">Formation</a> &middot; <a href="/plan/">PlanJump</a> &middot; <a href="/easyread/">Syllabes Faciles</a></nav>
+  <p>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a> &middot; <a href="tel:+15149268633">514 926-8633</a></p>
+</footer>
 
 </body>
 </html>
