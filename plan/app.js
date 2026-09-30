@@ -290,17 +290,20 @@ function tagDimColors(n) {
     c.width = sw; c.height = sh;
     cx.drawImage(base.bmp, sx, sy, sw, sh, 0, 0, sw, sh);
     const d = cx.getImageData(0, 0, sw, sh).data;
-    let ink = 0, red = 0;
+    // Deux votes : le ROUGE, même pâli en rose — vert et bleu à peu près égaux, sinon c'est une frange
+    // colorée d'anticrénelage (orangé, magenta) autour d'un texte noir —, et le SOMBRE. Le papier, les
+    // pixels pâles et les traits d'autres couleurs (verre en cyan) ne votent pas. Le fond vient souvent
+    // du cache du téléphone, en WebP : la compression délave un trait rouge fin en rose, et l'ancienne
+    // règle, qui le prenait pour du papier alors que le trait noir voisin comptait, rendait vertes des
+    // cotes rouges (Yoan, MR8 sur A-206 : 1006.2, 1015.7). Rejouée sur sa capture, 2 résolutions ×
+    // 5 compressions : 0 erreur sur 30 cotes.
+    let red = 0, dark = 0;
     for (let i = 0; i < d.length; i += 4) {
       const r = d[i], g = d[i + 1], b = d[i + 2];
-      if (Math.min(r, g, b) > 170 && Math.max(r, g, b) - Math.min(r, g, b) < 60) continue;   // papier
-      ink++;
-      // Un trait rouge fin sort rosé du rendu (224, 160, 160) : on juge la teinte, pas la saturation.
-      if (r >= 120 && r - Math.max(g, b) >= 40) red++;
+      if (r >= 110 && r - Math.max(g, b) >= 30 && Math.abs(g - b) <= 0.35 * (r - Math.min(g, b))) red++;
+      else if (0.3 * r + 0.59 * g + 0.11 * b < 140) dark++;
     }
-    // Rouge si c'est la couleur de la moitié de l'encre au moins (un trait noir peut traverser la cote),
-    // ou de TOUTE l'encre d'une cote minuscule : un texte noir laisse toujours des pixels noirs.
-    m.red = (ink >= 3 && red >= 0.5 * ink) || (ink >= 2 && red === ink) ? 1 : 0;
+    m.red = red >= 3 && red >= dark ? 1 : 0;
   }
   c.width = c.height = 0;
 }
