@@ -91,11 +91,21 @@
   .nav-links{display:flex;align-items:center;gap:26px}
   .nav-links a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
   .nav-links a:hover{color:var(--navy)}
-  .nav-links a.tel{color:var(--navy);font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:none}
+  .nav-links a.tel{color:var(--navy);font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:none;white-space:nowrap}
   .nav-links a.cta{background:var(--navy);color:#fff;padding:9px 16px;border-radius:100px;letter-spacing:.08em;white-space:nowrap}
   .nav-links a.cta:hover{background:var(--navy-3);color:#fff}
   .nav-links a.cta .short{display:none}
-  @media(max-width:760px){.nav-links a:not(.cta){display:none}}
+  /* 29.09 : l’onglet Formation a fait deborder la barre. On resserre avant de cacher. */
+  @media(max-width:1080px){
+    .nav-links{gap:15px}
+    .nav-links a{font-size:10.5px;letter-spacing:.06em}
+    .nav-links a.tel{display:none}
+  }
+  @media(max-width:760px){.nav-links a:not(.cta):not(.page){display:none}
+    .nav-links{gap:14px}
+    .nav-links a.page{font-size:10.5px;letter-spacing:.06em}}
+  @media(max-width:380px){.nav-links a.page{font-size:10px;letter-spacing:.02em}}
+  @media(max-width:620px){.logo .word{display:none}}
   @media(max-width:520px){
     .wrap{padding:0 20px}
     .nav-links a.cta{padding:8px 13px}
@@ -261,7 +271,8 @@
     </a>
     <nav class="nav-links" aria-label="Navigation principale">
       <a href="#services">Services</a>
-      <a href="#methode">Méthode</a>
+      <a class="page" href="/methode/">Méthode</a>
+      <a class="page" href="/formation/">Formation</a>
       <a href="#processus">Déroulement</a>
       <a class="tel" href="tel:+15149268633">514 926-8633</a>
       <a class="login" href="#portail" data-voile>Se connecter</a>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formation — YM IA Conseil</title>
+<meta name="description" content="Formation à l'utilisation de l'IA en entreprise : atelier d'une journée, conférence, ou accompagnement individuel. On repart avec des fichiers qui tournent, pas avec des notes.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1f3a">
+<meta property="og:title" content="Formation — YM IA Conseil">
+<meta property="og:description" content="On repart avec des fichiers qui tournent, pas avec des notes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ymiaconseil.com/formation/">
+<link rel="canonical" href="https://ymiaconseil.com/formation/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Lora:ital,wght@0,400..600;1,400..500&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --navy-3:#16355e; --gold:#d4a843; --gold-small:#8a6b18;
+  --ink-body:#2a2620; --dim:#5c5c5c; --line:#e4e2dd; --paper:#fff; --tint:#f6f4f0;
+  --display:'Newsreader',Georgia,serif; --body:'Lora',Georgia,serif; --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;background:var(--paper);color:var(--ink-body);
+  font-family:var(--body);font-size:17px;line-height:1.66;
+  display:flex;flex-direction:column;
+}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar .in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.bar a.logo{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar a.logo span{color:var(--gold)}
+.bar a.autre{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#a8bad0;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.45);white-space:nowrap}
+.bar a.autre:hover{color:#fff}
+main{flex:1;padding:44px 20px 8px}
+.wrap{max-width:660px;margin:0 auto;width:100%}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(30px,7vw,46px);line-height:1.1;margin:0 0 16px;text-wrap:balance}
+h1 em{font-style:italic;color:var(--gold-small)}
+.chapeau{font-size:18.5px;color:#3c3830;margin:0 0 22px;max-width:34em}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(22px,4.4vw,28px);line-height:1.2;margin:44px 0 4px;text-wrap:balance}
+.sous{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-small);margin:0 0 16px;max-width:none}
+p{margin:0 0 15px;max-width:34em}
+strong{font-weight:600;color:#1a1814}
+a.lien{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
+a.lien:hover{background:var(--tint)}
+.loi{margin:24px 0;padding:20px 22px;background:var(--navy);border-left:5px solid var(--gold)}
+.loi p{margin:0;max-width:30em;font-family:var(--display);font-size:clamp(19px,3.8vw,23px);line-height:1.35;color:#fff}
+.loi .src{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:#a8bad0;margin-top:12px;max-width:none}
+.loi .src a{color:#d9c48c;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.5)}
+.formats{display:flex;flex-direction:column;gap:0;margin:20px 0 0;border-top:1px solid var(--line)}
+.fmt{border-bottom:1px solid var(--line);padding:22px 0}
+.fmt .duree{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-small);margin:0 0 5px}
+.fmt h3{font-family:var(--display);font-weight:600;color:var(--navy);font-size:21px;line-height:1.25;margin:0 0 8px}
+.fmt p{margin:0 0 10px}
+.fmt ul{margin:0;padding-left:20px;max-width:34em}
+.fmt li{margin:0 0 5px}
+.fmt li b{font-weight:600;color:#1a1814}
+.pas{background:var(--tint);border-left:3px solid var(--gold);padding:18px 20px;margin:22px 0}
+.pas p{margin:0 0 10px}
+.pas p:last-child{margin:0}
+.bul{list-style:none;padding:0;margin:18px 0 0;max-width:34em}
+.bul li{position:relative;padding-left:22px;margin:0 0 10px}
+.bul li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:8px;background:var(--gold);border-radius:50%}
+.appel{margin:46px 0 0;padding:26px 0 0;border-top:3px solid var(--gold)}
+.btn{display:inline-block;background:var(--navy);color:#fff;font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;padding:14px 22px;border-radius:100px;text-decoration:none;margin:8px 0 0}
+.btn:hover{background:var(--navy-3)}
+.tel{display:block;font-family:var(--display);font-size:20px;color:var(--navy);text-decoration:none;margin:16px 0 0}
+footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
+footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
+@media (max-width:480px){.bar .in{flex-direction:column;align-items:flex-start;gap:8px}}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="in">
+  <a class="logo" href="/">YM <span>IA</span> Conseil</a>
+  <a class="autre" href="/methode/">Lire la méthode</a>
+</div></div>
+
+<main>
+<article class="wrap">
+
+  <p class="code">Formation</p>
+  <h1>On repart avec des fichiers qui tournent, <em>pas avec des notes</em>.</h1>
+  <p class="chapeau">La plupart des formations à l'IA enseignent des prompts. Un prompt est un
+    rituel : il exige qu'une personne s'en souvienne, au bon moment, avec le bon texte. C'est
+    précisément ce qui ne survit pas à six mois.</p>
+
+  <div class="loi">
+    <p>Ce qui s'écrit sans geste humain survit.<br>Ce qui exige un rituel meurt.</p>
+    <p class="src">La méthode, en entier &middot; <a href="/methode/">ymiaconseil.com/methode</a></p>
+  </div>
+
+  <p>Ce que j'enseigne n'est pas une liste de formules. C'est <strong>où vit l'état</strong> :
+    ce que la machine relit d'elle-même à chaque session, ce qui s'écrit au moment du geste, et
+    ce qu'un humain doit continuer de juger. Trois couches, un seul test, et ce test s'applique
+    dès le premier jour.</p>
+
+  <h2>Trois formats</h2>
+  <p class="sous">Selon qui doit apprendre, et combien</p>
+
+  <div class="formats">
+
+    <div class="fmt">
+      <p class="duree">Une journée &middot; sur place</p>
+      <h3>Atelier en entreprise</h3>
+      <p>Avec l'équipe, sur vos propres dossiers — pas sur un cas d'école. La journée se termine
+        quand ce qu'on a bâti tourne chez vous.</p>
+      <ul>
+        <li><b>Le matin :</b> la méthode, et le tri de ce qui chez vous ne passe pas le test.</li>
+        <li><b>L'après-midi :</b> on écrit ensemble le fichier d'instructions de votre équipe et
+          on branche ce qui doit se charger tout seul.</li>
+        <li><b>À la fin :</b> l'équipe repart avec des fichiers en place, versionnés, qui se
+          chargent sans que personne ait à y penser.</li>
+      </ul>
+    </div>
+
+    <div class="fmt">
+      <p class="duree">60 à 90 minutes &middot; sur place ou à distance</p>
+      <h3>Conférence</h3>
+      <p>Pour un groupe, un événement, un conseil d'administration ou une équipe qui veut
+        d'abord comprendre avant de s'engager.</p>
+      <ul>
+        <li>La méthode en entier, avec les mesures qui l'appuient.</li>
+        <li>Les deux pièges qui font échouer la plupart des démarches, et comment on les a
+          mesurés sur notre propre travail.</li>
+        <li>Questions ouvertes à la fin, sans limite de temps.</li>
+      </ul>
+    </div>
+
+    <div class="fmt">
+      <p class="duree">Séances individuelles &middot; selon le rythme</p>
+      <h3>Accompagnement individuel</h3>
+      <p>Un à un, pour un dirigeant ou un praticien qui travaille déjà avec l'IA tous les jours
+        et veut que ça tienne. On part de vos dossiers réels, pas d'un programme.</p>
+      <ul>
+        <li>On installe votre couche automatique en première séance.</li>
+        <li>Entre les séances, vous travaillez normalement ; ce qui casse devient la matière de
+          la séance suivante.</li>
+        <li>On arrête quand ça tourne sans moi — c'est le but, pas un abonnement.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <h2>Ce que ce n'est pas</h2>
+  <p class="sous">Dit avant, pour que personne ne perde son temps</p>
+
+  <div class="pas">
+    <p><strong>Ce n'est pas un tour d'horizon des outils.</strong> Je ne compare pas quinze
+      applications. La méthode tient quel que soit l'outil, et c'est le point.</p>
+    <p><strong>Ce n'est pas une banque de prompts.</strong> Vous n'en repartirez pas avec une
+      liste à copier-coller, parce que ces listes ne sont plus ouvertes un mois plus tard.</p>
+    <p><strong>Ce n'est pas une promesse de gain chiffré.</strong> Personne ne peut honnêtement
+      vous annoncer un pourcentage avant d'avoir vu votre travail. Ce qui se mesure, on le
+      mesurera chez vous.</p>
+  </div>
+
+  <h2>Le prix</h2>
+  <p class="sous">Par mandat, fixé au cadrage</p>
+  <p>Comme pour le reste de mes mandats : <strong>le prix est fixé avant que le travail
+    commence</strong>, une fois qu'on sait qui doit apprendre, combien de personnes, et ce qui
+    doit tourner à la fin. Pas de tarif au catalogue, parce qu'une journée avec quatre personnes
+    et une journée avec vingt ne sont pas le même travail.</p>
+
+  <ul class="bul">
+    <li><b>La première conversation est sans frais</b> et sert à savoir s'il y a quelque chose à
+      faire ou non. S'il n'y a rien, je le dis à ce moment-là.</li>
+    <li><b>Entente de confidentialité</b> signée avant tout accès à vos dossiers ou à vos
+      données.</li>
+    <li><b>Vos données restent chez vous.</b> Rien n'est copié à l'extérieur pour les besoins de
+      la formation.</li>
+  </ul>
+
+  <div class="appel">
+    <h2 style="margin-top:0">Écrivez-moi ce que votre équipe essaie de faire</h2>
+    <p>Dites-moi qui doit apprendre, combien vous êtes, et ce qui coince aujourd'hui. Je réponds
+      avec un format et un prix, ou avec la raison pour laquelle ce n'est pas pour vous.</p>
+    <a class="btn" href="mailto:yoan@ymiaconseil.com?subject=Formation%20%E2%80%94%20demande&amp;body=Bonjour%20Yoan%2C%0A%0AQui%20doit%20apprendre%20%3A%20%0ANombre%20de%20personnes%20%3A%20%0AFormat%20envisag%C3%A9%20(atelier%20%2F%20conf%C3%A9rence%20%2F%20individuel)%20%3A%20%0ACe%20qui%20coince%20aujourd%27hui%20%3A%20%0AT%C3%A9l%C3%A9phone%20pour%20vous%20joindre%20%3A%20%0A%0AMerci.">Demander un format et un prix</a>
+    <a class="tel" href="tel:+15149268633">514 926-8633</a>
+    <p style="margin-top:18px;font-size:15.5px;color:var(--dim)"><a class="lien" href="/methode/">Lire d'abord la méthode</a> &middot; <a class="lien" href="/">Retour à l'accueil</a></p>
+  </div>
+
+</article>
+</main>
+
+<footer>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a></footer>
+
+</body>
+</html>
