@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /assets/og-source.html
+Disallow: /hector/
 
 Sitemap: https://ymiaconseil.com/sitemap.xml
