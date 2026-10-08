@@ -19,7 +19,7 @@
 // A CHAQUE PUBLICATION : changer VERSION. Sinon les tablettes qui ont deja l'app gardent
 // l'ancien cache. C'est la panne P27 de l'app de plans, apprise a la dure le 20 septembre.
 
-const VERSION = 'syllabes-2026-10-08-1456';
+const VERSION = 'syllabes-2026-10-08-1659';
 const COQUILLE = VERSION + '-coquille';
 
 // Relatif au sw.js lui-meme : marche a /easyread/ en ligne comme a / en local, sans rien coder en dur.
@@ -67,8 +67,12 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
       fetch(req)
         .then((rep) => {
-          const copie = rep.clone();
-          caches.open(COQUILLE).then((c) => c.put(RACINE, copie)).catch(() => {});
+          // A3 (08.10.2026) : seul l'ACCUEIL va sous la clé de l'accueil. Avant, toute page visitée
+          // y allait — la page de confidentialité lue en ligne serait devenue l'app hors ligne.
+          if (rep && rep.ok && (url.pathname === RACINE || url.pathname === RACINE + 'index.html')) {
+            const copie = rep.clone();
+            caches.open(COQUILLE).then((c) => c.put(RACINE, copie)).catch(() => {});
+          }
           return rep;
         })
         .catch(() => caches.match(RACINE).then((r) => r || caches.match(req)))
