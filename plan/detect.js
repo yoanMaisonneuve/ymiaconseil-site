@@ -19,13 +19,18 @@
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
 // Aussi quand seul extract.js change : la ré-analyse refait la lecture (15 : plans réimposés, 28.10).
-export const DETECT_VERSION = 15;
+// 16 : détails à décimale (« 05.1 / 400 ») et chiffres d'une police sans table de caractères (28.10).
+export const DETECT_VERSION = 16;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
-const DETAIL_RE = /^(\d{1,3}[A-Z]?|[A-Z])$/;
+// La décimale (« 5.1 », « 05.1 ») : un détail ajouté entre deux autres. Vu sur le plan 26-006 Fleetwood (28.10),
+// « 05.1 / 400 » sur A-206 : la seule bulle de renvoi du plan que l'app ne reconnaissait pas.
+// Le prime (« A′ », « P′ ») : la vue d'en face, ou une variante de A. Vu sur le plan PAVILLON 25-037 (28.10) : des
+// élévations P′, Q′, R′, X′, que l'app ne pouvait pas cibler.
+const DETAIL_RE = /^(\d{1,3}(?:\.\d{1,2})?[A-Z]?|[A-Z]['’′]?)$/;
 // Le haut d'un renvoi peut porter une mention : « 10 INV. » = détail 10 inversé, « 19-sim » = similaire.
-const DETAIL_TOP_RE = /^(\d{1,3}[A-Z]?|[A-Z])(?:[\s\-–]*(INV|SIM|TYP|OPP|MIR)\.?)?$/;
+const DETAIL_TOP_RE = /^(\d{1,3}(?:\.\d{1,2})?[A-Z]?|[A-Z]['’′]?)(?:[\s\-–]*(INV|SIM|TYP|OPP|MIR)\.?)?$/;
 const SHORT_RE = /^\d{2,4}$/;
 // Repère de coupe lettré : « -A- », « -B- ». Vu sur le plan 25-012. L'étiquette est le même texte
 // posé à gauche d'un titre « SECTION » ; le renvoi est le même texte en tête de la ligne de coupe.
@@ -106,12 +111,12 @@ export const sheetKey = (s) => normSheet(s).replace(/-/g, '');
 //   2. le détail doit exister SUR cette feuille — sinon le renvoi est jeté (voir section D).
 // Le deuxième est plus strict que pour les renvois en deux parties, qui sont gardés même sans cible :
 // là, la convention est certaine et l'app peut dire « étiquette introuvable ». Ici elle ne l'est pas.
-const INLINE_RE = /^(\d{1,3}[A-Z]?|[A-Z])\s*\/\s*([A-Z]{0,3}-?\d{2,4}[A-Z]?)$/;
+const INLINE_RE = /^(\d{1,3}(?:\.\d{1,2})?[A-Z]?|[A-Z])\s*\/\s*([A-Z]{0,3}-?\d{2,4}[A-Z]?)$/;
 export const normKey = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
 // Clé d'un nom de mur : comme normKey, et les zéros de tête des nombres tombent —
 // vu sur un vrai plan : marqueur « PS-001 », élévation « PS-01 ».
 export const wallKey = (s) => normKey(s).replace(/(^|[A-Z])0+(?=\d)/g, '$1');
-const normDetail = (s) => String(s).toUpperCase().replace(/^0+(?=\d)/, '');
+const normDetail = (s) => String(s).toUpperCase().replace(/^0+(?=\d)/, '').replace(/[’′]/g, "'");
 
 const cx = (it) => (it.x0 + it.x1) / 2;
 const cy = (it) => (it.y0 + it.y1) / 2;
@@ -267,6 +272,10 @@ export function buildIndex(doc) {
 
   // ── B. renvois : tout texte qui nomme une feuille du document ────────────
   const out = pages.map(() => ({ hotspots: [], labels: [] }));
+  // Police sans table de caractères (extract.js, `glyphesBruts`) : une lettre arrive en numéro de glyphe brut,
+  // caractère − 29 (B → « % », F → « ) », M → « 0 »). Décodé seulement là où ce ne peut pas être un vrai texte : un
+  // nom de mur fait de ponctuation (« )) » pour FF), ou un nom de vue absent de la feuille visée (section C).
+  const decoder = (s) => (doc.glyphesBruts && /^[\x24-\x3D]+$/.test(s) ? [...s].map((c) => String.fromCharCode(c.charCodeAt(0) + 29)).join('') : null);
   const tops = pages.map(() => new Set());
   const orphans = [];
 
@@ -321,7 +330,13 @@ export function buildIndex(doc) {
       seen.add(cle);
       const hs = { ...box, sheet, page: sheetToPage.get(key) };
       if (isDetail) { hs.kind = 'detail'; hs.detail = normDetail(dm[1]); if (dm[2]) hs.note = dm[2]; }
-      else { hs.kind = 'sheet'; hs.label = t ? t.s : null; }
+      else {
+        hs.kind = 'sheet'; hs.label = t ? t.s : null;
+        // Un repère de coupe « -%- » garde ses tirets : seule la lettre du milieu est abîmée (« -B- »).
+        const dec = hs.label && !/[A-Z0-9]/i.test(hs.label) &&
+          (/^-[^-]+-$/.test(hs.label) ? (decoder(hs.label.slice(1, -1)) && `-${decoder(hs.label.slice(1, -1))}-`) : decoder(hs.label));
+        if (dec) { hs.lu = hs.label; hs.label = dec; }
+      }
       out[i].hotspots.push(hs);
       if (isDetail && key === sheetKey(me.base)) selfPairs.push({ hs, t, b });
     }
@@ -404,6 +419,22 @@ export function buildIndex(doc) {
       .reduce((a, b) => (b.sc > a.sc ? b : a)).it;
   }
 
+  // Police sans table de caractères (extract.js, `glyphesBruts`) : la LETTRE du haut d'une bulle peut, elle aussi,
+  // arriver en numéro de glyphe brut — M devient « 0 », Q « 4 », B « % » (plan PAVILLON 25-037, 28.10). Un renvoi
+  // dont le nom n'est écrit nulle part sur la feuille visée est relu décodé (caractère + 29), et SEULEMENT si le nom
+  // décodé, lui, y est écrit. Jamais sur un plan dont la police est saine.
+  if (doc.glyphesBruts) {
+    const noms = pages.map((pg, i) => new Set(pg.items.filter((it) => it.horiz && it.x0 < sheets[i].tzX)
+      .map((it) => it.s.toUpperCase().trim()).filter((s) => DETAIL_RE.test(s)).map(normDetail)));
+    for (const p of out) for (const hs of p.hotspots) {
+      if (hs.kind !== 'detail' || noms[hs.page].has(hs.detail)) continue;
+      // Le prime du marqueur se perd aussi dans cette police (son glyphe tombe sur un saut de ligne) : P → P′.
+      const dec = decoder(hs.detail);
+      const essai = [dec, `${hs.detail}'`, dec && `${dec}'`].find((n) => n && noms[hs.page].has(n));
+      if (essai) { hs.lu = hs.detail; hs.detail = essai; }
+    }
+  }
+
   const refCount = new Map(); // « page|détail » → nombre de renvois
   for (const p of out) for (const hs of p.hotspots) {
     if (hs.kind !== 'detail') continue;
@@ -433,7 +464,9 @@ export function buildIndex(doc) {
       // ou si elle est franchement grosse (≥ 1,8 × le corps) même sans renvoi.
       // Hauteur lue (voir `lu`) : redressée, un numéro de local de la vue d'ensemble passait pour une
       // grosse étiquette (plan d'essai, A-100).
-      const big = lu(top) >= 1.8 * docBody && /\d/.test(n);
+      // Un nombre à décimale n'est une étiquette que si un renvoi le vise : seul, en gros, c'est une bulle d'axe
+      // (« 5.6 ») ou une cote.
+      const big = lu(top) >= 1.8 * docBody && /\d/.test(n) && !n.includes('.');
       const okRef = refs > 0 && top.size >= 1.15 * docBody;
       if (!big && !okRef) continue;
       // Le MÊME numéro peut être dessiné plusieurs fois sur une feuille : sur le plan 25-012, les

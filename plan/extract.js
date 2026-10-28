@@ -189,6 +189,7 @@ export async function extractPage(page, ctx = {}) {
   const tc = await page.getTextContent({ includeMarkedContent: true });
   const open = [];
   const texts = [];
+  let bruts = 0;   // caractères réparés (voir plus bas) : le signe d'une police sans table de caractères
   for (const it of tc.items) {
     if (it.type === 'beginMarkedContent' || it.type === 'beginMarkedContentProps') {
       open.push(it.type === 'beginMarkedContent' && it.tag === 'Span');
@@ -196,7 +197,12 @@ export async function extractPage(page, ctx = {}) {
     }
     if (it.type === 'endMarkedContent') { open.pop(); continue; }
     if (!it.str) continue;
-    const s = it.str.trim();
+    // Police TrueType réduite sans table de caractères complète (vu sur le plan PAVILLON 25-037, 28.10 : « A-2␓␓ »
+    // pour A-200, 201 textes) : pdf.js rend alors le numéro de glyphe brut. Dans l'ordre TrueType standard, l'espace
+    // est le glyphe 3 : glyphe = caractère − 29, et les chiffres tombent sur U+0013 à U+001C, « - . / » sur U+0010 à
+    // U+0012. Un caractère de contrôle n'apparaît jamais dans un vrai texte : la réparation est sûre. Les lettres,
+    // elles, tombent sur de la ponctuation, indiscernable de la vraie : on les laisse.
+    const s = it.str.replace(/[\u0010-\u001C]/g, (c) => { bruts++; return String.fromCharCode(c.charCodeAt(0) + 29); }).trim();
     if (!s) continue;
     texts.push({ s, it, span: open.length > 0 && open[open.length - 1] });
   }
@@ -227,7 +233,7 @@ export async function extractPage(page, ctx = {}) {
     items.push({ s, x0, y0, x1, y1, size: tall ? (x1 - x0) : (y1 - y0), horiz: !tall, ang: tall ? -Math.PI / 2 : 0, src: 'a' });
   }
 
-  return { w: vp.width, h: vp.height, items };
+  return { w: vp.width, h: vp.height, items, bruts };
 }
 
 export async function extractDocument(pdf, onProgress) {
@@ -253,5 +259,9 @@ export async function extractDocument(pdf, onProgress) {
   } catch {
     outline = null;
   }
-  return { pages, outline };
+  // `calage` : la transformation appliquée aux annotations d'un plan réimposé (null sinon). Pour le banc des
+  // nouveaux plans (tests/banc-plans.mjs) ; l'app, elle, ne garde que l'index.
+  // `glyphesBruts` : le nombre de chiffres réparés d'une police sans table de caractères ; detect.js s'en sert pour
+  // relire, avec prudence, une lettre abîmée de la même façon.
+  return { pages, outline, calage: ctx.calage, glyphesBruts: pages.reduce((n, p) => n + (p.bruts || 0), 0) };
 }
