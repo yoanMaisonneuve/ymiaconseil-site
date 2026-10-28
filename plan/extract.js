@@ -68,7 +68,118 @@ export function ocrTextSize(len, size) {
   return h > 0 ? Math.max(size, h * (1 + r)) : size;
 }
 
-export async function extractPage(page) {
+// Plan RÉIMPOSÉ (vu sur le plan 26-006 Fleetwood, 28.10) : un outil a posé chaque feuille de 36 × 24 po
+// dans une page A4, par une transformation en tête du contenu (« .2296 0 0 .2296 0 222.17 cm »). Le dessin
+// a suivi ; les annotations SHX, non : leurs rectangles sont restés dans le repère de la feuille d'origine.
+// Lues telles quelles, elles tombaient hors de la page ou au mauvais endroit — « MR5.1 » devenait le numéro
+// de la feuille A-202, et tous les renvois vers A-202, A-203, A-205… disparaissaient.
+// On le reconnaît à des annotations HORS de la page. La transformation de tête du contenu les recale, à
+// deux conditions : elle les ramène toutes, ou presque, dans la page, et elle leur donne la taille du texte
+// de la feuille. La deuxième écarte la tête d'un plan AutoCAD ordinaire (« 0.06 0 0 0.06 14 48 cm »,
+// son unité de dessin), qui ramènerait aussi tout dans la page — écrasé dans un coin. Faute de calage, on
+// jette les annotations qui sortent de la page : pas de cible vaut mieux qu'une cible au mauvais endroit.
+//
+// Codes d'opération de pdf.js (`OPS`), stables depuis des années, vérifiés au banc sur pdfjs-dist 6.3.289.
+const OP_TRANSFORM = 12;
+// Ce qui peut précéder la transformation sans rien dessiner : dependency, setGState, save, restore,
+// endPath, clip, eoClip, contenu marqué, constructPath (le rectangle de découpe de la page).
+const OP_NEUTRES = new Set([1, 9, 10, 11, 28, 29, 30, 69, 70, 71, 91]);
+
+async function teteDuContenu(page) {
+  let ol;
+  try {
+    ol = await page.getOperatorList({ intent: 'display' });
+  } catch {
+    return null;
+  }
+  let m = null;
+  for (let k = 0; k < Math.min(ol.fnArray.length, 12); k++) {
+    if (ol.fnArray[k] === OP_TRANSFORM) { m = Array.from(ol.argsArray[k]); break; }
+    if (!OP_NEUTRES.has(ol.fnArray[k])) break;
+  }
+  page.cleanup();   // la liste d'opérations d'une feuille pèse lourd ; le rendu la refera
+  return m;
+}
+
+const mediane = (a) => { const b = [...a].sort((x, y) => x - y); return b.length ? b[Math.floor(b.length / 2)] : 0; };
+
+async function corpsDe(page) {
+  const vp = page.getViewport({ scale: 1 });
+  const tc = await page.getTextContent();
+  return mediane(tc.items.filter((it) => it.str && it.str.trim()).map((it) => textItemToBox(it, vp.transform).size));
+}
+
+const appliquer = (m, r) => {
+  const xs = [], ys = [];
+  for (const [x, y] of [[r[0], r[1]], [r[2], r[1]], [r[0], r[3]], [r[2], r[3]]]) {
+    xs.push(m[0] * x + m[2] * y + m[4]);
+    ys.push(m[1] * x + m[3] * y + m[5]);
+  }
+  return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+};
+const dansLaPage = (r, v) => {
+  const x = (r[0] + r[2]) / 2, y = (r[1] + r[3]) / 2;
+  return x >= Math.min(v[0], v[2]) && x <= Math.max(v[0], v[2]) && y >= Math.min(v[1], v[3]) && y <= Math.max(v[1], v[3]);
+};
+
+async function lireNotes(page) {
+  let annots = [];
+  try {
+    annots = await page.getAnnotations({ intent: 'display' });
+  } catch {
+    annots = [];
+  }
+  const notes = [];
+  for (const a of annots) {
+    const raw = (a.contentsObj && a.contentsObj.str) || a.contents || '';
+    const s = String(raw).trim();
+    if (!s || !a.rect || s.length > 60) continue;
+    notes.push({ s, rect: a.rect });
+  }
+  return notes;
+}
+
+// Le rectangle d'un commentaire SHX épouse le texte : sa hauteur tient lieu de corps (voir `tall` plus bas).
+const hauteur = (r, s) => { const w = r[2] - r[0], h = r[3] - r[1]; return h > w * 1.2 && s.length > 1 ? w : h; };
+
+// Ce que donne la transformation `m` (null : telles quelles) : assez d'annotations dans la page ? Et quel
+// écart entre leur corps et celui du texte de la feuille (en log : 0 = même corps) ?
+function essai(m, notes, v, corps) {
+  const rs = notes.map((n) => ({ r: m ? appliquer(m, n.rect) : n.rect, s: n.s }));
+  const h = mediane(rs.map((x) => hauteur(x.r, x.s)));
+  return {
+    m,
+    dedans: rs.filter((x) => dansLaPage(x.r, v)).length >= 0.9 * notes.length,
+    ecart: corps > 0 && h > 0 ? Math.abs(Math.log(h / corps)) : Infinity,
+  };
+}
+
+// La transformation à appliquer aux annotations de cette page, ou null : telles quelles.
+// `ctx.calage` : celle trouvée sur une autre feuille du même document (le même outil les a toutes posées).
+// Elle sert aussi quand toutes les annotations tombent dans la page PAR HASARD (le coin bas-gauche de la
+// feuille d'origine recouvre la page A4) : le corps du texte départage.
+async function calage(page, notes, ctx, corps) {
+  if (!notes.length) return null;
+  const v = page.view;
+  const cands = [essai(null, notes, v, corps)];
+  if (ctx.calage) cands.push(essai(ctx.calage, notes, v, corps));
+  if (!cands.some((c) => c.dedans) && (ctx.essais || 0) < 3) {
+    ctx.essais = (ctx.essais || 0) + 1;    // une liste d'opérations par feuille coûte cher : trois essais au plus
+    const m = await teteDuContenu(page);
+    if (m) cands.push(essai(m, notes, v, corps));
+  }
+  // Telles quelles d'abord ; un calage ne gagne qu'avec le corps du texte (à 4 × près) et nettement plus juste.
+  let best = cands[0].dedans ? cands[0] : null;
+  for (const c of cands.slice(1)) {
+    if (!c.dedans || c.ecart > Math.log(4)) continue;
+    if (!best || c.ecart < best.ecart - 0.1) best = c;
+  }
+  if (!best || !best.m) return null;
+  if (!ctx.calage) ctx.calage = best.m;
+  return best.m;
+}
+
+export async function extractPage(page, ctx = {}) {
   const vp = page.getViewport({ scale: 1 });
   const items = [];
 
@@ -99,20 +210,15 @@ export async function extractPage(page) {
     items.push({ s, ...b, src: 't' });
   }
 
-  let annots = [];
-  try {
-    annots = await page.getAnnotations({ intent: 'display' });
-  } catch {
-    annots = [];
-  }
-  for (const a of annots) {
-    const raw = (a.contentsObj && a.contentsObj.str) || a.contents || '';
-    const s = String(raw).trim();
-    if (!s || !a.rect || s.length > 60) continue;
+  const notes = await lireNotes(page);
+  const cal = await calage(page, notes, ctx, mediane(items.map((it) => it.raw || it.size)));
+  for (const { s, rect } of notes) {
+    const r = cal ? appliquer(cal, rect) : rect;
+    if (!dansLaPage(r, page.view)) continue;   // hors de la feuille : ni visible ni touchable
     // Transformation faite à la main : l'API de pdf.js pour ça a changé d'une version à l'autre.
     const m = vp.transform;
-    const ax = m[0] * a.rect[0] + m[2] * a.rect[1] + m[4], ay = m[1] * a.rect[0] + m[3] * a.rect[1] + m[5];
-    const bx = m[0] * a.rect[2] + m[2] * a.rect[3] + m[4], by = m[1] * a.rect[2] + m[3] * a.rect[3] + m[5];
+    const ax = m[0] * r[0] + m[2] * r[1] + m[4], ay = m[1] * r[0] + m[3] * r[1] + m[5];
+    const bx = m[0] * r[2] + m[2] * r[3] + m[4], by = m[1] * r[2] + m[3] * r[3] + m[5];
     const x0 = Math.min(ax, bx), x1 = Math.max(ax, bx);
     const y0 = Math.min(ay, by), y1 = Math.max(ay, by);
     if (!(x1 > x0) || !(y1 > y0)) continue;
@@ -125,10 +231,20 @@ export async function extractPage(page) {
 }
 
 export async function extractDocument(pdf, onProgress) {
+  // Pré-passe, sur les annotations seules (rapide) : le document est-il réimposé ? La première feuille dont
+  // la plupart des annotations sortent de la page donne le calage, avant qu'une feuille ambiguë ne passe.
+  const ctx = { calage: null, essais: 0 };
+  for (let n = 1; n <= pdf.numPages && !ctx.calage && ctx.essais < 2; n++) {
+    const page = await pdf.getPage(n);
+    const notes = await lireNotes(page);
+    if (notes.filter((x) => !dansLaPage(x.rect, page.view)).length > notes.length / 2) {
+      await calage(page, notes, ctx, await corpsDe(page));
+    }
+  }
   const pages = [];
   for (let n = 1; n <= pdf.numPages; n++) {
     const page = await pdf.getPage(n);
-    pages.push(await extractPage(page));
+    pages.push(await extractPage(page, ctx));
     if (onProgress) onProgress(n, pdf.numPages);
   }
   let outline = null;

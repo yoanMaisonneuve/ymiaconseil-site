@@ -18,7 +18,8 @@
 // Module pur, sans DOM : tourne dans Node pour les tests.
 
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
-export const DETECT_VERSION = 14;
+// Aussi quand seul extract.js change : la ré-analyse refait la lecture (15 : plans réimposés, 28.10).
+export const DETECT_VERSION = 15;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
@@ -349,8 +350,11 @@ export function buildIndex(doc) {
     const hasRefBelow = (b) => pg.items.some((r) => /^(R[ÉE]F|[ÉE]CH(ELLE)?|SCALE)\b/i.test(r.s) && r.y0 >= b.y0 - b.size &&
       cy(r) - cy(b) < 3 * Math.max(b.size, 8) && cx(r) - cx(b) > -5 * Math.max(b.size, 8) && cx(r) - cx(b) < 12 * Math.max(b.size, 8));
     for (const [n, members] of groups) {
-      let title = members.find((m) => hasRefBelow(m.b));
-      if (!title) {
+      // Deux vues du MÊME nom, chacune avec son « RÉF: » (plan 26-006 Fleetwood, A-202 : une coupe C
+      // par élévation) : ce sont deux titres. Le renvoi reçoit les deux cibles et l'app demande
+      // « Lequel ? » — n'en garder qu'un envoyait la coupe du bas, avec assurance, sur la vue du haut.
+      const titres = members.filter((m) => hasRefBelow(m.b));
+      if (!titres.length) {
         // Sans « RÉF: » : on ne conclut que s'il n'existe pas ailleurs une vraie grosse étiquette du
         // même nom. « Grosse » = nettement plus que le renvoi ; un fragment de cote ne compte pas.
         const bigger = pg.items.some((it) => it.horiz && it.x0 < me.tzX && !used.has(it) &&
@@ -360,11 +364,13 @@ export function buildIndex(doc) {
         // d'échelle, rien ne dit laquelle est le titre : on s'abstient, et l'app dit au poseur que
         // l'étiquette est introuvable — plutôt que de l'envoyer avec assurance au mauvais endroit.
         if (members.length > 1) continue;
-        title = members[0];
+        titres.push(members[0]);
       }
-      out[i].hotspots.splice(out[i].hotspots.indexOf(title.hs), 1);
-      const { x0, y0, x1, y1 } = title.hs;
-      out[i].labels.push({ kind: 'detail', n, refs: 0, titleMark: true, x0, y0, x1, y1 });
+      for (const title of titres) {
+        out[i].hotspots.splice(out[i].hotspots.indexOf(title.hs), 1);
+        const { x0, y0, x1, y1 } = title.hs;
+        out[i].labels.push({ kind: 'detail', n, refs: 0, titleMark: true, x0, y0, x1, y1 });
+      }
     }
   });
 

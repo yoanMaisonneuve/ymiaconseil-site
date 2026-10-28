@@ -657,11 +657,14 @@ function activate(hit) {
     if (hit.hs.targets && hit.hs.targets.length > 1) {
       const hs = hit.hs;
       openSheet(`Détail ${hs.detail} — il y en a ${hs.targets.length} sur ${hs.sheet}`,
-        hs.targets.map((t, i) => ({
-          dot: '#0a6cff', big: `Le ${i + 1}${i === 0 ? 'er' : 'e'}`,
-          small: `${Math.round(t.x0)}, ${Math.round(t.y0)} sur la feuille`,
-          run: () => go(hs.page, t, 'detail'),
-        })));
+        hs.targets.map((t, i) => {
+          const place = placeDe(hs.targets, t);
+          return {
+            dot: '#0a6cff', big: place || `Le ${i + 1}${i === 0 ? 'er' : 'e'}`,
+            small: place ? `Détail ${hs.detail}, feuille ${hs.sheet}` : `${Math.round(t.x0)}, ${Math.round(t.y0)} sur la feuille`,
+            run: () => go(hs.page, t, 'detail'),
+          };
+        }));
       return;
     }
     const d = destOf(hit.hs);
@@ -672,6 +675,16 @@ function activate(hit) {
     else if (hit.hs.note === 'INV') toast(`Détail ${hit.hs.detail} — INV. : à lire inversé.`);
     else if (hit.hs.note === 'SIM') toast(`Détail ${hit.hs.detail} — SIM. : détail similaire.`);
   } else showCallers(hit.label);
+}
+
+// Deux dessins du même nom : les dire par leur place l'un par rapport à l'autre — des coordonnées ne
+// parlent à personne sur un échafaudage (plan 26-006 Fleetwood : une vue C par élévation sur A-202).
+function placeDe(ts, t) {
+  if (ts.length !== 2) return null;
+  const c = (r) => [(r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2];
+  const [x, y] = c(t), [ax, ay] = c(t === ts[0] ? ts[1] : ts[0]);
+  if (Math.abs(y - ay) >= Math.abs(x - ax)) return y < ay ? 'Celui du haut' : 'Celui du bas';
+  return x < ax ? 'Celui de gauche' : 'Celui de droite';
 }
 
 function choose(hits) {
