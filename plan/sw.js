@@ -6,15 +6,21 @@
 //
 // Les plans eux-mêmes ne passent jamais par ici vers le réseau : ils vivent dans IndexedDB.
 
-const VERSION = 'plans-v15';
+const VERSION = 'plans-v16';
 const SHELL = [
   './', 'index.html', 'app.js', 'detect.js', 'extract.js', 'store.js',
   'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png',
   'vendor/pdfjs/pdf.min.mjs', 'vendor/pdfjs/pdf.worker.min.mjs',
 ];
 
+// `cache: 'reload'` : la coquille vient du RÉSEAU, jamais du cache HTTP du navigateur. Sans ça, un téléphone
+// passé sur le site dans les dix minutes d'avant une publication (GitHub Pages : max-age=600) remplissait le
+// cache de la nouvelle version avec les ANCIENS fichiers, et restait sur l'ancien code jusqu'à la publication
+// suivante (vu au banc le 28.10, tests/e2e-mise-a-jour.mjs : cache « plans-v15 », détecteur 14 dedans).
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION)
+    .then((c) => c.addAll(SHELL.map((p) => new Request(p, { cache: 'reload' }))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {

@@ -1088,11 +1088,36 @@ window.addEventListener('orientationchange', () => setTimeout(resize, 200));
 window.addEventListener('pagehide', () => savePos(true));
 
 const secure = location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
-if ('serviceWorker' in navigator && secure && !params.has('nosw')) navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator && secure && !params.has('nosw')) {
+  // Une publication : le nouveau service worker prend la main, mais la page garde l'ancien code jusqu'au
+  // prochain chargement. Il fallait actualiser DEUX fois pour voir une correction — Yoan, 28.10 à 12 h 04 :
+  // « j'ai actualisé, mais ils sont toujours pas dans la page ». On recharge donc dès que rien n'est en cours
+  // (jamais pendant la lecture d'un plan), et on rouvre le plan où il était.
+  const dejaInstallee = !!navigator.serviceWorker.controller;   // première visite : rien à recharger
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!dejaInstallee) return;
+    const recharger = () => {
+      if (!$('#work').hidden) { setTimeout(recharger, 2000); return; }
+      try {
+        if (Date.now() - Number(sessionStorage.getItem('plans-maj') || 0) < 15000) return;   // jamais en boucle
+        sessionStorage.setItem('plans-maj', String(Date.now()));
+        if (S.plan && !S.plan.ephemere && !$('#viewer').hidden) sessionStorage.setItem('plans-reouvrir', S.plan.id);
+      } catch { /* stockage refusé : on recharge quand même, l'accueil liste le plan */ }
+      location.reload();   // `pagehide` garde la position du plan
+    };
+    recharger();
+  });
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 
 history.replaceState({ v: 'home' }, '');
 renderHome();
 takeShared();
+// Rechargée pour une mise à jour : on rouvre le plan qui était ouvert, à sa position.
+try {
+  const reouvrir = sessionStorage.getItem('plans-reouvrir');
+  if (reouvrir) { sessionStorage.removeItem('plans-reouvrir'); openPlan(reouvrir).then(() => toast('PlanJump vient d\'être mis à jour.')); }
+} catch { /* stockage refusé */ }
 
 // Prise de test : l'état interne, pour le banc d'essai automatisé.
 window.__plans = { S, go, onTap, importFile, fitView, viewForTarget, get running() { return running; } };
