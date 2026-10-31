@@ -117,6 +117,11 @@
   #workBar i { display: block; height: 100%; width: 0%; background: var(--gold); transition: width .2s; }
   #drop { position: fixed; inset: 0; background: rgba(10,108,255,.18); border: 4px dashed var(--blue); display: grid; place-items: center; font-size: 22px; font-weight: 700; color: var(--navy); pointer-events: none; }
 </style>
+<!-- v18 (30.10.2026, Yoan : « configurer le Gold Counter pour plan jump ») : la mesure d'audience, GoatCounter —
+     sans témoin, sans donnée personnelle, et jamais le plan. Le nom du site devant le chemin : planjump.ca et
+     ymiaconseil.com servent la même app, on les compte à part. -->
+<script>window.goatcounter = { path: function (p) { return location.host + p; } };</script>
+<script data-goatcounter="https://planjump.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -133,8 +138,8 @@
     </button>
     <input id="file" type="file" accept="application/pdf,.pdf" hidden>
     <div class="private">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b8a2d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-      <span>Le plan reste dans ce téléphone. Rien n'est envoyé sur internet, et l'app fonctionne sans réseau une fois le plan ouvert.</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b8a2d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      <span>Une fois le plan ouvert, l'app fonctionne sans réseau, même dans un sous-sol de béton.</span>
     </div>
     <h2 class="sec" id="plansTitle" hidden>Mes plans</h2>
     <div id="plans"></div>
