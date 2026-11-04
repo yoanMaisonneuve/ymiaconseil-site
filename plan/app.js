@@ -14,11 +14,13 @@ import * as pdfjsLib from './vendor/pdfjs/pdf.min.mjs';
 import { extractDocument } from './extract.js';
 import { buildIndex, DETECT_VERSION, normKey, wallKey, dimInches } from './detect.js';
 import * as store from './store.js';
+import { t as T, rang, traduirePage, LANGUE, changerLangue } from './i18n.js';
 
 const VENDOR = new URL('./vendor/pdfjs/', import.meta.url).href;
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${VENDOR}pdf.worker.min.mjs`;
 
 const $ = (s) => document.querySelector(s);
+traduirePage();
 const params = new URLSearchParams(location.search);
 
 // ── Budget selon l'appareil ────────────────────────────────────────────────
@@ -206,7 +208,7 @@ async function prepLoop() {
       await new Promise((r) => setTimeout(r, 250));
       if (token !== prepToken) return;
     }
-    $('#prep').hidden = false; $('#prep').textContent = `Préparation ${done + 1}/${total}`;
+    $('#prep').hidden = false; $('#prep').textContent = T('Préparation {a}/{b}', { a: done + 1, b: total });
     try {
       const canvas = await pdfRender('prep', n, baseScale(n), null);
       const blob = await new Promise((res) => canvas.toBlob(res, 'image/webp', 0.9));
@@ -621,7 +623,7 @@ function onTap(sx, sy) {
       const dd = Math.hypot(m.x - x, m.y - y);
       if (dd < bd && dd <= Math.max(reach, (m.l || 0) / 2 + m.h)) { bd = dd; best = m; }
     }
-    if (best) toast(`${best.s} mm sur le plan = ${dimInches(best)}`);
+    if (best) toast(T('{s} mm sur le plan = {po}', { s: best.s, po: dimInches(best) }));
   }
   if (!hits.length) {
     // Double-toucher dans le vide : zoomer, ou revenir à la feuille entière.
@@ -642,13 +644,13 @@ function onTap(sx, sy) {
 
 function destOf(hs) {
   // Le marqueur se trompe de feuille : on va où le mur est réellement dessiné.
-  if (hs.alt) return { page: hs.alt.page, rect: hs.alt.target, kind: 'wall', warn: `Le marqueur indique ${hs.sheet}, mais ${hs.label} est dessiné sur ${hs.alt.sheet}.` };
+  if (hs.alt) return { page: hs.alt.page, rect: hs.alt.target, kind: 'wall', warn: T('Le marqueur indique {f}, mais {l} est dessiné sur {g}.', { f: hs.sheet, l: hs.label, g: hs.alt.sheet }) };
   return { page: hs.page, rect: hs.target || null, kind: hs.kind === 'detail' ? 'detail' : 'wall' };
 }
 const hsTitle = (hs) => (hs.kind === 'detail'
-  ? `Détail ${hs.detail}${hs.note ? ` (${hs.note}.)` : ''}`
-  : (hs.label || 'Feuille'));
-const hsSub = (hs) => `Feuille ${hs.alt ? hs.alt.sheet : hs.sheet}${hs.kind === 'detail' && !hs.target ? ' · étiquette introuvable' : ''}`;
+  ? `${T('Détail {d}', { d: hs.detail })}${hs.note ? ` (${hs.note}.)` : ''}`
+  : (hs.label || T('Feuille')));
+const hsSub = (hs) => `${T('Feuille {f}', { f: hs.alt ? hs.alt.sheet : hs.sheet })}${hs.kind === 'detail' && !hs.target ? ` · ${T('étiquette introuvable')}` : ''}`;
 
 function activate(hit) {
   if (hit.hs) {
@@ -656,12 +658,12 @@ function activate(hit) {
     // Deviner, ici, c'est envoyer quelqu'un couper une pièce d'après la mauvaise coupe.
     if (hit.hs.targets && hit.hs.targets.length > 1) {
       const hs = hit.hs;
-      openSheet(`Détail ${hs.detail} — il y en a ${hs.targets.length} sur ${hs.sheet}`,
+      openSheet(T('Détail {d} — il y en a {n} sur {f}', { d: hs.detail, n: hs.targets.length, f: hs.sheet }),
         hs.targets.map((t, i) => {
           const place = placeDe(hs.targets, t);
           return {
-            dot: '#0a6cff', big: place || `Le ${i + 1}${i === 0 ? 'er' : 'e'}`,
-            small: place ? `Détail ${hs.detail}, feuille ${hs.sheet}` : `${Math.round(t.x0)}, ${Math.round(t.y0)} sur la feuille`,
+            dot: '#0a6cff', big: place || rang(i + 1),
+            small: place ? T('Détail {d}, feuille {f}', { d: hs.detail, f: hs.sheet }) : T('{x}, {y} sur la feuille', { x: Math.round(t.x0), y: Math.round(t.y0) }),
             run: () => go(hs.page, t, 'detail'),
           };
         }));
@@ -670,10 +672,10 @@ function activate(hit) {
     const d = destOf(hit.hs);
     go(d.page, d.rect, d.kind);
     if (d.warn) toast(d.warn, true);
-    else if (hit.hs.kind === 'detail' && !hit.hs.target) toast(`Détail ${hit.hs.detail} : étiquette introuvable sur ${hit.hs.sheet}.`, true);
-    else if (hit.hs.inferred) toast(`Détail ${hit.hs.detail} : la bulle est vide sur le dessin. Déduit par élimination — à confirmer.`, true);
-    else if (hit.hs.note === 'INV') toast(`Détail ${hit.hs.detail} — INV. : à lire inversé.`);
-    else if (hit.hs.note === 'SIM') toast(`Détail ${hit.hs.detail} — SIM. : détail similaire.`);
+    else if (hit.hs.kind === 'detail' && !hit.hs.target) toast(T('Détail {d} : étiquette introuvable sur {f}.', { d: hit.hs.detail, f: hit.hs.sheet }), true);
+    else if (hit.hs.inferred) toast(T('Détail {d} : la bulle est vide sur le dessin. Déduit par élimination — à confirmer.', { d: hit.hs.detail }), true);
+    else if (hit.hs.note === 'INV') toast(T('Détail {d} — INV. : à lire inversé.', { d: hit.hs.detail }));
+    else if (hit.hs.note === 'SIM') toast(T('Détail {d} — SIM. : détail similaire.', { d: hit.hs.detail }));
   } else showCallers(hit.label);
 }
 
@@ -683,25 +685,25 @@ function placeDe(ts, t) {
   if (ts.length !== 2) return null;
   const c = (r) => [(r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2];
   const [x, y] = c(t), [ax, ay] = c(t === ts[0] ? ts[1] : ts[0]);
-  if (Math.abs(y - ay) >= Math.abs(x - ax)) return y < ay ? 'Celui du haut' : 'Celui du bas';
-  return x < ax ? 'Celui de gauche' : 'Celui de droite';
+  if (Math.abs(y - ay) >= Math.abs(x - ax)) return T(y < ay ? 'Celui du haut' : 'Celui du bas');
+  return T(x < ax ? 'Celui de gauche' : 'Celui de droite');
 }
 
 function choose(hits) {
-  openSheet('Lequel ?', hits.map((h) => (h.hs
+  openSheet(T('Lequel ?'), hits.map((h) => (h.hs
     ? { dot: h.hs.kind === 'detail' ? '#0a6cff' : '#f07800', big: hsTitle(h.hs), small: hsSub(h.hs), run: () => activate(h) }
-    : { dot: '#0b8a2d', big: h.label.kind === 'wall' ? `Mur ${h.label.text || h.label.n}` : `Détail ${h.label.n}`, small: 'Voir d\'où il est appelé', run: () => activate(h) })));
+    : { dot: '#0b8a2d', big: h.label.kind === 'wall' ? T('Mur {m}', { m: h.label.text || h.label.n }) : T('Détail {d}', { d: h.label.n }), small: T("Voir d'où il est appelé"), run: () => activate(h) })));
 }
 
 // Depuis une étiquette : « qui m'appelle ? » — la navigation à rebours.
 function showCallers(label) {
   const list = S.backrefs.get(`${S.page}|${label.kind}|${label.n}`) || [];
-  const name = label.kind === 'wall' ? `Mur ${label.text || label.n}` : `Détail ${label.n}`;
-  if (!list.length) { toast(`${name} : aucun renvoi ne pointe ici.`); return; }
+  const name = label.kind === 'wall' ? T('Mur {m}', { m: label.text || label.n }) : T('Détail {d}', { d: label.n });
+  if (!list.length) { toast(T('{n} : aucun renvoi ne pointe ici.', { n: name })); return; }
   const byPage = new Map();
   for (const c of list) { if (!byPage.has(c.page)) byPage.set(c.page, []); byPage.get(c.page).push(c.hs); }
-  openSheet(`${name} — appelé depuis`, [...byPage].map(([p, arr]) => ({
-    dot: '#0a6cff', big: S.index.sheets[p].id, small: `${S.index.sheets[p].title || ''} · ${arr.length} renvoi${arr.length > 1 ? 's' : ''}`.replace(/^ · /, ''),
+  openSheet(T('{n} — appelé depuis', { n: name }), [...byPage].map(([p, arr]) => ({
+    dot: '#0a6cff', big: S.index.sheets[p].id, small: `${S.index.sheets[p].title || ''} · ${T(arr.length > 1 ? '{n} renvois' : '{n} renvoi', { n: arr.length })}`.replace(/^ · /, ''),
     run: () => go(p, arr[0], 'detail'),
   })));
 }
@@ -740,7 +742,7 @@ async function showPage(n, rect, kind, exactView) {
   S.view = target;
   draw();
   const ready = S.bases.has(n);
-  if (!ready) { $('#busyMsg').textContent = `Feuille ${sh.id}…`; $('#busy').hidden = false; }
+  if (!ready) { $('#busyMsg').textContent = T('Feuille {f}…', { f: sh.id }); $('#busy').hidden = false; }
   const tick = setInterval(draw, 250);   // montrer le fond qui se dessine, plutôt qu'attendre devant du vide
   try { await ensureBase(n, 'base'); } catch { /* l'utilisateur est déjà ailleurs */ }
   tagDimColors(n);
@@ -832,7 +834,7 @@ function chip(text, cls, run) { const c = el('button', `chip ${cls || ''}`, text
 
 function goWall(w) {
   if (w.places.length === 1) { const p = w.places[0]; go(p.page, p.target, 'wall'); return; }
-  openSheet(`Mur ${w.label}`, w.places.map((p) => ({ dot: '#f07800', big: p.sheet, small: S.index.sheets[p.page].title, run: () => go(p.page, p.target, 'wall') })));
+  openSheet(T('Mur {m}', { m: w.label }), w.places.map((p) => ({ dot: '#f07800', big: p.sheet, small: S.index.sheets[p.page].title, run: () => go(p.page, p.target, 'wall') })));
 }
 
 function renderDrawer(q) {
@@ -842,12 +844,12 @@ function renderDrawer(q) {
 
   const walls = ix.walls.filter((w) => match(w.label));
   if (walls.length) {
-    body.append(el('div', 'grp', 'Murs'));
+    body.append(el('div', 'grp', T('Murs')));
     const c = el('div', 'chips');
     for (const w of walls) c.append(chip(w.label, 'wall', () => goWall(w)));
     body.append(c);
   }
-  body.append(el('div', 'grp', key ? 'Résultats' : 'Feuilles'));
+  body.append(el('div', 'grp', T(key ? 'Résultats' : 'Feuilles')));
   let shown = 0;
   ix.sheets.forEach((sh, i) => {
     const details = ix.pages[i].labels.filter((l) => l.kind === 'detail');
@@ -857,7 +859,7 @@ function renderDrawer(q) {
     shown++;
     const row = el('button', `row${i === S.page ? ' cur' : ''}`); row.type = 'button';
     row.append(el('span', 'id', sh.id), el('span', 'tt', sh.title || `Page ${i + 1}`));
-    if (details.length) row.append(el('span', 'n', `${details.length} détails`));
+    if (details.length) row.append(el('span', 'n', T('{n} détails', { n: details.length })));
     row.addEventListener('click', () => runFromPanel(() => { if (i !== S.page) go(i, null, null); }));
     body.append(row);
     const list = key ? dm : details;
@@ -867,9 +869,11 @@ function renderDrawer(q) {
       body.append(sub);
     }
   });
-  if (!shown && !walls.length) body.append(el('div', 'note', 'Rien ne correspond.'));
-  if (!key && !ix.stats.hotspots) body.append(el('div', 'note', 'Aucun renvoi détecté dans ce plan : PDF numérisé (image) ou convention différente. La navigation par feuille fonctionne quand même.'));
+  if (!shown && !walls.length) body.append(el('div', 'note', T('Rien ne correspond.')));
+  if (!key && !ix.stats.hotspots) body.append(el('div', 'note', T('Aucun renvoi détecté dans ce plan : PDF numérisé (image) ou convention différente. La navigation par feuille fonctionne quand même.')));
 }
+$('#langBtn').textContent = LANGUE === 'en' ? 'Français' : 'English';
+$('#langBtn').addEventListener('click', () => changerLangue(LANGUE === 'en' ? 'fr' : 'en'));
 $('#q').addEventListener('input', (e) => renderDrawer(e.target.value));
 $('#menuBtn').addEventListener('click', openDrawer);
 $('#sheetBtn').addEventListener('click', openDrawer);
@@ -879,15 +883,15 @@ $('#back').addEventListener('click', () => history.back());
 $('#moreBtn').addEventListener('click', () => {
   const st = S.index.stats;
   openSheet(S.plan.name, [
-    { big: S.showLinks ? 'Masquer les renvois' : 'Afficher les renvois', small: `${st.detailRefs} renvois de détail · ${st.sheetRefs} renvois de feuille`, run: () => { S.showLinks = !S.showLinks; draw(); } },
-    { big: S.bigDims ? 'Cotes à leur taille d\'origine' : 'Grossir les cotes', small: `${st.dims || 0} mesures repérées · grossies jusqu'à ×2 quand elles sont trop petites`, run: () => { S.bigDims = !S.bigDims; draw(); } },
+    { big: T(S.showLinks ? 'Masquer les renvois' : 'Afficher les renvois'), small: T('{a} renvois de détail · {b} renvois de feuille', { a: st.detailRefs, b: st.sheetRefs }), run: () => { S.showLinks = !S.showLinks; draw(); } },
+    { big: T(S.bigDims ? "Cotes à leur taille d'origine" : 'Grossir les cotes'), small: T("{n} mesures repérées · grossies jusqu'à ×2 quand elles sont trop petites", { n: st.dims || 0 }), run: () => { S.bigDims = !S.bigDims; draw(); } },
     ...(S.index.unit === 'mm' ? [{
-      big: S.inches ? 'Cotes en millimètres' : 'Cotes en pouces',
-      small: S.inches ? 'Revenir aux cotes du plan' : 'Ce plan est en mm · converties au 1/16 po près, en vert (le rouge du plan reste rouge)',
+      big: T(S.inches ? 'Cotes en millimètres' : 'Cotes en pouces'),
+      small: T(S.inches ? 'Revenir aux cotes du plan' : 'Ce plan est en mm · converties au 1/16 po près, en vert (le rouge du plan reste rouge)'),
       run: () => setInches(!S.inches),
     }] : []),
-    { big: S.keepAwake ? 'Laisser l\'écran s\'éteindre' : 'Garder l\'écran allumé', small: 'Pratique quand on mesure avec les deux mains', run: () => { S.keepAwake = !S.keepAwake; wake(); } },
-    { big: 'Changer de plan', small: 'Retour à la liste de mes plans', run: () => closePanelThen(leaveViewer), keepOpen: true },
+    { big: T(S.keepAwake ? "Laisser l'écran s'éteindre" : "Garder l'écran allumé"), small: T('Pratique quand on mesure avec les deux mains'), run: () => { S.keepAwake = !S.keepAwake; wake(); } },
+    { big: T('Changer de plan'), small: T('Retour à la liste de mes plans'), run: () => closePanelThen(leaveViewer), keepOpen: true },
   ]);
 });
 
@@ -895,7 +899,7 @@ function setInches(on) {
   S.inches = on;
   if (S.plan) { S.plan.inches = on; savePos(true); }   // gardé avec le plan : il se rouvre en pouces
   draw();
-  if (on) toast('Cotes en pouces, au 1/16 près. Touche une cote convertie pour voir sa valeur en mm.');
+  if (on) toast(T('Cotes en pouces, au 1/16 près. Touche une cote convertie pour voir sa valeur en mm.'));
 }
 
 let toastTimer = 0;
@@ -928,24 +932,24 @@ function loadPdf(bytes) {
 }
 
 async function analyse(pdf) {
-  const doc = await extractDocument(pdf, (n, t) => work(`Lecture des feuilles… ${n}/${t}`, 0.15 + 0.75 * (n / t)));
-  work('Repérage des renvois…', 0.93);
+  const doc = await extractDocument(pdf, (n, t) => work(T('Lecture des feuilles… {n}/{t}', { n, t }), 0.15 + 0.75 * (n / t)));
+  work(T('Repérage des renvois…'), 0.93);
   return buildIndex(doc);
 }
 
 async function importFile(file) {
   if (!file) return;
   try {
-    work('Lecture du plan…', 0.05);
+    work(T('Lecture du plan…'), 0.05);
     const bytes = new Uint8Array(await file.arrayBuffer());
-    if (!String.fromCharCode(...bytes.subarray(0, 1024)).includes('%PDF-')) throw new Error('Ce fichier n\'est pas un PDF.');
+    if (!String.fromCharCode(...bytes.subarray(0, 1024)).includes('%PDF-')) throw new Error(T("Ce fichier n'est pas un PDF."));
     const id = await store.fingerprint(bytes, file.name);
     const known = await store.getPlan(id);
     if (known) { await openPlan(id); return; }
     const pdf = await loadPdf(bytes.slice());        // pdf.js garde sa copie ; l'original part dans le téléphone
     const index = await analyse(pdf);
     const plan = { id, name: file.name.replace(/\.pdf$/i, ''), size: bytes.length, pages: pdf.numPages, addedAt: Date.now(), lastOpenedAt: Date.now(), index, lastPos: null };
-    work('Enregistrement dans le téléphone…', 0.97);
+    work(T('Enregistrement dans le téléphone…'), 0.97);
     // Le plan est déjà lu et analysé — une minute de travail sur un téléphone modeste. Si le
     // téléphone refuse de le garder (mémoire pleine, navigation privée, stockage bloqué par
     // l'employeur), on l'ouvre quand même pour cette séance plutôt que de tout jeter.
@@ -955,11 +959,11 @@ async function importFile(file) {
     if (garde) store.askPersistence();
     plan.ephemere = !garde;   // rien à réécrire plus tard : la fiche n'existe pas dans le téléphone
     startViewer(plan, pdf);
-    if (!garde) toast('Pas de place pour garder ce plan dans le téléphone. Il reste ouvert pour cette séance seulement.', true);
+    if (!garde) toast(T('Pas de place pour garder ce plan dans le téléphone. Il reste ouvert pour cette séance seulement.'), true);
   } catch (e) {
     $('#work').hidden = true;
-    const m = e && e.name === 'PasswordException' ? 'Ce PDF est protégé par un mot de passe.' : (e && e.message) || 'Lecture impossible.';
-    alert(`Impossible d'ouvrir ce plan.\n${m}`);
+    const m = e && e.name === 'PasswordException' ? T('Ce PDF est protégé par un mot de passe.') : (e && e.message) || T('Lecture impossible.');
+    alert(`${T("Impossible d'ouvrir ce plan.")}\n${m}`);
   }
 }
 
@@ -967,7 +971,7 @@ async function openPlan(id) {
   try {
     work('Ouverture…', 0.2);
     const plan = await store.getPlan(id), blob = await store.getFile(id);
-    if (!plan || !blob) throw new Error('Plan introuvable dans ce téléphone.');
+    if (!plan || !blob) throw new Error(T('Plan introuvable dans ce téléphone.'));
     const bytes = new Uint8Array(blob instanceof Blob ? await blob.arrayBuffer() : blob);
     const pdf = await loadPdf(bytes);
     if (!plan.index || plan.index.version !== DETECT_VERSION) plan.index = await analyse(pdf);  // le détecteur a progressé
@@ -976,7 +980,7 @@ async function openPlan(id) {
     startViewer(plan, pdf);
   } catch (e) {
     $('#work').hidden = true;
-    alert(`Impossible d'ouvrir ce plan.\n${(e && e.message) || ''}`);
+    alert(`${T("Impossible d'ouvrir ce plan.")}\n${(e && e.message) || ''}`);
   }
 }
 
@@ -1013,8 +1017,8 @@ function startViewer(plan, pdf) {
   // Plan en mm jamais réglé : le dire une fois. Le choix « non » s'enregistre avec la position.
   const mmHint = plan.index.unit === 'mm' && plan.inches === undefined;
   if (mmHint) plan.inches = false;
-  const hint = 'Plan en millimètres : menu ⋮ → « Cotes en pouces ».';
-  if (!lp) toast(`${st.hotspots ? `${st.hotspots} renvois repérés. Touche un mur ou une coupe.` : 'Aucun renvoi repéré dans ce plan. Navigation par feuille seulement.'}${mmHint ? ` ${hint}` : ''}`, !st.hotspots);
+  const hint = T('Plan en millimètres : menu ⋮ → « Cotes en pouces ».');
+  if (!lp) toast(`${st.hotspots ? T('{n} renvois repérés. Touche un mur ou une coupe.', { n: st.hotspots }) : T('Aucun renvoi repéré dans ce plan. Navigation par feuille seulement.')}${mmHint ? ` ${hint}` : ''}`, !st.hotspots);
   else if (mmHint) toast(hint);
 }
 
@@ -1038,19 +1042,19 @@ async function renderHome() {
   try { plans = await store.listPlans(); } catch { /* stockage indisponible (navigation privée) */ }
   const box = $('#plans'); box.textContent = '';
   $('#plansTitle').hidden = !plans.length;
-  if (!plans.length) { box.append(el('div', 'empty', 'Aucun plan pour l\'instant. Ouvre le PDF des dessins d\'atelier : il sera gardé ici, prêt à rouvrir sans réseau.')); return; }
+  if (!plans.length) { box.append(el('div', 'empty', T("Aucun plan pour l'instant. Ouvre le PDF des dessins d'atelier : il sera gardé ici, prêt à rouvrir sans réseau."))); return; }
   for (const p of plans) {
     const card = el('div', 'plan');
     const open = el('button', 'open'); open.type = 'button';
     const st = p.index && p.index.stats;
     open.append(el('div', 'name', p.name), el('div', 'meta', `${p.pages} feuilles · ${st ? st.hotspots : 0} renvois · ${(p.size / 1048576).toFixed(1)} Mo`));
     open.addEventListener('click', () => openPlan(p.id));
-    const more = el('button', 'more'); more.type = 'button'; more.setAttribute('aria-label', 'Options du plan');
+    const more = el('button', 'more'); more.type = 'button'; more.setAttribute('aria-label', T('Options du plan'));
     more.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
     more.addEventListener('click', () => openSheet(p.name, [
-      { big: 'Ouvrir', run: () => closePanelThen(() => openPlan(p.id)), keepOpen: true },
-      { big: 'Retirer de ce téléphone', small: 'Le fichier PDF d\'origine n\'est pas touché', danger: true, keepOpen: true,
-        run: async () => { if (confirm(`Retirer « ${p.name} » de ce téléphone ?`)) { await store.removePlan(p.id); closePanelThen(renderHome); } } },
+      { big: T('Ouvrir'), run: () => closePanelThen(() => openPlan(p.id)), keepOpen: true },
+      { big: T('Retirer de ce téléphone'), small: T("Le fichier PDF d'origine n'est pas touché"), danger: true, keepOpen: true,
+        run: async () => { if (confirm(T('Retirer « {p} » de ce téléphone ?', { p: p.name }))) { await store.removePlan(p.id); closePanelThen(renderHome); } } },
     ]));
     card.append(open, more); box.append(card);
   }
@@ -1116,7 +1120,7 @@ takeShared();
 // Rechargée pour une mise à jour : on rouvre le plan qui était ouvert, à sa position.
 try {
   const reouvrir = sessionStorage.getItem('plans-reouvrir');
-  if (reouvrir) { sessionStorage.removeItem('plans-reouvrir'); openPlan(reouvrir).then(() => toast('PlanJump vient d\'être mis à jour.')); }
+  if (reouvrir) { sessionStorage.removeItem('plans-reouvrir'); openPlan(reouvrir).then(() => toast(T("PlanJump vient d'être mis à jour."))); }
 } catch { /* stockage refusé */ }
 
 // Prise de test : l'état interne, pour le banc d'essai automatisé.
