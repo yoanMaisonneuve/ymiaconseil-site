@@ -20,9 +20,14 @@
 // À incrémenter à chaque changement de règle : l'app ré-analyse alors les plans déjà importés.
 // Aussi quand seul extract.js change : la ré-analyse refait la lecture (15 : plans réimposés, 28.10).
 // 16 : détails à décimale (« 05.1 / 400 ») et chiffres d'une police sans table de caractères (28.10).
-export const DETECT_VERSION = 16;
+// 17 : les feuilles à un seul chiffre (« S4 », « M-1 ») et le point gardé à l'affichage (« A0.1 ») : jeux américains et ontariens (04.11).
+export const DETECT_VERSION = 17;
 
 const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
+// Un numéro à un seul chiffre : « S4 », « M-1 », « ME1 », « K2 ». Courant en Ontario et aux États-Unis (vu le 04.11 sur les jeux publics de
+// Tweed, Lakehead et Notre-Dame). C'est aussi la forme d'un repère de fenêtre, de porte ou de panneau (« W1 », « E7 ») : d'où les deux gardes,
+// dans `numeroCourt` (écrit gros, dans le coin) et dans les renvois (seulement sous un détail, comme « 300 »).
+const SHEET_COURT_RE = /^[A-Z]{1,3}-?\d$/;
 // Un détail se nomme par un numéro (« 5 », « 12A ») ou par une lettre seule (coupe « A »).
 // La décimale (« 5.1 », « 05.1 ») : un détail ajouté entre deux autres. Vu sur le plan 26-006 Fleetwood (28.10),
 // « 05.1 / 400 » sur A-206 : la seule bulle de renvoi du plan que l'app ne reconnaissait pas.
@@ -31,7 +36,8 @@ const SHEET_RE = /^[A-Z]{1,3}[-. ]?\d{2,4}[A-Z]?$/;
 const DETAIL_RE = /^(\d{1,3}(?:\.\d{1,2})?[A-Z]?|[A-Z]['’′]?)$/;
 // Le haut d'un renvoi peut porter une mention : « 10 INV. » = détail 10 inversé, « 19-sim » = similaire.
 const DETAIL_TOP_RE = /^(\d{1,3}(?:\.\d{1,2})?[A-Z]?|[A-Z]['’′]?)(?:[\s\-–]*(INV|SIM|TYP|OPP|MIR)\.?)?$/;
-const SHORT_RE = /^\d{2,4}$/;
+// « 300 » pour A-300. Jamais à deux chiffres : « 5 » sur « 16 », c'est la fraction 5/16 d'un plan américain, et « 12 » sur « 13 », une liste de notes (Tweed, 04.11).
+const SHORT_RE = /^\d{3,4}$/;
 // Repère de coupe lettré : « -A- », « -B- ». Vu sur le plan 25-012. L'étiquette est le même texte
 // posé à gauche d'un titre « SECTION » ; le renvoi est le même texte en tête de la ligne de coupe.
 // Les tirets sont gardés dans le nom : « -A- » ne doit pas se confondre avec un détail nommé « A »
@@ -98,8 +104,10 @@ export const dimInches = (d) => [d.pre, inches(d.mm), d.post].filter(Boolean).jo
 
 export const normSheet = (s) => String(s).toUpperCase().replace(/[\s.]/g, '');
 // Clé de feuille : le trait d'union ne compte pas. Un même plan écrit « A-300 » dans son cartouche
-// et « A300 » dans un renvoi ; ce sont la même feuille. `normSheet` reste ce qu'on AFFICHE.
+// et « A300 » dans un renvoi ; ce sont la même feuille.
 export const sheetKey = (s) => normSheet(s).replace(/-/g, '');
+// Ce qu'on AFFICHE : le numéro tel qu'il est écrit, sans ses espaces. « A0.1 » reste « A0.1 » ; seule la clé le compare à « A01 ».
+const afficheSheet = (s) => String(s).toUpperCase().replace(/\s/g, '').replace(/\.+$/, '');
 // Renvoi écrit sur une seule ligne : « 5/A-300 », « 5 / A300 », « A/A-301 ». Très répandu hors du
 // bureau qui a dessiné nos trois plans — mais AUCUN de ces trois n'en contient un seul.
 //
@@ -111,7 +119,7 @@ export const sheetKey = (s) => normSheet(s).replace(/-/g, '');
 //   2. le détail doit exister SUR cette feuille — sinon le renvoi est jeté (voir section D).
 // Le deuxième est plus strict que pour les renvois en deux parties, qui sont gardés même sans cible :
 // là, la convention est certaine et l'app peut dire « étiquette introuvable ». Ici elle ne l'est pas.
-const INLINE_RE = /^(\d{1,3}(?:\.\d{1,2})?[A-Z]?|[A-Z])\s*\/\s*([A-Z]{0,3}-?\d{2,4}[A-Z]?)$/;
+const INLINE_RE = /^(\d{1,3}(?:\.\d{1,2})?[A-Z]?|[A-Z])\s*\/\s*([A-Z]{0,3}-?\d{2,4}[A-Z]?|[A-Z]{1,3}-?\d(?:\.\d{1,3})?[A-Z]?)$/;
 export const normKey = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
 // Clé d'un nom de mur : comme normKey, et les zéros de tête des nombres tombent —
 // vu sur un vrai plan : marqueur « PS-001 », élévation « PS-01 ».
@@ -121,11 +129,26 @@ const normDetail = (s) => String(s).toUpperCase().replace(/^0+(?=\d)/, '').repla
 const cx = (it) => (it.x0 + it.x1) / 2;
 const cy = (it) => (it.y0 + it.y1) / 2;
 
+// Un numéro à un seul chiffre, seulement s'il est dans le coin et plus gros que ce qui l'entoure, ou posé sous son libellé (« DWG # », « SHEET NO. »).
+function numeroCourt(pg) {
+  const coin = pg.items.filter((it) => it.horiz && cx(it) > 0.8 * pg.w && cy(it) > 0.8 * pg.h);
+  const courts = coin.filter((it) => SHEET_COURT_RE.test(normSheet(it.s)));
+  if (!courts.length) return null;
+  const corps = coin.map(lu).sort((a, b) => a - b);
+  const mediane = corps[corps.length >> 1], plusGrand = corps[corps.length - 1];
+  const best = courts.reduce((a, b) => (lu(a) >= lu(b) ? a : b));
+  if (lu(best) >= 1.25 * mediane && lu(best) >= 0.8 * plusGrand) return best;
+  const label = coin.find((it) => PAGE_LABEL_RE.test(it.s));
+  return label && lu(best) >= mediane && Math.hypot(cx(best) - cx(label), cy(best) - cy(label)) < 12 * lu(label) ? best : null;
+}
+
 function findSheetItem(pg) {
   const { w, h, items } = pg;
   const cands = items.filter((it) => it.horiz && SHEET_RE.test(normSheet(it.s)));
-  if (!cands.length) return null;
   const inCorner = cands.filter((it) => cx(it) > 0.8 * w && cy(it) > 0.8 * h);
+  // Le coin n'a aucun numéro de la forme longue : le numéro court passe avant un texte du bord de la feuille.
+  if (!inCorner.length) { const court = numeroCourt(pg); if (court) return court; }
+  if (!cands.length) return null;
   const inEdge = cands.filter((it) => cx(it) > 0.85 * w || cy(it) > 0.88 * h);
   const pool = inCorner.length ? inCorner : inEdge;
   if (!pool.length) return null;
@@ -250,11 +273,12 @@ export function buildIndex(doc) {
     // `base` est le numéro tel qu'il est écrit ; `id` le distingue quand deux pages le partagent
     // (feuille révisée réémise, feuille continuée). Sans `base`, la deuxième page ne se reconnaissait
     // plus elle-même : ses traits de coupe devenaient des renvois vers la PREMIÈRE page.
-    const base = si ? normSheet(si.s) : `P${i + 1}`;
+    const base = si ? afficheSheet(si.s) : `P${i + 1}`;
     let id = base;
     const bk = sheetKey(base);
     if (sheetToPage.has(bk)) id = `${id} (p.${i + 1})`; // doublon : la première occurrence garde le nom
-    else { sheetToPage.set(bk, i); keyToId.set(bk, id); }
+    // Une page sans numéro s'appelle « P12 » chez nous : ce n'est pas un nom écrit sur le plan, et le « P12 » écrit sur une feuille est un appareil de plomberie (Notre-Dame, 04.11).
+    else if (si) { sheetToPage.set(bk, i); keyToId.set(bk, id); }
     const tzX = si && si.x0 > 0.8 * pg.w ? si.x0 - 0.05 * pg.w : Infinity;
     sheets.push({ page: i, id, base, title: findTitle(pg, tzX, isBoilerplate), w: pg.w, h: pg.h, tzX });
   });
@@ -291,6 +315,8 @@ export function buildIndex(doc) {
       if (!b.horiz) continue;
       const full = sheetKey(b.s);
       if (sheetToPage.has(full) && SHEET_RE.test(normSheet(b.s))) refs.push({ b, key: full, short: false });
+      // « S7 » seul, ce peut être une fenêtre ou un panneau : comme « 300 », un renvoi seulement sous un détail.
+      else if (sheetToPage.has(full) && SHEET_COURT_RE.test(normSheet(b.s))) refs.push({ b, key: full, short: true, court: true });
       else if (SHORT_RE.test(b.s) && shortMap.has(b.s)) refs.push({ b, key: shortMap.get(b.s), short: true });
       else {
         // « 5/A-300 » : un seul texte porte le détail ET sa feuille.
@@ -300,14 +326,14 @@ export function buildIndex(doc) {
     }
     refs.sort((a, b) => Number(a.short) - Number(b.short));
 
-    for (const { b, key, short } of refs) {
+    for (const { b, key, short, court } of refs) {
       const sheet = keyToId.get(key);
       if (b.x0 >= me.tzX) continue; // cartouche
       const t = findTop(b, pg.items, used, (it) => sheetToPage.has(sheetKey(it.s)));
       const dm = t ? t.s.toUpperCase().match(DETAIL_TOP_RE) : null;
       const isDetail = !!dm;
       if (short && !isDetail) {
-        orphans.push({ page: i, s: b.s, x: Math.round(cx(b)), y: Math.round(cy(b)) });
+        if (!court) orphans.push({ page: i, s: b.s, x: Math.round(cx(b)), y: Math.round(cy(b)) });
         continue; // « 300 » seul = une cote, pas un renvoi
       }
       if (!t && key === sheetKey(me.base)) continue; // la feuille qui se nomme elle-même
@@ -362,7 +388,8 @@ export function buildIndex(doc) {
     }
     // Un titre de vue est accompagné de son échelle ou de sa référence (« ÉCHELLE: 3/16" = 1' »,
     // « RÉF: N/A »), dessous ou à droite. Un trait de coupe ne l'est jamais.
-    const hasRefBelow = (b) => pg.items.some((r) => /^(R[ÉE]F|[ÉE]CH(ELLE)?|SCALE)\b/i.test(r.s) && r.y0 >= b.y0 - b.size &&
+    // Une échelle américaine ou ontarienne s'écrit souvent sans le mot : « 3/4" = 1'-0" », « 1:100 », « N.T.S. », « AS SHOWN » (Tweed, 04.11).
+    const hasRefBelow = (b) => pg.items.some((r) => /^(R[ÉE]F|[ÉE]CH(ELLE)?|SCALE)\b|^\d[\d\s\/]*["”″'′]?\s*=\s*\d|^1\s*:\s*\d+$|^N\.?T\.?S\.?$|^AS\s+(SHOWN|NOTED)$/i.test(r.s.trim()) && r.y0 >= b.y0 - b.size &&
       cy(r) - cy(b) < 3 * Math.max(b.size, 8) && cx(r) - cx(b) > -5 * Math.max(b.size, 8) && cx(r) - cx(b) < 12 * Math.max(b.size, 8));
     for (const [n, members] of groups) {
       // Deux vues du MÊME nom, chacune avec son « RÉF: » (plan 26-006 Fleetwood, A-202 : une coupe C
