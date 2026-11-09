@@ -500,6 +500,29 @@ footer p{margin:0;max-width:none}
       dans <a class="lien" href="#fichiers">les fichiers</a>&nbsp;; les hypothèses, écrites avant chaque essai, sont au cahier R-036
       du journal de recherche.</p>
 
+    <h2 id="banc">Le banc&nbsp;: du simulateur au vrai robot</h2>
+    <p class="sous">Un servo, la webcam d'un portable, trois pastilles &middot; éprouvé en simulation, pas encore sur un vrai servo</p>
+    <p>La simulation ci-dessus repose sur des hypothèses sur les servos&nbsp;: leur raideur, l'inertie de leur moteur, leur amortissement, leur retard.
+      Avant d'imprimer le robot, un banc les mesure sur un vrai servo posé dans le gabarit d'essai&nbsp;: le PC commande le servo par le Pico, la webcam
+      regarde son palonnier, et le PC en tire les chiffres du modèle. Le banc est prêt avant les pièces.</p>
+    <figure class="video"><img src="simulation/banc-vision-exemple.png" alt="Image de synthèse du banc : le gabarit gris, le palonnier orange, une pastille verte et une magenta sur le palonnier, une bleue sur le gabarit, chacune marquée d'une croix" style="display:block;width:100%;height:auto;border:1px solid var(--line)">
+      <figcaption>Ce que voit la vision&nbsp;: une image de synthèse du banc, la webcam penchée de 10°. Les pastilles trouvées sont marquées d'une croix&nbsp;;
+        l'angle est la direction de la verte à la magenta.</figcaption></figure>
+    <ul class="liste">
+      <li><b>Le programme du Pico.</b><span>Il obéit au PC en lignes de texte (JSON), par l'USB ou le Wi-Fi. Aucun servo ne reçoit de signal au démarrage,
+        chaque angle est borné, tout se relâche après 30&nbsp;s sans ordre. 41 épreuves sur 41 réussies sur un Pico simulé.</span></li>
+      <li><b>La vision.</b><span>Les pastilles trouvées par leur couleur, l'angle par la direction du palonnier&nbsp;: 0,2° d'erreur au plus
+        la webcam de face, 0,1° penchée de 20° une fois étalonnée sur cinq angles (2,3° sans), sur des images de synthèse.</span></li>
+      <li><b>Les chiffres du servo.</b><span>De la réponse à des échelons (2°, 10°, 40°), les quatre paramètres du modèle&nbsp;: avec la webcam, 30 essais
+        sur 30 à 10&nbsp;% près quand chaque échelon est vu cinq fois (14 sur 30 en une fois)&nbsp;; avec le curseur du servo lu 100 fois par seconde,
+        à 2&nbsp;% près.</span></li>
+      <li><b>De bout en bout.</b><span>Tout enchaîné (le programme du Pico, le pilote, les images, la vision, l'ajustement) sur un servo simulé aux paramètres
+        connus&nbsp;: retrouvés à 0,6&nbsp;% près.</span></li>
+    </ul>
+    <p class="sources">Ce qui reste&nbsp;: le vrai Pico, le vrai servo, la vraie webcam (son objectif déforme, l'image bouge pendant un geste rapide). Le couple
+      de blocage reste celui de la fiche&nbsp;: le banc ne le mesure pas encore. Les gestes de la première séance sont dans <code>BANC.md</code>, avec les
+      programmes, dans <a class="lien" href="#fichiers">les fichiers</a>&nbsp;; le détail au cahier R-045.</p>
+
 
     <h2 id="servos">Pourquoi des SG90 et des MG90S</h2>
     <p class="sous">Et pas des MG996R, des DS3218 ou des DS3240</p>
@@ -660,6 +683,8 @@ footer p{margin:0;max-width:none}
         <span class="d"><code>main.py</code> (le centrage, la démonstration) et <code>etalonner.py</code> (l'option des capteurs), en MicroPython.</span><span class="u">5&nbsp;ko &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n0-simulation.zip" download><span class="n">La simulation MuJoCo</span>
         <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0,1&nbsp;Mo &middot; ZIP</span></a>
+      <a class="fichier" href="fichiers/navitek-n0-banc.zip" download><span class="n">Le banc d'un servo</span>
+        <span class="d"><code>BANC.md</code> (les gestes), le programme du Pico, le pilote, la vision et l'ajustement, éprouvés en simulation.</span><span class="u">31&nbsp;ko &middot; ZIP</span></a>
     </div>
   </div>
 
