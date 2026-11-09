@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0b1f3a">
 <meta property="og:title" content="Navitek N1, un humanoïde de 62,1 cm">
-<meta property="og:description" content="17 servos à bus, 67 pièces imprimées, simulé avant d'être imprimé. Fichiers ouverts.">
+<meta property="og:description" content="17 servos à bus, 69 pièces imprimées, simulé avant d'être imprimé. Fichiers ouverts.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ymiaconseil.com/navitek/n1/">
 <link rel="canonical" href="https://ymiaconseil.com/navitek/n1/">
@@ -159,17 +159,17 @@ footer p{margin:0;max-width:none}
 <article>
 
   <div class="wrap">
-    <p class="code">Navitek &middot; N1 &middot; version 2 &middot; 9 novembre 2026</p>
+    <p class="code">Navitek &middot; N1 &middot; version 2.3 &middot; 9 novembre 2026</p>
     <h1>Un humanoïde de 62,1&nbsp;cm, <em>dont les servos parlent</em>.</h1>
     <p class="chapeau">17 servos à bus Feetech STS3215 qui renvoient leur position, leur charge, leur tension et leur température,
-      une carte Raspberry Pi Pico&nbsp;2&nbsp;W, une centrale inertielle, et 67 pièces en PLA imprimées sans support. La suite de
+      une carte Raspberry Pi Pico&nbsp;2&nbsp;W, une centrale inertielle, et 69 pièces en PLA imprimées sans support. La suite de
       <a class="lien" href="/navitek/">N0</a>&nbsp;: le même module d'articulation, deux fois plus grand, qui sait où il est.</p>
   </div>
 
   <div class="large">
     <div class="atelier">
       <div id="scene" aria-label="Assemblage du robot Navitek N1 en 3D : faites-le tourner du doigt ou de la souris">
-        <div id="etat">Chargement des 117 pièces de l'assemblage…</div>
+        <div id="etat">Chargement des 119 pièces de l'assemblage…</div>
       </div>
       <div class="commandes" role="group" aria-label="Vue">
         <button type="button" data-vue="face" aria-pressed="true">Face</button>
@@ -184,19 +184,20 @@ footer p{margin:0;max-width:none}
     <div class="chiffres">
       <div><b>62,1&nbsp;cm</b><span>de haut</span></div>
       <div><b>17</b><span>articulations</span></div>
-      <div><b>67</b><span>pièces imprimées</span></div>
-      <div><b>59&nbsp;h&nbsp;01</b><span>d'impression</span></div>
-      <div><b>1117&nbsp;g</b><span>de PLA</span></div>
+      <div><b>69</b><span>pièces imprimées</span></div>
+      <div><b>60&nbsp;h&nbsp;36</b><span>d'impression</span></div>
+      <div><b>1157&nbsp;g</b><span>de PLA</span></div>
     </div>
   </div>
 
   <div class="wrap">
     <div class="loi">
-      <p>Version 2&nbsp;: dessinée, simulée et tranchée. Pas encore imprimée&nbsp;; les cotes du servo à vérifier sur un vrai d'abord.</p>
+      <p>Version 2.3&nbsp;: dessinée, simulée et tranchée. Pas encore imprimée&nbsp;; les cotes du servo à vérifier sur un vrai d'abord.</p>
       <p class="src">La version 1 supposait des oreilles de fixation que le STS3215 n'a pas. La version 2 est dessinée autour du modèle 3D du servo
-        publié par le projet SO-ARM100 (cahier R-047)&nbsp;: un gabarit d'essai à imprimer en premier permet de vérifier la poche et le palonnier. Aucune collision entre les 117
-        pièces de l'assemblage &middot; chaque plateau tranché dans OrcaSlicer pour une Ender-3 V3 SE &middot; la simulation est
-        <b>simulée</b>, jamais «&nbsp;testée&nbsp;».</p>
+        publié par le projet SO-ARM100 (cahier R-047)&nbsp;: un gabarit d'essai à imprimer en premier permet de vérifier la poche et le palonnier. La version 2.3 écarte les
+        hanches pour qu'elles s'ouvrent de côté (cahier R-051). Aucune collision entre les 119
+        pièces de l'assemblage&nbsp;; chacune des 32 vis qui tiennent les jambes, les épaulettes et les bras porte dans la matière des deux pièces qu'elle joint
+        &middot; chaque plateau tranché dans OrcaSlicer pour une Ender-3 V3 SE &middot; la simulation est <b>simulée</b>, jamais «&nbsp;testée&nbsp;».</p>
     </div>
 
     <h2>Ce qui change par rapport à N0</h2>
@@ -206,8 +207,7 @@ footer p{margin:0;max-width:none}
         servos et renvoie sa position (4096 pas par tour), sa charge, sa tension et sa température. Le robot peut enfin mesurer son corps.</span></li>
       <li><b>Dix-sept articulations au lieu de treize.</b><span>Chaque hanche gagne un mouvement de côté (le roulis), chaque épaule aussi&nbsp;:
         le robot peut balancer son poids d'un pied à l'autre au lieu de pencher la cheville. Il manque encore la rotation de la hanche, pour tourner sur place.</span></li>
-      <li><b>Une centrale inertielle.</b><span>Un BNO055 dans le torse dit au robot de quel côté il penche. Dans la simulation, c'est ce retour d'information
-        qui fait avancer N1 3,5 fois plus loin, en moyenne, que la même marche aveugle (plus bas).</span></li>
+      <li><b>Une centrale inertielle.</b><span>Un BNO055 dans le torse dit au robot de quel côté il penche. Dans la simulation, ce retour ne fait pas encore de différence nette pour la marche&nbsp;: 20&nbsp;cm en moyenne avec lui, 17 sans lui, et les trois essais vont de 6 à 36&nbsp;cm avec, de 11 à 21 sans (plus bas).</span></li>
       <li><b>Un cerveau en deux étages.</b><span>Le Pico commande les servos et lit la centrale&nbsp;; il porte la sécurité. Un Raspberry Pi Zero 2&nbsp;W
         facultatif, relié au Pico, ajoute la caméra de la tête et les programmes qui apprennent. <strong>Le robot marche sans lui.</strong></span></li>
     </ul>
@@ -332,9 +332,12 @@ footer p{margin:0;max-width:none}
       articulation cherche ses deux butées en lisant sa propre position, et les garde comme bornes&nbsp;; <b>démo</b>. Éprouvé contre des servos simulés qui parlent le même
       protocole, octet par octet&nbsp;: 8 épreuves sur 9. L'étalonnage y a trouvé, sur 13 articulations, les limites du modèle à 0,2° près,
       et sur les autres <strong>de vrais contacts</strong>, que les essais de marche ne voyaient pas (plus bas). Pas encore essayé sur un vrai bus.</p>
-    <p><b>Une limite qui reste.</b> Même sur la version 2, une hanche ne s'ouvre de côté que de 4° vers l'intérieur et 5° vers l'extérieur (maillages exacts, cahier R-047)&nbsp;:
-      vers l'intérieur, les étriers des deux chevilles se touchent&nbsp;; vers l'extérieur, la main touche la hanche, d'où les bras écartés en marchant.
-      Les marches ci-dessous font avec. Ouvrir la hanche demanderait des chevilles plus minces ou des jambes plus écartées&nbsp;: c'est à étudier pour la version suivante.</p>
+    <p><b>La hanche s'ouvre (version 2.3).</b> Sur la version 2.2, une hanche ne s'ouvrait de côté que de 4° vers l'intérieur et 5° vers l'extérieur
+      (maillages exacts, cahier R-047)&nbsp;: les étriers des deux chevilles se touchaient, et la main touchait la hanche. La version 2.3 écarte les hanches de 36 à 50&nbsp;mm du milieu,
+      les épaules de 98 à 123, et rogne le bord intérieur des pieds&nbsp;: <strong>10° vers l'intérieur, 12° vers l'extérieur</strong> (cahier R-051). Le prix&nbsp;:
+      29,7&nbsp;cm de large au lieu de 24,7. Et un torse d'une seule pièce ne tenait plus sur le plateau de 220&nbsp;mm&nbsp;: les épaules sont maintenant portées par deux
+      <b>épaulettes</b>, la même pièce des deux côtés, vissées sur les flancs du torse. Vers l'intérieur, ce sont encore les chevilles qui butent&nbsp;; vers l'extérieur, la main contre le genou,
+      d'où les bras écartés en marchant.</p>
 
     <h2>En simulation&nbsp;: ce que N1 peut faire</h2>
     <p class="sous">MuJoCo 3.8 &middot; modèle tiré de la CAO &middot; 2,3&nbsp;kg &middot; <b>simulé</b>, pas testé</p>
@@ -344,64 +347,62 @@ footer p{margin:0;max-width:none}
       de notre journal de recherche donne ce qu'on attendait <em>avant</em> chaque essai.</p>
 
     <h3>S'accroupir</h3>
-    <p>Part du couple de blocage que le genou doit fournir, en moyenne puis au pic. Sur deux jambes, le genou monte à 37&nbsp;% du blocage au pic et 13&nbsp;% en moyenne
-      à 90° de genou&nbsp;; <strong>sur une jambe, le robot tient jusqu'à 70°</strong> (là où N0 saturait), et tombe à 90°.</p>
-    <div class="defile"><table><thead><tr><th>Genou</th><th>Deux jambes (moyen / pic)</th><th>Une jambe (moyen / pic)</th><th>Une jambe</th></tr></thead><tbody><tr><td class="n">20°</td><td class="n">3&nbsp;% / 8&nbsp;%</td><td class="n">25&nbsp;% / 46&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">40°</td><td class="n">6&nbsp;% / 16&nbsp;%</td><td class="n">5&nbsp;% / 12&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">60°</td><td class="n">10&nbsp;% / 24&nbsp;%</td><td class="n">4&nbsp;% / 8&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">70°</td><td class="n">11&nbsp;% / 29&nbsp;%</td><td class="n">6&nbsp;% / 26&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">90°</td><td class="n">13&nbsp;% / 37&nbsp;%</td><td class="n">4&nbsp;% / 16&nbsp;%</td><td class="n">tombe</td></tr></tbody></table></div>
-    <p class="sources">L'équilibre sur une jambe est cherché par un décalage fixe de la hanche et de la cheville, sans retour d'information&nbsp;: un ordre de grandeur.</p>
+    <p>Part du couple de blocage que le genou doit fournir, en moyenne puis au pic. Sur deux jambes, le genou monte à 38&nbsp;% du blocage au pic et 14&nbsp;% en moyenne
+      à 90° de genou&nbsp;; <strong>sur une jambe, il tient de 0 à 70° de genou</strong> (il tombe à 90°), à condition de faire comme un humain&nbsp;: le poids d'abord, en roulant les deux hanches de 11 à 15° les deux pieds au sol, la jambe ensuite (cahier R-052). D'un seul geste, la jambe levée pendant que la hanche roule, il tombe à tous les angles (dernière colonne du tableau contre l'avant-dernière). Deux erreurs corrigées le 9 novembre&nbsp;: la page disait «&nbsp;tient jusqu'à 70°&nbsp;», un résultat de la version 1&nbsp;; et la cheville de côté était commandée à l'envers, ce qui couchait les pieds sur la tranche au lieu de les garder à plat.</p>
+    <div class="defile"><table><thead><tr><th>Genou</th><th>Deux jambes (moyen / pic)</th><th>Une jambe, d'un geste</th><th>Une jambe, en deux temps</th></tr></thead><tbody><tr><td class="n">0°</td><td class="n">0&nbsp;% / 1&nbsp;%</td><td class="n">tombe</td><td class="n">tient (roulis -13°)</td></tr><tr><td class="n">20°</td><td class="n">4&nbsp;% / 8&nbsp;%</td><td class="n">tombe</td><td class="n">tient (roulis -14 à -11°)</td></tr><tr><td class="n">40°</td><td class="n">7&nbsp;% / 16&nbsp;%</td><td class="n">tombe</td><td class="n">tient (roulis -14 à -12°)</td></tr><tr><td class="n">60°</td><td class="n">10&nbsp;% / 25&nbsp;%</td><td class="n">tombe</td><td class="n">tient (roulis -15 à -13°)</td></tr><tr><td class="n">70°</td><td class="n">11&nbsp;% / 29&nbsp;%</td><td class="n">tombe</td><td class="n">tient (roulis -15 à -14°)</td></tr><tr><td class="n">90°</td><td class="n">14&nbsp;% / 38&nbsp;%</td><td class="n">tombe</td><td class="n">tombe</td></tr></tbody></table></div>
+    <p class="sources">L'équilibre sur une jambe est cherché par un roulis fixe des hanches et des chevilles (de −24 à 24° d'un geste, de −20 à 20° en deux temps), sans retour d'information&nbsp;: un ordre de grandeur.
+      «&nbsp;Tient&nbsp;»&nbsp;: incliné de moins de 20° à la fin, jamais plus de 35°.</p>
 
     <h3>Marcher, avec et sans retour d'information</h3>
     <figure class="video">
       <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche de N1 avec retour d'information">
         <source src="simulation/n1-marche.mp4" type="video/mp4"></video>
-      <figcaption>La marche retenue (graine 3, avec retour d'information)&nbsp;: 12&nbsp;s, 50&nbsp;cm.</figcaption>
+      <figcaption>La marche retenue (graine 3, avec retour d'information)&nbsp;: 12&nbsp;s, 36&nbsp;cm.</figcaption>
     </figure>
     <p>Une marche périodique à onze réglages, plus quatre gains qui corrigent la cheville d'après l'inclinaison du torse, a été cherchée trois fois
       (trois graines) par l'algorithme CMA-ES, puis refaite trois fois avec les gains forcés à zéro&nbsp;: la même marche, aveugle.
-      <strong>Avec le retour, la distance moyenne est de 35&nbsp;cm en douze secondes&nbsp;; sans, de 10&nbsp;cm</strong>
+      <strong>Avec le retour, la distance moyenne est de 20&nbsp;cm en douze secondes&nbsp;; sans, de 17&nbsp;cm</strong>
       (aucune des trois marches aveugles ne tombe).
       À titre de repère, N0 aveugle faisait 6 à 8&nbsp;cm en dix secondes, pour un robot deux fois plus petit.</p>
-    <div class="defile"><table><thead><tr><th>Marche</th><th>Graine</th><th>Avance en 12 s</th><th>Dérive de côté</th><th>Fin</th><th>Couple max</th></tr></thead><tbody><tr><td class="n">avec retour</td><td class="n">1</td><td class="n">25&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">86&nbsp;%</td></tr><tr><td class="n">avec retour</td><td class="n">2</td><td class="n">30&nbsp;cm</td><td class="n">5&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">avec retour</td><td class="n">3</td><td class="n">50&nbsp;cm</td><td class="n">6&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">1</td><td class="n">8&nbsp;cm</td><td class="n">0&nbsp;cm</td><td class="n">debout</td><td class="n">65&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">2</td><td class="n">9&nbsp;cm</td><td class="n">7&nbsp;cm</td><td class="n">debout</td><td class="n">93&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">3</td><td class="n">13&nbsp;cm</td><td class="n">3&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr></tbody></table></div>
+    <div class="defile"><table><thead><tr><th>Marche</th><th>Graine</th><th>Avance en 12 s</th><th>Dérive de côté</th><th>Fin</th><th>Couple max</th></tr></thead><tbody><tr><td class="n">avec retour</td><td class="n">1</td><td class="n">6&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">80&nbsp;%</td></tr><tr><td class="n">avec retour</td><td class="n">2</td><td class="n">19&nbsp;cm</td><td class="n">2&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">avec retour</td><td class="n">3</td><td class="n">36&nbsp;cm</td><td class="n">2&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">1</td><td class="n">11&nbsp;cm</td><td class="n">0&nbsp;cm</td><td class="n">debout</td><td class="n">76&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">2</td><td class="n">18&nbsp;cm</td><td class="n">5&nbsp;cm</td><td class="n">debout</td><td class="n">94&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">3</td><td class="n">21&nbsp;cm</td><td class="n">12&nbsp;cm</td><td class="n">debout</td><td class="n">99&nbsp;%</td></tr></tbody></table></div>
     <p class="sources">Un seul modèle de servo, parfait (sans jeu, sans chute de tension, sans échauffement)&nbsp;; les marches sont réglées sur le modèle lui-même,
       donc elles peuvent en exploiter un défaut&nbsp;; trois graines&nbsp;; la marche avance en diagonale (la dérive de côté est dite). <strong>Se relever&nbsp;: essayé, pas obtenu.</strong> Onze recherches de mouvements, couché sur le dos, dans le plan sagittal, même avec trois fois plus de couple&nbsp;: au mieux assis ou agenouillé, jamais debout (cahier R-038, sur la version 1 de la CAO&nbsp;: pas refait). Il manque à N1 la rotation de la hanche, que font les robots qui se relèvent.
       Le «&nbsp;couple max&nbsp;» est la part du couple de blocage&nbsp;: 100&nbsp;% veut dire que le servo sature.</p>
-    <p><strong>Ces marches glissent encore.</strong> Rejouées en relevant les appuis (cahier R-044), les 10 marches publiées sur cette page gardent les deux pieds au sol
-      53&nbsp;% à 96&nbsp;% du temps, lèvent les pieds de 3 à 64&nbsp;mm au plus, et 4 sur 10 font glisser leurs pieds au sol
+    <p><strong>Ces marches traînent les pieds.</strong> Rejouées en relevant les appuis (cahier R-044), les 10 marches publiées sur cette page gardent les deux pieds au sol
+      52&nbsp;% à 100&nbsp;% du temps, lèvent les pieds de 2 à 24&nbsp;mm au plus, et 6 sur 10 font glisser leurs pieds au sol
       plus loin qu'elles n'avancent. C'est une marche réglée par la simulation, qui en exploite le sol&nbsp;: sur un vrai plancher, le glissement dépendra du revêtement.
       Une marche qui lève les pieds reste à régler.</p>
-    <p><strong>Et elles tournent sur elles-mêmes.</strong> Rejouées en relevant le cap du torse (cahier R-050), les 6 marches de cette page qui avancent de plus
-      de 20&nbsp;cm finissent tournées de 133 à 175° en 12&nbsp;s&nbsp;; la marche retenue, de 164°, la marche robuste de 175°&nbsp;: elles
-      finissent de dos. Elles pivotent en dérivant plutôt qu'elles ne marchent droit, parce que leur réglage ne regardait que l'avance. Nous ne l'avions pas
-      vu avant le 9 novembre. <strong>Une première marche droite, qui glisse moins qu'elle n'avance, a été réglée le 9 novembre</strong>, en payant le glissement des pieds et le cap au-delà de 20°, avec un retour du cap sur la longueur du pas&nbsp;: 12&nbsp;cm en 12&nbsp;s (lente&nbsp;: un centimètre par seconde), 18° de cap au plus, un pied en l'air 74&nbsp;% du temps, 10&nbsp;cm de glissement, aucune pièce qui en traverse une autre (cahier R-050). Sous les 12 variations de ±50&nbsp;% du modèle, elle tient 12 fois sur 12, et avance de 9 à 16&nbsp;cm.</p>
+    <p><strong>Et elles tournent sur elles-mêmes.</strong> Rejouées en relevant le cap du torse (cahier R-050), les 10 marches de cette page finissent tournées de 2 à 150° en 12&nbsp;s&nbsp;; la marche retenue, de 150°, la marche robuste de 53°. Leur réglage ne regarde que l'avance. Le 9 novembre, nous avons vu que celles de la version 2.2 finissaient de dos. <strong>Pas encore de marche droite sur la version 2.3.</strong> La recette qui en avait donné une sur la 2.2 (payer le glissement des pieds et le cap au-delà de 20°) n'en trouve pas qui avance d'au moins 10&nbsp;cm sans glisser plus qu'elle n'avance&nbsp;: réglées pour ne pas glisser, ses marches restent debout sans lever un pied (2&nbsp;cm au plus en 12&nbsp;s), et réglées sur l'avance seule, elles avancent en glissant et en tournant. La marche droite publiée le matin du 9 novembre était celle de la 2.2, réglée avec la cheville de côté commandée à l'envers (cahiers R-050 à R-052). <strong>Ce qui avance&nbsp;: N1 marche sur place.</strong> Les marches trouvées roulaient les deux hanches en sens contraires&nbsp;: les jambes s'ouvraient et se fermaient, et le poids ne passait jamais d'un pied à l'autre. Partie d'un geste construit comme celui d'un humain (les deux hanches roulées du même côté, le poids posé un huitième de pas avant que l'autre genou se plie), la recherche donne une marche sur place&nbsp;: un pied en l'air 31&nbsp;% du temps, 3&nbsp;cm de glissement en 12&nbsp;s, 5° de cap au plus (cahier R-051). Il lui reste à avancer.</p>
     <figure class="video">
-      <video controls muted playsinline loop preload="metadata" aria-label="Simulation : la première marche droite de N1">
-        <source src="simulation/n1-marche-droite.mp4" type="video/mp4"></video>
-      <figcaption>La première marche droite de N1 (9 novembre)&nbsp;: 12&nbsp;s, 12&nbsp;cm, de petits pas, qui glissent moins qu'ils n'avancent. Simulé.</figcaption>
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation : N1 version 2.3 marche sur place">
+        <source src="simulation/n1-marche-sur-place.mp4" type="video/mp4"></video>
+      <figcaption>N1 (version 2.3) marche sur place&nbsp;: 12&nbsp;s, un pied en l'air 31&nbsp;% du temps, sans tomber. Il n'avance pas encore. Simulé.</figcaption>
     </figure>
     <p><strong>Une erreur corrigée le 9 novembre.</strong> Les marches de la version 1 étaient réglées avec les contacts coupés entre les pièces du robot&nbsp;: rejouées, elles
-      faisaient se traverser les deux jambes, et les mains entrer dans les hanches, la moitié du temps environ (cahier R-048). La version 2 écarte les hanches et les
-      épaules, garde les bras écartés de 15° en marchant, et règle les marches <b>contacts allumés</b> entre les deux jambes et entre les bras et les jambes. Contrôle
-      sur les maillages exacts, toutes les 50&nbsp;ms&nbsp;: plus aucune pièce n'en traverse une autre&nbsp;; seuls les deux pieds se frôlent, de 0 à 71 instants sur 240 selon la marche (le simulateur les fait se toucher, pas se traverser).</p>
+      faisaient se traverser les deux jambes, et les mains entrer dans les hanches, la moitié du temps environ (cahier R-048). Les versions 2.2 et 2.3 écartent les hanches et les
+      épaules, gardent les bras écartés de 15° en marchant, et règlent les marches <b>contacts allumés</b> entre les deux jambes et entre les bras et les jambes. Contrôle
+      sur les maillages exacts, toutes les 50&nbsp;ms&nbsp;: 6 marches sur 26 ont encore des instants de contact, les deux chevilles l'une contre l'autre (au plus 64 sur 240&nbsp;; la marche retenue, 64).</p>
 
     <h3>Ce qui fait tomber la marche</h3>
     <p>Chaque hypothèse du modèle a été divisée par deux, puis multipliée par un et demi, et la meilleure marche rejouée telle quelle
       (sans la réoptimiser).</p>
-    <div class="defile"><table><thead><tr><th>Hypothèse</th><th>Divisée par 2</th><th>Multipliée par 1,5</th></tr></thead><tbody><tr class="repond"><td><b>Masse de l'électronique (330&nbsp;g)</b></td><td class="n">tient, 31&nbsp;cm</td><td class="n">tombe à 4,1&nbsp;s</td></tr><tr><td><b>Couple de blocage des servos</b></td><td class="n">tient, 17&nbsp;cm</td><td class="n">tient, 33&nbsp;cm</td></tr><tr class="repond"><td><b>Raideur de position des servos</b></td><td class="n">tient, 11&nbsp;cm</td><td class="n">tombe à 7,9&nbsp;s</td></tr><tr class="repond"><td><b>Frottement du sol</b></td><td class="n">tombe à 7,2&nbsp;s</td><td class="n">tient, 18&nbsp;cm</td></tr><tr><td><b>Inertie du rotor</b></td><td class="n">tient, 21&nbsp;cm</td><td class="n">tient, 24&nbsp;cm</td></tr><tr><td><b>Amortissement des charnières</b></td><td class="n">tient, 24&nbsp;cm</td><td class="n">tient, 22&nbsp;cm</td></tr></tbody></table></div>
+    <div class="defile"><table><thead><tr><th>Hypothèse</th><th>Divisée par 2</th><th>Multipliée par 1,5</th></tr></thead><tbody><tr><td><b>Masse de l'électronique (330&nbsp;g)</b></td><td class="n">tient, 35&nbsp;cm</td><td class="n">tient, 30&nbsp;cm</td></tr><tr class="repond"><td><b>Couple de blocage des servos</b></td><td class="n">tombe à 3,9&nbsp;s</td><td class="n">tient, 37&nbsp;cm</td></tr><tr class="repond"><td><b>Raideur de position des servos</b></td><td class="n">tient, 37&nbsp;cm</td><td class="n">tombe à 4,4&nbsp;s</td></tr><tr><td><b>Frottement du sol</b></td><td class="n">tient, 42&nbsp;cm</td><td class="n">tient, 37&nbsp;cm</td></tr><tr><td><b>Inertie du rotor</b></td><td class="n">tient, 38&nbsp;cm</td><td class="n">tient, 37&nbsp;cm</td></tr><tr><td><b>Amortissement des charnières</b></td><td class="n">tient, 37&nbsp;cm</td><td class="n">tient, 33&nbsp;cm</td></tr></tbody></table></div>
 
     <h3>Une marche qui ne dépend pas d'un détail du modèle</h3>
     <p>La fragilité ci-dessus vient du réglage sur <em>un seul</em> modèle, pas du robot. Une deuxième recherche a donc réglé la même marche pour tenir sur <strong>huit modèles à la fois</strong>
       (masse de l'électronique, frottement, inertie, amortissement, couple et raideur, chacun un peu changé) : l'aptitude d'un candidat est celle de son pire modèle. Résultat&nbsp;: la marche
-      robuste tient dans les <strong>12 variations sur 12</strong> de ±50&nbsp;% (plus larges que l'entraînement), contre 9 sur 12 pour la marche réglée sur le nominal. Le prix&nbsp;:
-      34&nbsp;cm en 12&nbsp;s au lieu de 50. Et si les servos sont plafonnés à 60&nbsp;% de leur couple de blocage (une marge de 40&nbsp;%, parce que ce couple est un pic annoncé, pas un couple continu), la marche robuste tient encore dans les huit modèles&nbsp;: <strong>24&nbsp;cm en 12&nbsp;s</strong>, soit 2&nbsp;cm par seconde.</p>
+      robuste tient dans les <strong>12 variations sur 12</strong> de ±50&nbsp;% (plus larges que l'entraînement), contre 10 sur 12 pour la marche réglée sur le nominal. Le prix&nbsp;:
+      13&nbsp;cm en 12&nbsp;s au lieu de 36. Et si les servos sont plafonnés à 60&nbsp;% de leur couple de blocage (une marge de 40&nbsp;%, parce que ce couple est un pic annoncé, pas un couple continu), la marche robuste tient encore dans les huit modèles&nbsp;: <strong>3&nbsp;cm en 12&nbsp;s</strong>, soit 0,3&nbsp;cm par seconde.</p>
     <figure class="video">
       <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche robuste de N1">
         <source src="simulation/n1-marche-robuste.mp4" type="video/mp4"></video>
-      <figcaption>La marche robuste (graine 2)&nbsp;: 12&nbsp;s, 34&nbsp;cm, sans chute dans aucune des variations.</figcaption>
+      <figcaption>La marche robuste (graine 2)&nbsp;: 12&nbsp;s, 13&nbsp;cm, sans chute dans aucune des 12 variations.</figcaption>
     </figure>
-    <div class="defile"><table><thead><tr><th>Hypothèse (÷2 &middot; ×1,5)</th><th>Marche réglée sur le nominal</th><th>Marche robuste</th></tr></thead><tbody><tr><td><b>Masse de l'électronique (330&nbsp;g)</b></td><td class="n">tient, 31&nbsp;cm &middot; tombe à 4,1&nbsp;s</td><td class="n">tient, 34&nbsp;cm &middot; tient, 41&nbsp;cm</td></tr><tr><td><b>Couple de blocage des servos</b></td><td class="n">tient, 17&nbsp;cm &middot; tient, 33&nbsp;cm</td><td class="n">tient, 37&nbsp;cm &middot; tient, 35&nbsp;cm</td></tr><tr><td><b>Raideur de position des servos</b></td><td class="n">tient, 11&nbsp;cm &middot; tombe à 7,9&nbsp;s</td><td class="n">tient, 6&nbsp;cm &middot; tient, 15&nbsp;cm</td></tr><tr><td><b>Frottement du sol</b></td><td class="n">tombe à 7,2&nbsp;s &middot; tient, 18&nbsp;cm</td><td class="n">tient, 21&nbsp;cm &middot; tient, 36&nbsp;cm</td></tr><tr><td><b>Inertie du rotor</b></td><td class="n">tient, 21&nbsp;cm &middot; tient, 24&nbsp;cm</td><td class="n">tient, 37&nbsp;cm &middot; tient, 39&nbsp;cm</td></tr><tr><td><b>Amortissement des charnières</b></td><td class="n">tient, 24&nbsp;cm &middot; tient, 22&nbsp;cm</td><td class="n">tient, 26&nbsp;cm &middot; tient, 37&nbsp;cm</td></tr></tbody></table></div>
+    <div class="defile"><table><thead><tr><th>Hypothèse (÷2 &middot; ×1,5)</th><th>Marche réglée sur le nominal</th><th>Marche robuste</th></tr></thead><tbody><tr><td><b>Masse de l'électronique (330&nbsp;g)</b></td><td class="n">tient, 35&nbsp;cm &middot; tient, 30&nbsp;cm</td><td class="n">tient, 11&nbsp;cm &middot; tient, 13&nbsp;cm</td></tr><tr><td><b>Couple de blocage des servos</b></td><td class="n">tombe à 3,9&nbsp;s &middot; tient, 37&nbsp;cm</td><td class="n">tient, 10&nbsp;cm &middot; tient, 12&nbsp;cm</td></tr><tr><td><b>Raideur de position des servos</b></td><td class="n">tient, 37&nbsp;cm &middot; tombe à 4,4&nbsp;s</td><td class="n">tient, 11&nbsp;cm &middot; tient, 13&nbsp;cm</td></tr><tr><td><b>Frottement du sol</b></td><td class="n">tient, 42&nbsp;cm &middot; tient, 37&nbsp;cm</td><td class="n">tient, 11&nbsp;cm &middot; tient, 12&nbsp;cm</td></tr><tr><td><b>Inertie du rotor</b></td><td class="n">tient, 38&nbsp;cm &middot; tient, 37&nbsp;cm</td><td class="n">tient, 11&nbsp;cm &middot; tient, 14&nbsp;cm</td></tr><tr><td><b>Amortissement des charnières</b></td><td class="n">tient, 37&nbsp;cm &middot; tient, 33&nbsp;cm</td><td class="n">tient, 12&nbsp;cm &middot; tient, 12&nbsp;cm</td></tr></tbody></table></div>
     <p class="sources">Cela ne prouve pas que la marche tiendrait sur le vrai robot&nbsp;: les huit modèles sont des variations d'un même modèle simplifié (pas de jeu, pas de sol irrégulier, pas de chute de tension).</p>
 
     <h2>Ce qui s'imprime</h2>
-    <p class="sous">67 pièces &middot; 59&nbsp;h&nbsp;01 &middot; 1117&nbsp;g de PLA &middot; 11 plateaux de 220 × 220&nbsp;mm</p>
+    <p class="sous">69 pièces &middot; 60&nbsp;h&nbsp;36 &middot; 1157&nbsp;g de PLA &middot; 11 plateaux de 220 × 220&nbsp;mm</p>
     <p>Comme pour N0, tout s'imprime sans support, sur une Ender-3 V3 SE, en PLA, 3 parois et 25&nbsp;% de remplissage. Les temps et les grammes
       viennent du tranchage dans OrcaSlicer, pas d'une estimation. <strong>Le plateau P0 est le gabarit d'essai&nbsp;: à imprimer d'abord.</strong></p>
     <div class="plateaux">
@@ -464,7 +465,7 @@ footer p{margin:0;max-width:none}
       <figcaption>
         <span class="pn">P6 <i class="pastille orange"></i>orange</span>
         <b>Le torse, couché sur la poitrine</b>
-        <span class="pc">7&nbsp;h&nbsp;24 &middot; 164&nbsp;g</span>
+        <span class="pc">6&nbsp;h&nbsp;30 &middot; 152&nbsp;g</span>
         <a class="lien" href="fichiers/P6-torse.3mf" download>Fichier 3MF</a>
       </figcaption>
     </figure>
@@ -482,16 +483,16 @@ footer p{margin:0;max-width:none}
       <figcaption>
         <span class="pn">P8 <i class="pastille orange"></i>orange</span>
         <b>Mains et pieds</b>
-        <span class="pc">5&nbsp;h&nbsp;37 &middot; 121&nbsp;g</span>
+        <span class="pc">5&nbsp;h&nbsp;22 &middot; 115&nbsp;g</span>
         <a class="lien" href="fichiers/P8-mains-pieds.3mf" download>Fichier 3MF</a>
       </figcaption>
     </figure>
     <figure class="plateau">
-      <img src="plateaux/P9-dos.png" alt="Vue de dessus du plateau P9 : dos, support du cou" width="440" height="440" loading="lazy">
+      <img src="plateaux/P9-dos.png" alt="Vue de dessus du plateau P9 : dos, support du cou, 2 épaulettes" width="440" height="440" loading="lazy">
       <figcaption>
         <span class="pn">P9 <i class="pastille gris"></i>gris</span>
-        <b>La plaque du dos et le support du cou</b>
-        <span class="pc">1&nbsp;h&nbsp;33 &middot; 34&nbsp;g</span>
+        <b>La plaque du dos, le support du cou et les deux épaulettes (version 2.3, R-051)</b>
+        <span class="pc">4&nbsp;h&nbsp;16 &middot; 92&nbsp;g</span>
         <a class="lien" href="fichiers/P9-dos.3mf" download>Fichier 3MF</a>
       </figcaption>
     </figure>
@@ -513,12 +514,13 @@ footer p{margin:0;max-width:none}
       <tr><td><b>Rallonge</b><span class="role">allonge la cuisse, le tibia et le bras</span></td><td class="n">6</td><td class="n">18 × 33,6 × 18</td><td class="n">21&nbsp;min</td><td class="n">6,2&nbsp;g</td><td>P5</td><td><a class="lien" href="fichiers/stl/rallonge.stl" download>STL</a></td></tr>
       <tr><td><b>Visière</b><span class="role">entre dans sa fente, sur le devant de la tête</span></td><td class="n">1</td><td class="n">16,8 × 59,2 × 3,2</td><td class="n">9&nbsp;min</td><td class="n">3&nbsp;g</td><td>P5</td><td><a class="lien" href="fichiers/stl/visiere.stl" download>STL</a></td></tr>
       <tr><td><b>Antenne</b><span class="role">ferme le trou du tournevis, sur le dessus de la tête</span></td><td class="n">1</td><td class="n">12,6 × 12,6 × 31,4</td><td class="n">10&nbsp;min</td><td class="n">1,1&nbsp;g</td><td>P5</td><td><a class="lien" href="fichiers/stl/antenne.stl" download>STL</a></td></tr>
-      <tr><td><b>Torse</b><span class="role">porte les hanches, les épaules, le cou, la pile, la carte et la centrale</span></td><td class="n">1</td><td class="n">130 × 228 × 80</td><td class="n">7&nbsp;h&nbsp;24</td><td class="n">163,6&nbsp;g</td><td>P6</td><td><a class="lien" href="fichiers/stl/torse.stl" download>STL</a></td></tr>
+      <tr><td><b>Torse</b><span class="role">porte les hanches, les épaulettes, le cou, la pile, la carte et la centrale</span></td><td class="n">1</td><td class="n">130 × 132 × 80</td><td class="n">6&nbsp;h&nbsp;30</td><td class="n">151,9&nbsp;g</td><td>P6</td><td><a class="lien" href="fichiers/stl/torse.stl" download>STL</a></td></tr>
+      <tr><td><b>Épaulette</b><span class="role">vissée sur un flanc du torse (4 vis M3 x 8, de l'intérieur) ; porte l'épaule (version 2.3)</span></td><td class="n">2</td><td class="n">64 × 73 × 40</td><td class="n">1&nbsp;h&nbsp;17</td><td class="n">25&nbsp;g</td><td>P9</td><td><a class="lien" href="fichiers/stl/epaulette.stl" download>STL</a></td></tr>
       <tr><td><b>Tête</b><span class="role">se visse sur le palonnier du servo du cou</span></td><td class="n">1</td><td class="n">86 × 80 × 80</td><td class="n">6&nbsp;h&nbsp;34</td><td class="n">142,5&nbsp;g</td><td>P7</td><td><a class="lien" href="fichiers/stl/tete.stl" download>STL</a></td></tr>
       <tr><td><b>Main</b><span class="role">se visse sur l'étrier du coude</span></td><td class="n">2</td><td class="n">87,9 × 46 × 22</td><td class="n">1&nbsp;h&nbsp;39</td><td class="n">33,6&nbsp;g</td><td>P8</td><td><a class="lien" href="fichiers/stl/main.stl" download>STL</a></td></tr>
-      <tr><td><b>Pied gauche</b><span class="role">se visse sous l'étrier de la cheville</span></td><td class="n">1</td><td class="n">122 × 64 × 6,5</td><td class="n">1&nbsp;h&nbsp;08</td><td class="n">27&nbsp;g</td><td>P8</td><td><a class="lien" href="fichiers/stl/pied-gauche.stl" download>STL</a></td></tr>
-      <tr><td><b>Pied droit</b><span class="role">se visse sous l'étrier de la cheville</span></td><td class="n">1</td><td class="n">122 × 64 × 6,5</td><td class="n">1&nbsp;h&nbsp;08</td><td class="n">27&nbsp;g</td><td>P8</td><td><a class="lien" href="fichiers/stl/pied-droit.stl" download>STL</a></td></tr>
-      <tr><td><b>Dos</b><span class="role">ferme le torse par 4 vis</span></td><td class="n">1</td><td class="n">130 × 104 × 2,4</td><td class="n">1&nbsp;h&nbsp;06</td><td class="n">28,1&nbsp;g</td><td>P9</td><td><a class="lien" href="fichiers/stl/dos.stl" download>STL</a></td></tr>
+      <tr><td><b>Pied gauche</b><span class="role">se visse sous l'étrier de la cheville</span></td><td class="n">1</td><td class="n">122 × 56 × 6,5</td><td class="n">1&nbsp;h&nbsp;01</td><td class="n">24&nbsp;g</td><td>P8</td><td><a class="lien" href="fichiers/stl/pied-gauche.stl" download>STL</a></td></tr>
+      <tr><td><b>Pied droit</b><span class="role">se visse sous l'étrier de la cheville</span></td><td class="n">1</td><td class="n">122 × 56 × 6,5</td><td class="n">1&nbsp;h&nbsp;01</td><td class="n">24&nbsp;g</td><td>P8</td><td><a class="lien" href="fichiers/stl/pied-droit.stl" download>STL</a></td></tr>
+      <tr><td><b>Dos</b><span class="role">ferme le torse par 4 vis</span></td><td class="n">1</td><td class="n">130 × 132 × 2,4</td><td class="n">1&nbsp;h&nbsp;21</td><td class="n">36,4&nbsp;g</td><td>P9</td><td><a class="lien" href="fichiers/stl/dos.stl" download>STL</a></td></tr>
       <tr><td><b>Support du cou</b><span class="role">vissé sous le toit du torse ; reçoit le boîtier du servo du cou</span></td><td class="n">1</td><td class="n">32,7 × 52,6 × 22</td><td class="n">27&nbsp;min</td><td class="n">5,8&nbsp;g</td><td>P9</td><td><a class="lien" href="fichiers/stl/support-cou.stl" download>STL</a></td></tr>
     </tbody></table></div>
 
@@ -534,7 +536,7 @@ footer p{margin:0;max-width:none}
       <tr><td><b>Arrêt d'urgence, champignon 22&nbsp;mm</b></td><td class="n">1</td><td class="n">17,79 à 21,59&nbsp;$</td><td>Dayton 30G257 ou 32UK35&nbsp;: il doit couper tout le courant de la pile, ou commander un relais qui le fait</td></tr>
       <tr><td><b>Adaptateur Feetech FE-URT-1 ou FE-URT2</b></td><td class="n">1</td><td class="n">13,67&nbsp;£ à 19,44&nbsp;$</td><td>pour régler les identifiants 1 à 17&nbsp;; le FE-URT-1 est arrêté, le FE-URT2 le remplace</td></tr>
       <tr><td><b>Raspberry Pi Zero 2 W</b> (facultatif)</td><td class="n">0 ou 1</td><td class="n">15 à 21,38&nbsp;$</td><td>prix de lancement 15&nbsp;$ ; SparkFun 17,25&nbsp;$ (rupture)</td></tr>
-      <tr><td><b>Vis</b></td><td class="n">&mdash;</td><td class="n">&mdash;</td><td>M2&nbsp;×&nbsp;8&nbsp;: 68 (les brides) &middot; M3&nbsp;×&nbsp;6&nbsp;: 68 (les palonniers&nbsp;; souvent fournies) &middot; M3&nbsp;×&nbsp;10&nbsp;: 64 (les disques du bas) &middot; M3&nbsp;×&nbsp;8&nbsp;: 68 &middot; M3&nbsp;×&nbsp;25&nbsp;: 24 (les rallonges) &middot; M2&nbsp;×&nbsp;6&nbsp;: 4 (le Pico)</td></tr>
+      <tr><td><b>Vis</b> (longueurs calculées sur les épaisseurs traversées)</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td>M2&nbsp;×&nbsp;6&nbsp;: 4 (le Pico sur ses entretoises) &middot; M2&nbsp;×&nbsp;8&nbsp;: 68 (les brides) &middot; M3&nbsp;×&nbsp;6&nbsp;: 76 (hanche sous le plancher du torse, les palonniers : bras A des étriers et la tête) &middot; M3&nbsp;×&nbsp;8&nbsp;: 60 (étrier sur le boîtier suivant, étrier sous le pied, étrier sur la main, cou sur son support, épaulette sur le flanc du torse, support du cou sous le toit, dos sur le torse) &middot; M3&nbsp;×&nbsp;10&nbsp;: 64 (les disques du bas : bras B des étriers) &middot; M3&nbsp;×&nbsp;12&nbsp;: 8 (épaule sous l'épaulette) &middot; M3&nbsp;×&nbsp;25&nbsp;: 24 (étrier, rallonge, boîtier suivant)</td></tr>
     </tbody></table></div>
     <p class="sources"><strong>De 484 à 577&nbsp;$ US</strong> pour les servos, le Pico et la centrale (17 servos entre 442 et 533&nbsp;$)&nbsp;;
       <strong>environ 540 à 680&nbsp;$ US</strong> avec la pile, la protection, l'abaisseur, l'arrêt d'urgence et l'adaptateur. Sans les vis, le plastique, la livraison ni les droits de
@@ -550,7 +552,8 @@ footer p{margin:0;max-width:none}
       <li><b>Les modules.</b><span>Pour chaque articulation&nbsp;: le servo dans son boîtier, la bride vissée par-dessus (4 vis M2), puis l'étrier droit, vissé sur le palonnier
         (4 vis M3&nbsp;×&nbsp;6) et sur le disque du bas (4 vis M3&nbsp;×&nbsp;10). Les fiches des câbles branchées avant de fermer.</span></li>
       <li><b>Les chaînes.</b><span>Chaque étrier se visse sur le bout du boîtier suivant (4 vis M3&nbsp;×&nbsp;8, ou M3&nbsp;×&nbsp;25 à travers une rallonge), dans l'ordre de la vue 3D&nbsp;;
-        les hanches et les épaules sous le torse et sur ses rebords, le cou sur son support, puis la tête sur le palonnier du cou.</span></li>
+        les hanches sous le plancher du torse (M3&nbsp;×&nbsp;6&nbsp;: une M3&nbsp;×&nbsp;8 buterait au fond du trou)&nbsp;; les deux épaulettes sur ses flancs (4 vis M3&nbsp;×&nbsp;8 chacune, posées de l'intérieur avant de fermer le dos), puis les épaules
+        sous les épaulettes (M3&nbsp;×&nbsp;12)&nbsp;; le cou sur son support, puis la tête sur le palonnier du cou.</span></li>
       <li><b>L'électronique.</b><span>Selon le schéma&nbsp;: l'arrêt d'urgence et le fusible avant tout le reste, puis le bus, l'abaisseur, le Pico, la centrale.</span></li>
       <li><b>L'étalonnage.</b><span>Le robot suspendu, pieds dans le vide&nbsp;: <code>main.py</code> en mode «&nbsp;calibrer&nbsp;». Il écrit ses vraies butées dans <code>calibration.json</code>&nbsp;;
         lire le tableau qu'il affiche avant de le poser au sol.</span></li>
@@ -566,13 +569,13 @@ footer p{margin:0;max-width:none}
     <p class="sous">Licence CC BY 4.0&nbsp;: imprimez, modifiez, partagez, en nommant Navitek N1</p>
     <div class="fichiers">
       <a class="fichier" href="fichiers/navitek-n1-stl.zip" download><span class="n">Les pièces en STL</span>
-        <span class="d">Les 14 pièces, orientées pour l'impression, avec le gabarit d'essai.</span><span class="u">0,2&nbsp;Mo &middot; ZIP</span></a>
+        <span class="d">Les 15 pièces, orientées pour l'impression, avec le gabarit d'essai.</span><span class="u">0,2&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n1-plateaux-3mf.zip" download><span class="n">Les 11 plateaux en 3MF</span>
         <span class="d">Prêts à ouvrir dans OrcaSlicer ou Bambu Studio.</span><span class="u">0,9&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n1-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
         <span class="d">Chaque pièce, l'assemblage, et <code>n1.py</code>, le script FreeCAD qui les dessine (les cotes du servo, à vérifier, sont en tête).</span><span class="u">1,2&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n1-simulation.zip" download><span class="n">La simulation MuJoCo</span>
-        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">87&nbsp;ko &middot; ZIP</span></a>
+        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0,1&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n1-programme.zip" download><span class="n">Le programme du robot</span>
         <span class="d"><code>main.py</code> et <code>sts.py</code> (MicroPython) et le schéma électrique&nbsp;; éprouvés contre des servos simulés.</span><span class="u">8&nbsp;ko &middot; ZIP</span></a>
     </div>
@@ -606,7 +609,7 @@ footer p{margin:0;max-width:none}
 
 <script type="module">
 import { visionneuse } from "./visionneuse.js";
-const INFO = {"boitier-servo": {"nom": "Boîtier de servo", "role": "reçoit un STS3215 par le dessus ; son bout porte le carré de 4 vis M3 de l'articulation suivante", "n": 17, "imprimee": true, "temps": "1 h 14", "g": "23,3", "plateau": "P1", "couleur": "orange"}, "bride": {"nom": "Bride", "role": "tient le servo dans son boîtier, par le dessus (4 vis M2 x 8)", "n": 17, "imprimee": true, "temps": "9 min", "g": "3,2", "plateau": "P10", "couleur": "gris"}, "servo-sts3215": {"nom": "Servo Feetech STS3215, 12 V", "role": "à acheter : un seul numéro de pièce pour les 17", "n": 17, "imprimee": false}, "fiches": {"nom": "Fiches des câbles", "role": "branchées sous chaque servo (volume réservé, pas une pièce)", "n": 17, "imprimee": false}, "palonnier": {"nom": "Palonnier rond", "role": "fourni avec le servo : Ø 20 mm, 4 trous M3", "n": 17, "imprimee": false}, "etrier": {"nom": "Étrier", "role": "tourne avec le servo : vissé sur ses deux disques, au-dessus et au-dessous", "n": 16, "imprimee": true, "temps": "46 min", "g": "10,1", "plateau": "P3", "couleur": "gris"}, "rallonge": {"nom": "Rallonge", "role": "allonge la cuisse, le tibia et le bras", "n": 6, "imprimee": true, "temps": "21 min", "g": "6,2", "plateau": "P5", "couleur": "gris"}, "pied-gauche": {"nom": "Pied gauche", "role": "se visse sous l'étrier de la cheville", "n": 1, "imprimee": true, "temps": "1 h 08", "g": "27", "plateau": "P8", "couleur": "orange"}, "pied-droit": {"nom": "Pied droit", "role": "se visse sous l'étrier de la cheville", "n": 1, "imprimee": true, "temps": "1 h 08", "g": "27", "plateau": "P8", "couleur": "orange"}, "main": {"nom": "Main", "role": "se visse sur l'étrier du coude", "n": 2, "imprimee": true, "temps": "1 h 39", "g": "33,6", "plateau": "P8", "couleur": "orange"}, "torse": {"nom": "Torse", "role": "porte les hanches, les épaules, le cou, la pile, la carte et la centrale", "n": 1, "imprimee": true, "temps": "7 h 24", "g": "163,6", "plateau": "P6", "couleur": "orange"}, "dos": {"nom": "Dos", "role": "ferme le torse par 4 vis", "n": 1, "imprimee": true, "temps": "1 h 06", "g": "28,1", "plateau": "P9", "couleur": "gris"}, "support-cou": {"nom": "Support du cou", "role": "vissé sous le toit du torse ; reçoit le boîtier du servo du cou", "n": 1, "imprimee": true, "temps": "27 min", "g": "5,8", "plateau": "P9", "couleur": "gris"}, "tete": {"nom": "Tête", "role": "se visse sur le palonnier du servo du cou", "n": 1, "imprimee": true, "temps": "6 h 34", "g": "142,5", "plateau": "P7", "couleur": "orange"}, "visiere": {"nom": "Visière", "role": "entre dans sa fente, sur le devant de la tête", "n": 1, "imprimee": true, "temps": "9 min", "g": "3", "plateau": "P5", "couleur": "gris"}, "antenne": {"nom": "Antenne", "role": "ferme le trou du tournevis, sur le dessus de la tête", "n": 1, "imprimee": true, "temps": "10 min", "g": "1,1", "plateau": "P5", "couleur": "gris"}};
+const INFO = {"boitier-servo": {"nom": "Boîtier de servo", "role": "reçoit un STS3215 par le dessus ; son bout porte le carré de 4 vis M3 de l'articulation suivante", "n": 17, "imprimee": true, "temps": "1 h 14", "g": "23,3", "plateau": "P1", "couleur": "orange"}, "bride": {"nom": "Bride", "role": "tient le servo dans son boîtier, par le dessus (4 vis M2 x 8)", "n": 17, "imprimee": true, "temps": "9 min", "g": "3,2", "plateau": "P10", "couleur": "gris"}, "servo-sts3215": {"nom": "Servo Feetech STS3215, 12 V", "role": "à acheter : un seul numéro de pièce pour les 17", "n": 17, "imprimee": false}, "fiches": {"nom": "Fiches des câbles", "role": "branchées sous chaque servo (volume réservé, pas une pièce)", "n": 17, "imprimee": false}, "palonnier": {"nom": "Palonnier rond", "role": "fourni avec le servo : Ø 20 mm, 4 trous M3", "n": 17, "imprimee": false}, "etrier": {"nom": "Étrier", "role": "tourne avec le servo : vissé sur ses deux disques, au-dessus et au-dessous", "n": 16, "imprimee": true, "temps": "46 min", "g": "10,1", "plateau": "P3", "couleur": "gris"}, "rallonge": {"nom": "Rallonge", "role": "allonge la cuisse, le tibia et le bras", "n": 6, "imprimee": true, "temps": "21 min", "g": "6,2", "plateau": "P5", "couleur": "gris"}, "pied-gauche": {"nom": "Pied gauche", "role": "se visse sous l'étrier de la cheville", "n": 1, "imprimee": true, "temps": "1 h 01", "g": "24", "plateau": "P8", "couleur": "orange"}, "pied-droit": {"nom": "Pied droit", "role": "se visse sous l'étrier de la cheville", "n": 1, "imprimee": true, "temps": "1 h 01", "g": "24", "plateau": "P8", "couleur": "orange"}, "main": {"nom": "Main", "role": "se visse sur l'étrier du coude", "n": 2, "imprimee": true, "temps": "1 h 39", "g": "33,6", "plateau": "P8", "couleur": "orange"}, "torse": {"nom": "Torse", "role": "porte les hanches, les épaulettes, le cou, la pile, la carte et la centrale", "n": 1, "imprimee": true, "temps": "6 h 30", "g": "151,9", "plateau": "P6", "couleur": "orange"}, "epaulette": {"nom": "Épaulette", "role": "vissée sur un flanc du torse (4 vis M3 x 8, de l'intérieur) ; porte l'épaule (version 2.3)", "n": 2, "imprimee": true, "temps": "1 h 17", "g": "25", "plateau": "P9", "couleur": "gris"}, "dos": {"nom": "Dos", "role": "ferme le torse par 4 vis", "n": 1, "imprimee": true, "temps": "1 h 21", "g": "36,4", "plateau": "P9", "couleur": "gris"}, "support-cou": {"nom": "Support du cou", "role": "vissé sous le toit du torse ; reçoit le boîtier du servo du cou", "n": 1, "imprimee": true, "temps": "27 min", "g": "5,8", "plateau": "P9", "couleur": "gris"}, "tete": {"nom": "Tête", "role": "se visse sur le palonnier du servo du cou", "n": 1, "imprimee": true, "temps": "6 h 34", "g": "142,5", "plateau": "P7", "couleur": "orange"}, "visiere": {"nom": "Visière", "role": "entre dans sa fente, sur le devant de la tête", "n": 1, "imprimee": true, "temps": "9 min", "g": "3", "plateau": "P5", "couleur": "gris"}, "antenne": {"nom": "Antenne", "role": "ferme le trou du tournevis, sur le dessus de la tête", "n": 1, "imprimee": true, "temps": "10 min", "g": "1,1", "plateau": "P5", "couleur": "gris"}};
 const etat = document.getElementById("etat");
 const info = document.getElementById("info");
 const aide = info.innerHTML;

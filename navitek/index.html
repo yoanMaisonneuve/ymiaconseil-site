@@ -484,7 +484,7 @@ footer p{margin:0;max-width:none}
     <p>Ce sont de petits pas&nbsp;: un pied est en l'air 26&nbsp;% à 44&nbsp;% du temps, les pieds se lèvent de 3 à 12&nbsp;mm,
       et ils glissent au sol de 3,2 à 4,6&nbsp;cm en dix secondes, moins que la distance parcourue (cahier R-044).
       Et ils ne vont pas tout à fait droit&nbsp;: en dix secondes, ces marches tournent de 1 à 27° (cahier R-050), parce que leur réglage ne regardait que l'avance.
-      Rejouées sur les maillages exacts, aucune ne fait entrer une pièce dans une autre de plus d'un millimètre (cahier R-050), comme celles de N1 depuis sa version 2&nbsp;; ce n'est pas le cas de N2 ni de N3.</p>
+      Rejouées sur les maillages exacts, aucune ne fait entrer une pièce dans une autre de plus d'un millimètre (cahier R-050), ce que ne font pas encore 6 des marches de N1, dont les chevilles se touchent&nbsp;; ce n'est pas le cas de N2 ni de N3.</p>
 
     <h3>Ce qui fait tomber la marche</h3>
     <p>Chaque hypothèse du modèle a été divisée par deux, puis multipliée par un et demi, et la meilleure marche rejouée telle quelle.
@@ -546,9 +546,9 @@ footer p{margin:0;max-width:none}
         en 2 fois plus de gestes qu'un programme qui connaîtrait le bras par cœur&nbsp;; ce qu'il a appris est à 4&nbsp;% du vrai.
         Il ne se pose jamais tout à fait (il continue d'essayer, à quelques millimètres). Sur le vrai robot, il faudra voir la main&nbsp;: la caméra de la tête.</span></li>
       <li><b>Ses servos&nbsp;: à moitié.</b><span>N1 lit la position de chaque servo. En regardant ses propres échelons, il retrouve la raideur et l'inertie de ses
-        chevilles à 4&nbsp;% près, mais pas celles de ses hanches (jusqu'à 44&nbsp;% d'écart)&nbsp;: une articulation qui porte toute une
+        chevilles à 3&nbsp;% près, mais pas celles de ses hanches (jusqu'à 43&nbsp;% d'écart)&nbsp;: une articulation qui porte toute une
         jambe ne se comporte pas comme une charnière seule. Un piège, aussi&nbsp;: un échelon plus grand que la plage de l'articulation la fait buter, et l'essai
-        mesure le contact au lieu du servo (la hanche de côté de N1, qui ne s'ouvre que de quelques degrés, s'essaie à 4° au plus).
+        mesure le contact au lieu du servo (la hanche de côté de N1 s'essaie donc à 4° au plus, en deçà de sa plage&nbsp;: 4 à 5° sur la version 2.2, 10 à 12° depuis la 2.3).
         La suite&nbsp;: ajuster trois chiffres communs à ses 17 servos identiques, sur le modèle entier du robot.</span></li>
       <li><b>Son équilibre, sa marche&nbsp;: non.</b><span>Rien dans ce cerveau ne les apprend. Les marches plus haut sont réglées hors ligne, par une recherche sur le
         modèle&nbsp;; un cerveau qui apprend à marcher sur le vrai robot reste à écrire.</span></li>
@@ -596,7 +596,7 @@ footer p{margin:0;max-width:none}
         robot fait de l'ordre de 60&nbsp;cm (N1, dessiné depuis autour d'un servo de 45&nbsp;mm, fait 62,1&nbsp;cm).</span></li>
       <li><b>L'impression.</b><span>N0 se tranche à 15&nbsp;h&nbsp;21 et 256&nbsp;g de PLA. Au double de la taille, si le
         volume suivait le cube, ce serait de l'ordre de 120 heures et de 2&nbsp;kg, et le torse ne tiendrait plus sur un plateau de
-        220&nbsp;mm. N1, redessiné à environ deux fois N0, se tranche en fait à 59&nbsp;h&nbsp;01 et 1117&nbsp;g, et son torse
+        220&nbsp;mm. N1, redessiné à environ deux fois N0, se tranche en fait à 60&nbsp;h&nbsp;36 et 1157&nbsp;g, et son torse
         tient sur 220&nbsp;mm&nbsp;: en partie parce que les parois gardent leur épaisseur, et que N1 n'est pas N0 agrandi mais redessiné.</span></li>
       <li><b>Le courant.</b><span>N0 tourne sur 4 piles AA. Treize DS3240 qui forcent en même temps peuvent tirer de 40 à
         50&nbsp;A (3,1 à 3,9&nbsp;A chacun, d'après sa fiche)&nbsp;: une batterie au lithium, un régulateur de 15 à 20&nbsp;A
@@ -689,7 +689,7 @@ footer p{margin:0;max-width:none}
     <div class="defile"><table class="servos route"><thead><tr><th>Version</th><th>Taille</th><th>Actionneurs</th><th>À prouver</th></tr></thead>
       <tbody>
       <tr class="repond"><td data-l=""><b>N0</b><span class="role">en ligne, à imprimer</span></td><td data-l="Taille" class="n">33&nbsp;cm</td><td data-l="Actionneurs">servos SG90 et MG90S, qui n'ont aucun retour</td><td data-l="À prouver">Debout, accroupi, la démonstration&nbsp;: <b>fait en simulation</b> (ci-dessus), pas encore sur le vrai robot. La marche reste un trottinement&nbsp;: sans retour d'information, on n'ira pas plus loin.</td></tr>
-      <tr><td data-l=""><b><a class="lien" href="/navitek/n1/">N1</a></b><span class="role">en ligne : dessinée et simulée, un servo à mesurer</span></td><td data-l="Taille" class="n">62,1&nbsp;cm</td><td data-l="Actionneurs">servos à bus qui renvoient leur position et leur charge (le Feetech STS3215 est le candidat, à comparer à ses concurrents)</td><td data-l="À prouver">Une marche avec retour d'information&nbsp;: <b>obtenue en simulation</b> (version 2&nbsp;: les jambes ne se traversent plus), mais qui glisse encore. Se relever&nbsp;: <b>pas obtenu</b>. 17 articulations (la hanche de côté s'ajoute&nbsp;; la rotation de la hanche reste à dessiner).</td></tr>
+      <tr><td data-l=""><b><a class="lien" href="/navitek/n1/">N1</a></b><span class="role">en ligne : dessinée et simulée, un servo à mesurer</span></td><td data-l="Taille" class="n">62,1&nbsp;cm</td><td data-l="Actionneurs">servos à bus qui renvoient leur position et leur charge (le Feetech STS3215 est le candidat, à comparer à ses concurrents)</td><td data-l="À prouver">Une marche avec retour d'information&nbsp;: <b>obtenue en simulation</b>, mais elle glisse et tourne&nbsp;; pas encore de marche droite sur la version 2.3. 6 marches sur 26 cognent encore les chevilles. Se relever&nbsp;: <b>pas obtenu</b>. 17 articulations (la hanche de côté s'ajoute&nbsp;; la rotation de la hanche reste à dessiner).</td></tr>
       <tr><td data-l=""><b><a class="lien" href="/navitek/n2/">N2</a></b><span class="role">concept en ligne : l'actionneur imprimé et le robot entier dessinés, la marche simulée</span></td><td data-l="Taille" class="n">environ 1&nbsp;m</td><td data-l="Actionneurs">moteurs sans balais avec un réducteur imprimé, commande en boucle fermée, codeur magnétique</td><td data-l="À prouver">Une marche robuste, encaisser une poussée. Le couple de chaque articulation est tiré de la simulation à l'échelle avant de dessiner l'actionneur. Une sécurité d'abord&nbsp;: des gens vivent autour d'un robot de cette taille.</td></tr>
       <tr><td data-l=""><b><a class="lien" href="/navitek/n3/">N3</a></b><span class="role">document de concept en ligne</span></td><td data-l="Taille" class="n">1,4 à 1,6&nbsp;m</td><td data-l="Actionneurs">actionneurs plus forts, avec des renforts en métal là où le plastique ne suffit pas</td><td data-l="À prouver">Des tâches de maison simples. Le document dit d'abord ce qui ne peut pas s'imprimer, ce que coûtent les actionneurs et comment on garde un robot de cette taille sans danger.</td></tr>
       </tbody></table></div>
