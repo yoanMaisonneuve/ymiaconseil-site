@@ -443,23 +443,23 @@ footer p{margin:0;max-width:none}
       0,177&nbsp;N·m à 4,8&nbsp;V). Ce qui suit est <strong>simulé&nbsp;: le vrai robot peut en différer</strong>. Les
       hypothèses du modèle (l'inertie du moteur, le frottement, la masse de l'électronique) sont écrites dans
       <code>modele_n0.py</code>&nbsp;; le dernier tableau dit lesquelles le banc doit mesurer en premier.</p>
+    <p><strong>Une erreur corrigée le 9 novembre, l'après-midi.</strong> Dans la simulation, le côté droit de N0 faisait le geste inverse du gauche&nbsp;:
+      ses servos de tangage sont montés retournés, et le modèle leur donnait le même sens qu'à gauche (le même ordre pliait un genou et tendait l'autre à
+      l'envers). Tous les essais ci-dessous ont été refaits sur le modèle corrigé. Le programme du robot, lui, inversait déjà le côté droit&nbsp;: le vrai N0
+      n'était pas touché, à une borne près, corrigée le même jour (la cheville droite pouvait rouler de 60° vers l'intérieur au lieu de 7°).</p>
 
     <figure class="video">
       <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la démonstration de main.py : le non de la tête, le salut, deux accroupis">
         <source src="simulation/t3-demo.mp4" type="video/mp4"></video>
       <figcaption>La démonstration de <code>main.py</code>, rejouée à l'identique (poses, durées, interpolation)&nbsp;: le
-        non de la tête, le salut, deux accroupis. <b>Elle ne tombe pas</b>&nbsp;: 0,5° d'inclinaison au plus.
-        Mais le cou (100&nbsp;%), l'épaule droite (100&nbsp;%), le genou gauche (96&nbsp;%), le genou droit (94&nbsp;%) et le coude droit (94&nbsp;%) montent à 90&nbsp;% de leur couple de blocage ou plus&nbsp;: au pic des gestes rapides (le salut, le non) et de l'accroupi.</figcaption>
+        non de la tête, le salut, deux accroupis. <b>Elle ne tombe pas</b>&nbsp;: 1,6° d'inclinaison au plus.
+        Mais le genou gauche (100&nbsp;%), le genou droit (100&nbsp;%), le cou (100&nbsp;%), l'épaule droite (100&nbsp;%) et le coude droit (94&nbsp;%) montent à 90&nbsp;% de leur couple de blocage ou plus&nbsp;: au pic des gestes rapides (le salut, le non) et de l'accroupi.</figcaption>
     </figure>
 
     <h3>S'accroupir</h3>
-    <p>Part du couple de blocage que le genou doit fournir, en moyenne sur la dernière seconde, puis au pic. À deux jambes, il reste
-      sous le tiers du blocage en moyenne jusqu'à 70° de genou&nbsp;; <strong>sur une jambe, il sature à 70°</strong> et le robot
-      ne tient plus. Sur une jambe tendue (0°), il tombe aussi&nbsp;: sans retour d'information, l'équilibre ne tient qu'à un réglage. La «&nbsp;marge d'environ 2&nbsp;» estimée à la main plus haut (une jambe, 20°) est prudente
-      une fois la pose tenue (12&nbsp;% du blocage&nbsp;: la hanche et la cheville ramènent la charge au-dessus du pied),
-      mais trop large pendant la mise en place (68&nbsp;% au pic).</p>
+    <p>Part du couple de blocage que le genou doit fournir, en moyenne sur la dernière seconde, puis au pic. À deux jambes, il reste sous le tiers du blocage en moyenne jusqu'à 40° de genou&nbsp;; <strong>sur une jambe, il tombe à tous les angles essayés</strong>&nbsp;: sans retour d'information, l'équilibre sur une jambe ne tient qu'à un réglage. La «&nbsp;marge d'environ 2&nbsp;» estimée à la main plus haut (une jambe, 20°) n'est pas vérifiée&nbsp;: sur une jambe à 20°, le robot simulé tombe (41&nbsp;% du blocage au pic).</p>
     <div class="defile"><table><thead><tr><th>Genou</th><th>Deux jambes (moyen / pic)</th><th>Une jambe (moyen / pic)</th><th>Une jambe</th></tr></thead>
-      <tbody><tr><td class="n">0°</td><td class="n">3&nbsp;% / 3&nbsp;%</td><td class="n">13&nbsp;% / 33&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">20°</td><td class="n">10&nbsp;% / 19&nbsp;%</td><td class="n">12&nbsp;% / 68&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">40°</td><td class="n">16&nbsp;% / 34&nbsp;%</td><td class="n">29&nbsp;% / 51&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">60°</td><td class="n">22&nbsp;% / 50&nbsp;%</td><td class="n">56&nbsp;% / 100&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">70°</td><td class="n">25&nbsp;% / 58&nbsp;%</td><td class="n">100&nbsp;% / 100&nbsp;%</td><td class="n">tombe</td></tr></tbody></table></div>
+      <tbody><tr><td class="n">0°</td><td class="n">3&nbsp;% / 3&nbsp;%</td><td class="n">6&nbsp;% / 32&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">20°</td><td class="n">14&nbsp;% / 23&nbsp;%</td><td class="n">6&nbsp;% / 41&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">40°</td><td class="n">24&nbsp;% / 43&nbsp;%</td><td class="n">25&nbsp;% / 40&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">60°</td><td class="n">34&nbsp;% / 63&nbsp;%</td><td class="n">13&nbsp;% / 44&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">70°</td><td class="n">39&nbsp;% / 72&nbsp;%</td><td class="n">16&nbsp;% / 41&nbsp;%</td><td class="n">tombe</td></tr></tbody></table></div>
     <p class="sources">L'équilibre sur une jambe est cherché par un décalage fixe de la cheville, sans retour d'information&nbsp;: la
       colonne «&nbsp;une jambe&nbsp;» est un ordre de grandeur. Détail&nbsp;: cahier R-036, essai T2.</p>
 
@@ -472,31 +472,29 @@ footer p{margin:0;max-width:none}
     <h3>Marcher, sans rien sentir</h3>
     <figure class="video">
       <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche lente de N0">
-        <source src="simulation/t5-marche-g2.mp4" type="video/mp4"></video>
-      <figcaption>La marche lente retenue (graine 2)&nbsp;: 10&nbsp;s, 8,2&nbsp;cm. Un trottinement.</figcaption>
+        <source src="simulation/t5-marche-g1.mp4" type="video/mp4"></video>
+      <figcaption>La marche retenue (graine 1)&nbsp;: 10&nbsp;s, 237,1&nbsp;cm.</figcaption>
     </figure>
     <p>Une marche périodique à onze réglages (période, amplitudes de la hanche, du genou, de la cheville et du balancement latéral)
-      a été cherchée par l'algorithme CMA-ES, trois fois, avec trois graines. Les trois trouvent le même genre de pas, qui
-      tient debout dix secondes sans que rien ne dise au robot où il est. <strong>Elle avance de 6 à 8&nbsp;centimètres en dix
-      secondes&nbsp;: un trottinement, pas une marche.</strong> C'est le plafond d'un robot aveugle, et la raison de N1.</p>
+      a été cherchée par l'algorithme CMA-ES, trois fois, avec trois graines. Les trois trouvent le même genre de pas, qui tient debout dix secondes sans que rien ne dise au robot où il est. <strong>Elle avance de 215 à 237&nbsp;centimètres en dix
+      secondes&nbsp;: une marche rapide, sans retour d'information, un pas toutes les 0,4&nbsp;s.</strong> Ses servos y touchent leur couple de blocage au pic (100&nbsp;%) et tournent jusqu'à 355°/s (la fiche du SG90 annonce environ 600°/s à vide, moins en charge)&nbsp;: rien ne dit encore que le vrai robot le pourra. C'est la première chose que le banc doit vérifier.</p>
     <div class="defile"><table><thead><tr><th>Graine</th><th>Avance en 10 s</th><th>Période du pas</th><th>Fin</th><th>Couple max</th></tr></thead>
-      <tbody><tr><td class="n">1</td><td class="n">5,7&nbsp;cm</td><td class="n">1,72&nbsp;s</td><td class="n">debout</td><td class="n">84&nbsp;%</td></tr><tr><td class="n">2</td><td class="n">8,2&nbsp;cm</td><td class="n">1,61&nbsp;s</td><td class="n">debout</td><td class="n">84&nbsp;%</td></tr><tr><td class="n">3</td><td class="n">7,6&nbsp;cm</td><td class="n">1,83&nbsp;s</td><td class="n">debout</td><td class="n">82&nbsp;%</td></tr></tbody></table></div>
-    <p>Ce sont de petits pas&nbsp;: un pied est en l'air 26&nbsp;% à 44&nbsp;% du temps, les pieds se lèvent de 3 à 12&nbsp;mm,
-      et ils glissent au sol de 3,2 à 4,6&nbsp;cm en dix secondes, moins que la distance parcourue (cahier R-044).
-      Et ils ne vont pas tout à fait droit&nbsp;: en dix secondes, ces marches tournent de 1 à 27° (cahier R-050), parce que leur réglage ne regardait que l'avance.
-      Rejouées sur les maillages exacts, aucune ne fait entrer une pièce dans une autre de plus d'un millimètre (cahier R-050), ce que ne font pas encore 6 des marches de N1, dont les chevilles se touchent&nbsp;; ce n'est pas le cas de N2 ni de N3.</p>
+      <tbody><tr><td class="n">1</td><td class="n">237,1&nbsp;cm</td><td class="n">0,80&nbsp;s</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">2</td><td class="n">214,9&nbsp;cm</td><td class="n">0,82&nbsp;s</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">3</td><td class="n">233,2&nbsp;cm</td><td class="n">0,80&nbsp;s</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr></tbody></table></div>
+    <p>Ses appuis&nbsp;: un pied est en l'air 80&nbsp;% à 85&nbsp;% du temps, les pieds se lèvent de 14 à 24&nbsp;mm,
+      et ils glissent au sol de 7,8 à 9,5&nbsp;cm en dix secondes, moins que la distance parcourue (cahier R-044).
+      Et ils ne vont pas tout à fait droit&nbsp;: en dix secondes, ces marches tournent de 1 à 15° (cahier R-050), parce que leur réglage ne regardait que l'avance.
+      Rejouées sur les maillages exacts, aucune ne fait entrer une pièce dans une autre de plus d'un millimètre (cahier R-050), comme celles de N1 depuis sa version 2&nbsp;; ce n'est pas le cas de N2 ni de N3.</p>
 
     <h3>Ce qui fait tomber la marche</h3>
     <p>Chaque hypothèse du modèle a été divisée par deux, puis multipliée par un et demi, et la meilleure marche rejouée telle quelle.
-      Trois hypothèses la font tomber&nbsp;; trois autres ne changent presque rien. Ce sont les trois premières que le banc à la
-      webcam doit mesurer, en commençant par le plus simple&nbsp;: <strong>peser le bloc des piles, du boîtier, du Pico et des fils</strong>.</p>
+      Six hypothèses la font tomber. Ce sont les premières que le banc à la webcam doit mesurer, en commençant par le plus simple&nbsp;: <strong>peser le bloc des piles, du boîtier, du Pico et des fils</strong>.</p>
     <div class="defile"><table><thead><tr><th>Hypothèse</th><th>Divisée par 2</th><th>Multipliée par 1,5</th></tr></thead>
-      <tbody><tr class="repond"><td><b>Masse de l'électronique (165&nbsp;g)</b></td><td class="n">tient, 5,2&nbsp;cm</td><td class="n">tombe à 4&nbsp;s</td></tr><tr class="repond"><td><b>Couple de blocage des servos</b></td><td class="n">tombe à 3,3&nbsp;s</td><td class="n">tient, 8,2&nbsp;cm</td></tr><tr class="repond"><td><b>Raideur de position des servos</b></td><td class="n">tombe à 3,6&nbsp;s</td><td class="n">tient, 4,8&nbsp;cm</td></tr><tr><td><b>Frottement du sol</b></td><td class="n">tient, 7,8&nbsp;cm</td><td class="n">tient, 7,1&nbsp;cm</td></tr><tr><td><b>Inertie du rotor</b></td><td class="n">tient, 7,9&nbsp;cm</td><td class="n">tient, 7,5&nbsp;cm</td></tr><tr><td><b>Amortissement des charnières</b></td><td class="n">tient, 7,6&nbsp;cm</td><td class="n">tient, 7,7&nbsp;cm</td></tr></tbody></table></div>
+      <tbody><tr class="repond"><td><b>Masse de l'électronique (165&nbsp;g)</b></td><td class="n">tient, 181,1&nbsp;cm</td><td class="n">tombe à 2,3&nbsp;s</td></tr><tr class="repond"><td><b>Couple de blocage des servos</b></td><td class="n">tombe à 1,4&nbsp;s</td><td class="n">tient, 196,6&nbsp;cm</td></tr><tr class="repond"><td><b>Raideur de position des servos</b></td><td class="n">tombe à 2,5&nbsp;s</td><td class="n">tient, 218,9&nbsp;cm</td></tr><tr class="repond"><td><b>Frottement du sol</b></td><td class="n">tombe à 4,4&nbsp;s</td><td class="n">tombe à 1,5&nbsp;s</td></tr><tr class="repond"><td><b>Inertie du rotor</b></td><td class="n">tient, 192,8&nbsp;cm</td><td class="n">tombe à 2,5&nbsp;s</td></tr><tr class="repond"><td><b>Amortissement des charnières</b></td><td class="n">tombe à 2,7&nbsp;s</td><td class="n">tient, 234,2&nbsp;cm</td></tr></tbody></table></div>
 
     <h3>Une marche réglée pour tenir partout</h3>
     <p>La marche ci-dessus est réglée sur un seul modèle. Réglée au contraire pour tenir sur <strong>huit modèles à la fois</strong> (masse de l'électronique, frottement, inertie, amortissement, couple et raideur
-      un peu changés), elle avance de 5,6&nbsp;cm en 10&nbsp;s au lieu de 8,2 et <strong>tient dans les 12 variations sur 12</strong> de ±50&nbsp;% (la première&nbsp;: 9 sur 12).
-      Encore plus lent&nbsp;: <strong>la marche de N0, robuste, est un pas de fourmi</strong>, et seule la mesure sur le vrai robot dira ce qu'elle vaut.</p>
+      un peu changés), elle avance de 53,8&nbsp;cm en 10&nbsp;s au lieu de 237,1 et <strong>tient dans les 10 variations sur 12</strong> de ±50&nbsp;% (la première&nbsp;: 5 sur 12).
+      Le prix de la sûreté&nbsp;: <strong>4,4 fois moins vite</strong>, et seule la mesure sur le vrai robot dira ce qu'elle vaut.</p>
     <p class="sources">Un seul modèle de servo, parfait (sans jeu, sans chute de tension, sans échauffement)&nbsp;; la marche est
       réglée sur le modèle lui-même, donc elle peut en exploiter un défaut&nbsp;; trois graines. Les fichiers de la simulation sont
       dans <a class="lien" href="#fichiers">les fichiers</a>&nbsp;; les hypothèses, écrites avant chaque essai, sont au cahier R-036
@@ -688,8 +686,8 @@ footer p{margin:0;max-width:none}
       simulé avant d'être imprimé, et chaque chiffre a sa source ou dit qu'il est une estimation.</p>
     <div class="defile"><table class="servos route"><thead><tr><th>Version</th><th>Taille</th><th>Actionneurs</th><th>À prouver</th></tr></thead>
       <tbody>
-      <tr class="repond"><td data-l=""><b>N0</b><span class="role">en ligne, à imprimer</span></td><td data-l="Taille" class="n">33&nbsp;cm</td><td data-l="Actionneurs">servos SG90 et MG90S, qui n'ont aucun retour</td><td data-l="À prouver">Debout, accroupi, la démonstration&nbsp;: <b>fait en simulation</b> (ci-dessus), pas encore sur le vrai robot. La marche reste un trottinement&nbsp;: sans retour d'information, on n'ira pas plus loin.</td></tr>
-      <tr><td data-l=""><b><a class="lien" href="/navitek/n1/">N1</a></b><span class="role">en ligne : dessinée et simulée, un servo à mesurer</span></td><td data-l="Taille" class="n">62,1&nbsp;cm</td><td data-l="Actionneurs">servos à bus qui renvoient leur position et leur charge (le Feetech STS3215 est le candidat, à comparer à ses concurrents)</td><td data-l="À prouver">Une marche avec retour d'information&nbsp;: <b>obtenue en simulation</b>, mais elle glisse et tourne&nbsp;; pas encore de marche droite sur la version 2.3. 6 marches sur 26 cognent encore les chevilles. Se relever&nbsp;: <b>pas obtenu</b>. 17 articulations (la hanche de côté s'ajoute&nbsp;; la rotation de la hanche reste à dessiner).</td></tr>
+      <tr class="repond"><td data-l=""><b>N0</b><span class="role">en ligne, à imprimer</span></td><td data-l="Taille" class="n">33&nbsp;cm</td><td data-l="Actionneurs">servos SG90 et MG90S, qui n'ont aucun retour</td><td data-l="À prouver">Debout, accroupi, la démonstration&nbsp;: <b>fait en simulation</b> (ci-dessus), pas encore sur le vrai robot. Une marche sans retour d'information&nbsp;: <b>obtenue en simulation</b> (215 à 237&nbsp;cm en 10&nbsp;s), servos à la limite de leur couple&nbsp;: à vérifier sur le vrai robot.</td></tr>
+      <tr><td data-l=""><b><a class="lien" href="/navitek/n1/">N1</a></b><span class="role">en ligne : dessinée et simulée, un servo à mesurer</span></td><td data-l="Taille" class="n">62,1&nbsp;cm</td><td data-l="Actionneurs">servos à bus qui renvoient leur position et leur charge (le Feetech STS3215 est le candidat, à comparer à ses concurrents)</td><td data-l="À prouver">Une marche avec retour d'information&nbsp;: <b>obtenue en simulation</b> (jusqu'à 149&nbsp;cm en 12&nbsp;s), mais elle glisse&nbsp;; une marche droite, écrite pas à pas, de 16&nbsp;cm en 12&nbsp;s sur la version 2.3. Les jambes ne se touchent plus. Se relever&nbsp;: <b>pas obtenu</b>. 17 articulations (la hanche de côté s'ajoute&nbsp;; la rotation de la hanche reste à dessiner).</td></tr>
       <tr><td data-l=""><b><a class="lien" href="/navitek/n2/">N2</a></b><span class="role">concept en ligne : l'actionneur imprimé et le robot entier dessinés, la marche simulée</span></td><td data-l="Taille" class="n">environ 1&nbsp;m</td><td data-l="Actionneurs">moteurs sans balais avec un réducteur imprimé, commande en boucle fermée, codeur magnétique</td><td data-l="À prouver">Une marche robuste, encaisser une poussée. Le couple de chaque articulation est tiré de la simulation à l'échelle avant de dessiner l'actionneur. Une sécurité d'abord&nbsp;: des gens vivent autour d'un robot de cette taille.</td></tr>
       <tr><td data-l=""><b><a class="lien" href="/navitek/n3/">N3</a></b><span class="role">document de concept en ligne</span></td><td data-l="Taille" class="n">1,4 à 1,6&nbsp;m</td><td data-l="Actionneurs">actionneurs plus forts, avec des renforts en métal là où le plastique ne suffit pas</td><td data-l="À prouver">Des tâches de maison simples. Le document dit d'abord ce qui ne peut pas s'imprimer, ce que coûtent les actionneurs et comment on garde un robot de cette taille sans danger.</td></tr>
       </tbody></table></div>
@@ -714,7 +712,7 @@ footer p{margin:0;max-width:none}
       <a class="fichier" href="fichiers/navitek-n0-programmes.zip" download><span class="n">Les programmes du robot</span>
         <span class="d"><code>main.py</code> (le centrage, la démonstration) et <code>etalonner.py</code> (l'option des capteurs), en MicroPython.</span><span class="u">5&nbsp;ko &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n0-simulation.zip" download><span class="n">La simulation MuJoCo</span>
-        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0,2&nbsp;Mo &middot; ZIP</span></a>
+        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0,3&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n0-banc.zip" download><span class="n">Le banc d'un servo</span>
         <span class="d"><code>BANC.md</code> (les gestes), le programme du Pico, le pilote, la vision et l'ajustement, éprouvés en simulation.</span><span class="u">31&nbsp;ko &middot; ZIP</span></a>
     </div>

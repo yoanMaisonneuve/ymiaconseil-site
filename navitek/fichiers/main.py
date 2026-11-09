@@ -32,7 +32,9 @@ BORNES = {nom: (-60, 60) for nom in BROCHES}
 BORNES.update({"genou_g": (-10, 90), "genou_d": (-10, 90), "cou": (-80, 80)})
 # Simulation MuJoCo + FCL (navitek-sim, essai T4, 08.11.2026) : les pieds se touchent dès 7° de cheville-roulis vers l'intérieur
 # (le reste, ±60°, ne heurte rien). Dans l'angle de la charnière, l'intérieur est + à gauche et - à droite.
-BORNES.update({"cheville_roulis_g": (-60, 7), "cheville_roulis_d": (-7, 60)})
+# 09.11 (ERREURS E30) : BORNES s'applique au GESTE, avant SENS ; à droite, SENS = −1 retourne le geste, et l'intérieur y est donc + comme à gauche.
+# La version du 08.11 écrivait (-7, 60) à droite, dans l'angle de la charnière : la cheville droite pouvait rouler de 60° vers l'intérieur.
+BORNES.update({"cheville_roulis_g": (-60, 7), "cheville_roulis_d": (-60, 7)})
 
 MIN_US, MAX_US = 500, 2500    # 0° et 180° pour un SG90 ou un MG90S ; certains servos préfèrent 600 à 2400
 
