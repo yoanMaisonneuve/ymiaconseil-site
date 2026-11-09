@@ -243,6 +243,28 @@ footer p{margin:0;max-width:none}
       <li><b>Le genou et la hanche d'avant</b><span>demandent 3 à 8&nbsp;N·m en moyenne&nbsp;: au-dessus de 3,4&nbsp;N·m, en dessous de 18&nbsp;N·m. Indécidable sur ces sources.</span></li>
     </ul>
 
+    <h2>Le robot entier, dessiné</h2>
+    <p class="sous">412 pièces &middot; 17 articulations &middot; 106&nbsp;cm &middot; aucune collision &middot; cahier R-043</p>
+    <p>Le bassin, le torse, les bras, le cou et la tête sont maintenant dessinés (<code>n2_robot.py</code>)&nbsp;: deux jambes de cinq articulations, deux bras de trois, le cou, tous du même actionneur.
+      Le modèle de simulation en est tiré (corps, axes, volumes), et non plus du robot de N1 agrandi&nbsp;: 14,0&nbsp;kg, dont 1,5&nbsp;kg d'électronique et 300&nbsp;g par moteur
+      <em>estimés</em>. Bras et cou utilisent le même actionneur que les jambes par simplicité&nbsp;: un plus petit suffirait.</p>
+    <figure class="video"><img src="simulation/n2-robot-debout.png" alt="Le robot N2 de la CAO, debout, vu de face et de côté, dans la simulation" style="display:block;width:100%;height:auto;border:1px solid var(--line)">
+      <figcaption>Le N2 entier dans la simulation, de face et de côté. Les moteurs sont les cylindres noirs.</figcaption></figure>
+    <figure class="video">
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche du N2 entier tiré de la CAO, plafond de 18 newtons-mètres">
+        <source src="simulation/n2-robot-marche.mp4" type="video/mp4"></video>
+      <figcaption>Le N2 de la CAO, plafonné à 18&nbsp;N·m (graine 1)&nbsp;: 12&nbsp;s.</figcaption>
+    </figure>
+    <div class="defile"><table><thead><tr><th>Série</th><th>Graine</th><th>Avance, 12 s</th><th>Hanche, côté</th><th>Hanche, avant</th><th>Genou</th><th>Cheville, avant</th><th>Cheville, côté</th></tr></thead><tbody><tr><td class="n">sans plafond</td><td class="n">1</td><td class="n">51&nbsp;cm</td><td class="n">6&nbsp;/&nbsp;13</td><td class="n">2&nbsp;/&nbsp;6</td><td class="n">2&nbsp;/&nbsp;11</td><td class="n">5&nbsp;/&nbsp;26</td><td class="n">3&nbsp;/&nbsp;10</td></tr><tr><td class="n">sans plafond</td><td class="n">2</td><td class="n">55&nbsp;cm</td><td class="n">5&nbsp;/&nbsp;15</td><td class="n">4&nbsp;/&nbsp;10</td><td class="n">4&nbsp;/&nbsp;10</td><td class="n">4&nbsp;/&nbsp;28</td><td class="n">3&nbsp;/&nbsp;10</td></tr><tr><td class="n">sans plafond</td><td class="n">3</td><td class="n">71&nbsp;cm</td><td class="n">5&nbsp;/&nbsp;14</td><td class="n">7&nbsp;/&nbsp;17</td><td class="n">4&nbsp;/&nbsp;11</td><td class="n">3&nbsp;/&nbsp;19</td><td class="n">4&nbsp;/&nbsp;17</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">1</td><td class="n">74&nbsp;cm</td><td class="n">4&nbsp;/&nbsp;13</td><td class="n">6&nbsp;/&nbsp;16</td><td class="n">4&nbsp;/&nbsp;10</td><td class="n">4&nbsp;/&nbsp;21</td><td class="n">4&nbsp;/&nbsp;23</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">2</td><td class="n">82&nbsp;cm</td><td class="n">5&nbsp;/&nbsp;14</td><td class="n">6&nbsp;/&nbsp;19</td><td class="n">5&nbsp;/&nbsp;16</td><td class="n">4&nbsp;/&nbsp;27</td><td class="n">3&nbsp;/&nbsp;12</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">3</td><td class="n">62&nbsp;cm</td><td class="n">5&nbsp;/&nbsp;10</td><td class="n">5&nbsp;/&nbsp;14</td><td class="n">4&nbsp;/&nbsp;10</td><td class="n">3&nbsp;/&nbsp;22</td><td class="n">5&nbsp;/&nbsp;35</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">1</td><td class="n">89&nbsp;cm</td><td class="n">6&nbsp;/&nbsp;18</td><td class="n">6&nbsp;/&nbsp;18</td><td class="n">4&nbsp;/&nbsp;14</td><td class="n">5&nbsp;/&nbsp;18</td><td class="n">4&nbsp;/&nbsp;18</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">2</td><td class="n">54&nbsp;cm</td><td class="n">3&nbsp;/&nbsp;9</td><td class="n">5&nbsp;/&nbsp;15</td><td class="n">3&nbsp;/&nbsp;10</td><td class="n">4&nbsp;/&nbsp;18</td><td class="n">6&nbsp;/&nbsp;18</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">3</td><td class="n">63&nbsp;cm</td><td class="n">4&nbsp;/&nbsp;11</td><td class="n">6&nbsp;/&nbsp;15</td><td class="n">4&nbsp;/&nbsp;11</td><td class="n">4&nbsp;/&nbsp;18</td><td class="n">5&nbsp;/&nbsp;18</td></tr></tbody></table></div>
+    <p class="sources">Couple moyen / pic en N·m, jambe gauche. Neuf marches, aucune ne tombe&nbsp;; les bras demandent au plus 2,2&nbsp;N·m et le cou rien.</p>
+    <ul class="liste">
+      <li><b>Un écart à expliquer.</b><span>Sur ce modèle, la hanche de côté ne demande plus que 3 à 6&nbsp;N·m en moyenne et 9 à 18 au pic, contre 22 à 41 et jusqu'à 135 sur le robot de N1 agrandi.
+        Les deux modèles diffèrent par plusieurs choses à la fois (masses, centre de masse, écart des pieds)&nbsp;: nous n'avons pas isolé la cause. <strong>Les deux chiffres sont à garder en tête.</strong></span></li>
+      <li><b>La cheville d'avant</b><span>est maintenant la plus exposée au pic (19 à 28&nbsp;N·m sans plafond).</span></li>
+      <li><b>Une marche fragile.</b><span>Rejouer les mêmes réglages après avoir changé de quelques pour cent l'inertie des segments a fait passer l'avance de 89 à 37&nbsp;cm. Ces couples sont l'ordre de grandeur
+        d'une marche par graine, pas un budget&nbsp;; le réglage sur plusieurs modèles n'est pas fait pour N2.</span></li>
+    </ul>
+
     <h2>Ce qu'on ne sait pas</h2>
     <ul class="liste">
       <li><b>La durée de vie.</b><span>Nous n'avons trouvé aucune donnée vérifiée sur le nombre de cycles d'un réducteur cycloïdal ou planétaire imprimé. Un blogue met en garde contre la fatigue du PLA
@@ -259,18 +281,18 @@ footer p{margin:0;max-width:none}
 
     <h2>Et après</h2>
     <p>Imprimer <strong>un seul actionneur</strong> et le mesurer sur un banc&nbsp;: couple de rupture, couple continu, jeu, température. Ensuite seulement, décider articulation par articulation entre l'imprimé et le commerce,
-      dessiner le torse, simuler la vraie CAO, imprimer une jambe. <a class="lien" href="/navitek/n1/">N1</a> (63&nbsp;cm, servos à bus) est la version qui peut s'imprimer d'abord&nbsp;; N3, la taille d'un adulte, est décrit dans
+      régler la marche sur plusieurs modèles, imprimer une jambe. <a class="lien" href="/navitek/n1/">N1</a> (63&nbsp;cm, servos à bus) est la version qui peut s'imprimer d'abord&nbsp;; N3, la taille d'un adulte, est décrit dans
       <a class="lien" href="/navitek/n3/">sa page</a>.</p>
 
     <h2 id="fichiers">Les fichiers</h2>
     <p class="sous">Licence CC BY 4.0&nbsp;: imprimez, modifiez, partagez, en nommant Navitek N2</p>
     <div class="fichiers">
       <a class="fichier" href="fichiers/navitek-n2-stl.zip" download><span class="n">Les pièces imprimées en STL</span>
-        <span class="d">Boîtier, bride, disques, platines, pied.</span><span class="u">0,2&nbsp;Mo &middot; ZIP</span></a>
+        <span class="d">Boîtier, bride, disques, platines, pied.</span><span class="u">0,3&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n2-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
         <span class="d">Chaque pièce, la jambe, et <code>n2.py</code>, le script FreeCAD qui les dessine.</span><span class="u">3,4&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n2-simulation.zip" download><span class="n">La simulation à l'échelle</span>
-        <span class="d">Le modèle, les scripts des essais et les résultats en JSON.</span><span class="u">0&nbsp;Mo &middot; ZIP</span></a>
+        <span class="d">Le modèle, les scripts des essais et les résultats en JSON.</span><span class="u">0,2&nbsp;Mo &middot; ZIP</span></a>
     </div>
   </div>
 
