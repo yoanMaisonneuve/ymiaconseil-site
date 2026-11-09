@@ -166,9 +166,9 @@ footer p{margin:0;max-width:none}
 
   <div class="large">
     <figure class="video">
-      <img src="quatre-robots.png" alt="Les quatre robots de la série Navitek de la même taille de caméra : N0 de 33 centimètres, N1 de 63 centimètres, N2 d'un mètre et N3 d'un mètre et demi" style="display:block;width:100%;height:auto;background:#000;border:1px solid var(--line)">
-      <figcaption>De gauche à droite&nbsp;: N0 (33&nbsp;cm), N1 (63,5&nbsp;cm), N2 (1&nbsp;m) et N3 (1,5&nbsp;m), à la même échelle. N0 et N1 sont des CAO&nbsp;; <strong>N2 et N3 sont le robot de N1 agrandi</strong>, un modèle
-        de simulation, pas un dessin de ces versions.</figcaption>
+      <img src="quatre-robots.png" alt="Les quatre robots de la série Navitek vus par la même caméra : N0 de 33 centimètres, N1 de 63 centimètres, N2 d'un mètre six et N3 d'un mètre et demi" style="display:block;width:100%;height:auto;background:#000;border:1px solid var(--line)">
+      <figcaption>De gauche à droite&nbsp;: N0 (33&nbsp;cm), N1 (63,5&nbsp;cm), N2 (1,06&nbsp;m) et N3 (1,5&nbsp;m), à la même échelle. N0, N1 et N2 sont tirés de leur CAO&nbsp;; <strong>N3 est le robot de N1 agrandi</strong>, un modèle
+        de simulation, pas un dessin de N3.</figcaption>
     </figure>
     <div class="chiffres">
       <div><b>1,4 à 1,6&nbsp;m</b><span>de haut</span></div>
@@ -213,7 +213,7 @@ footer p{margin:0;max-width:none}
     <p class="sous">Des ordres de grandeur d'analystes, pas des devis</p>
     <p>Dans un actionneur rotatif de robot humanoïde, un fournisseur donne la répartition du coût&nbsp;: le réducteur harmonique environ 36&nbsp;%, le capteur de couple 30&nbsp;%, le moteur sans cadre 13,5&nbsp;%. Un réducteur harmonique haut de gamme se
       chiffre à 800 à 1&nbsp;500&nbsp;$&nbsp;; un jeu planétaire à un cinquième environ&nbsp;; les actionneurs planétaires à faible rapport de l'Unitree G1 seraient autour de 300&nbsp;$ pièce (estimation d'un site, pas un prix de catalogue)&nbsp;;
-      à l'autre bout, un actionneur imprimé ouvert est estimé de 40 à 133&nbsp;$. Pour 25 articulations, cela donne <strong>de l'ordre de 1&nbsp;000&nbsp;$ (tout imprimé) à plusieurs dizaines de milliers de dollars (hanches et genoux harmoniques avec capteur de couple)</strong>.
+      à l'autre bout, un actionneur imprimé ouvert est estimé de 40&nbsp;$ (un projet de passionné) à 133&nbsp;$ (le Berkeley Humanoid Lite). Pour 25 articulations, cela donne <strong>de 1&nbsp;000 à 3&nbsp;300&nbsp;$ environ (tout imprimé) à plusieurs dizaines de milliers de dollars (hanches et genoux harmoniques avec capteur de couple)</strong>.
       Ce n'est pas un prix&nbsp;: c'est l'étendue de ce qu'on ne sait pas.</p>
 
     <h2>Le couple à 1,5 m, selon une simulation simplifiée</h2>
@@ -221,7 +221,7 @@ footer p{margin:0;max-width:none}
     <p>Le modèle est <strong>le robot de N1 agrandi à 1,5&nbsp;m</strong> (structure plus légère d'un facteur 0,6 par hypothèse, 900&nbsp;g par actionneur et 3,5&nbsp;kg de pile et d'électronique, estimés), à 17 articulations
       (ni les mains ni la rotation de la hanche ne sont modélisées), avec des actionneurs sans limite de couple&nbsp;: on mesure ce que le mouvement demande. La loi d'échelle (couple proportionnel à la masse et à la longueur)
       prévoit environ 2,7 fois les couples de N2&nbsp;; elle se vérifie sur la statique&nbsp;:</p>
-    <div class="defile"><table><thead><tr><th>Genou</th><th>N2 : genou moyen / pic</th><th>N3 : genou moyen / pic</th></tr></thead><tbody><tr><td class="n">40°</td><td class="n">1,6&nbsp;/&nbsp;2,6</td><td class="n">4,8&nbsp;/&nbsp;6,2</td></tr><tr><td class="n">70°</td><td class="n">2,8&nbsp;/&nbsp;5</td><td class="n">8&nbsp;/&nbsp;12</td></tr><tr><td class="n">90°</td><td class="n">3,6&nbsp;/&nbsp;6,8</td><td class="n">9,8&nbsp;/&nbsp;16,4</td></tr></tbody></table></div>
+    <div class="defile"><table><thead><tr><th>Genou</th><th>N2 (N1 agrandi, R-040) : genou moyen / pic</th><th>N3 : genou moyen / pic</th></tr></thead><tbody><tr><td class="n">40°</td><td class="n">1,6&nbsp;/&nbsp;2,6</td><td class="n">4,8&nbsp;/&nbsp;6,2</td></tr><tr><td class="n">70°</td><td class="n">2,8&nbsp;/&nbsp;5</td><td class="n">8&nbsp;/&nbsp;12</td></tr><tr><td class="n">90°</td><td class="n">3,6&nbsp;/&nbsp;6,8</td><td class="n">9,8&nbsp;/&nbsp;16,4</td></tr></tbody></table></div>
     <p class="sources">Accroupi sur deux jambes. Moyen sur la dernière seconde, pic après la mise en place.</p>
     <figure class="video">
       <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche du N3 simplifié">
@@ -249,7 +249,7 @@ footer p{margin:0;max-width:none}
     <p class="sous">Licence CC BY 4.0&nbsp;: refaites les essais chez vous</p>
     <div class="fichiers">
       <a class="fichier" href="fichiers/navitek-n3-simulation.zip" download><span class="n">La simulation simplifiée</span>
-        <span class="d">Le modèle (le robot de N1 agrandi), les scripts des essais et leurs résultats en JSON.</span><span class="u">0&nbsp;Mo &middot; ZIP</span></a>
+        <span class="d">Le modèle (le robot de N1 agrandi), les scripts des essais et leurs résultats en JSON.</span><span class="u">23&nbsp;ko &middot; ZIP</span></a>
     </div>
   </div>
 

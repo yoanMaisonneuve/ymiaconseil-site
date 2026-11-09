@@ -202,12 +202,12 @@ footer p{margin:0;max-width:none}
     <h2>Ce qui change par rapport à N0</h2>
     <p class="sous">Le même principe, deux fois plus grand, et des servos qui disent où ils sont</p>
     <ul class="liste">
-      <li><b>Des servos qui parlent.</b><span>Les SG90 de N0 obéissent à l'aveugle. Le STS3215 se branche sur un seul fil commun aux 17
+      <li><b>Des servos qui parlent.</b><span>Les SG90 et MG90S de N0 obéissent à l'aveugle. Le STS3215 se branche sur un seul fil commun aux 17
         servos et renvoie sa position (4096 pas par tour), sa charge, sa tension et sa température. Le robot peut enfin mesurer son corps.</span></li>
       <li><b>Dix-sept articulations au lieu de treize.</b><span>Chaque hanche gagne un mouvement de côté (le roulis), chaque épaule aussi&nbsp;:
         le robot peut balancer son poids d'un pied à l'autre au lieu de pencher la cheville. Il manque encore la rotation de la hanche, pour tourner sur place.</span></li>
       <li><b>Une centrale inertielle.</b><span>Un BNO055 dans le torse dit au robot de quel côté il penche. Dans la simulation, c'est ce retour d'information
-        qui fait avancer N1 près de deux fois plus loin que la même marche aveugle (plus bas).</span></li>
+        qui fait avancer N1 1,8 fois plus loin, en moyenne, que la même marche aveugle (plus bas).</span></li>
       <li><b>Un cerveau en deux étages.</b><span>Le Pico commande les servos et lit la centrale&nbsp;; il porte la sécurité. Un Raspberry Pi Zero 2&nbsp;W
         facultatif, relié au Pico, ajoute la caméra de la tête et les programmes qui apprennent. <strong>Le robot marche sans lui.</strong></span></li>
     </ul>
@@ -232,7 +232,8 @@ footer p{margin:0;max-width:none}
       <li><b>Le bus.</b><span>Un seul UART du Pico, TX et RX réunis par une résistance, l'écho lu et rejeté&nbsp;; identifiants 1 à 17, réglés un à un avec un
         PC et un adaptateur Feetech FE-URT-1. <em>À valider sur le banc</em>&nbsp;: le Pico n'a pas de demi-duplex matériel confirmé.</span></li>
       <li><b>La pile.</b><span>Une 3S (9 à 12,6&nbsp;V), avec une carte de protection et un fusible, et un interrupteur d'arrêt d'urgence. Un servo de
-        7,4&nbsp;V n'accepte pas une 3S&nbsp;: ne pas mélanger les versions. Le Pico a son propre régulateur 5&nbsp;V.</span></li>
+        7,4&nbsp;V n'accepte pas une 3S&nbsp;: ne pas mélanger les versions. Le Pico est alimenté par un régulateur abaisseur 5&nbsp;V à part, séparé du rail
+        des servos, <strong>jamais directement par la 3S</strong> (son entrée accepte au plus 5,5&nbsp;V).</span></li>
       <li><b>La centrale.</b><span>Un BNO055 (fusion à bord, 100&nbsp;Hz au plus) plutôt qu'un MPU-6050, jugé en fin de vie. Si 100&nbsp;Hz ne suffisait pas à
         l'équilibre, on lirait le gyroscope brut et on filtrerait soi-même.</span></li>
     </ul>
@@ -404,7 +405,7 @@ footer p{margin:0;max-width:none}
       <tr><td><b>Raspberry Pi Zero 2 W</b> (facultatif)</td><td class="n">0 ou 1</td><td class="n">15 à 17&nbsp;$</td><td>prix de lancement 15&nbsp;$ ; SparkFun 17,25&nbsp;$</td></tr>
       <tr class="repond"><td><b>Pile 3S, carte de protection, fusible, interrupteur, adaptateur FE-URT-1, vis M3, PLA, fils</b></td><td class="n">&mdash;</td><td class="n">non sourcé</td><td>à relever avant de commander</td></tr>
     </tbody></table></div>
-    <p class="sources"><strong>Au moins 550&nbsp;$ US</strong> pour les servos, le Pico et la centrale (17 servos entre 442 et 533&nbsp;$), sans la pile, la protection,
+    <p class="sources"><strong>De 484 à 577&nbsp;$ US</strong> pour les servos, le Pico et la centrale (17 servos entre 442 et 533&nbsp;$), sans la pile, la protection,
       les vis, le plastique, la livraison ni les droits de douane. C'est un ordre de grandeur, pas une soumission&nbsp;: les prix changent et plusieurs fiches étaient en rupture de stock.</p>
 
     <h2>Et après</h2>
@@ -423,7 +424,7 @@ footer p{margin:0;max-width:none}
       <a class="fichier" href="fichiers/navitek-n1-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
         <span class="d">Chaque pièce, l'assemblage, et <code>n1.py</code>, le script FreeCAD qui les dessine (les cotes du servo à mesurer sont en tête).</span><span class="u">1&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n1-simulation.zip" download><span class="n">La simulation MuJoCo</span>
-        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0&nbsp;Mo &middot; ZIP</span></a>
+        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">49&nbsp;ko &middot; ZIP</span></a>
     </div>
   </div>
 

@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Navitek N2, concept d'un humanoïde d'un mètre à actionneurs imprimés</title>
-<meta name="description" content="Navitek N2, concept : un humanoïde d'environ un mètre dont les actionneurs à réducteur cycloïdal 16:1 s'impriment. Un actionneur et une jambe en CAO, le couple de chaque articulation tiré d'une simulation. Rien n'est imprimé.">
+<meta name="description" content="Navitek N2, concept : un humanoïde d'environ un mètre dont les actionneurs à réducteur cycloïdal 16:1 s'impriment. L'actionneur et le robot entier en CAO, le couple de chaque articulation tiré d'une simulation. Rien n'est imprimé.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0b1f3a">
 <meta property="og:title" content="Navitek N2, concept d'un humanoïde d'un mètre">
-<meta property="og:description" content="Un actionneur imprimé à réducteur cycloïdal et une jambe, avec le couple demandé tiré d'une simulation. Concept, pas encore imprimé.">
+<meta property="og:description" content="Un actionneur imprimé à réducteur cycloïdal et le robot entier en CAO, avec le couple demandé tiré d'une simulation. Concept, pas encore imprimé.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ymiaconseil.com/navitek/n2/">
 <link rel="canonical" href="https://ymiaconseil.com/navitek/n2/">
@@ -201,7 +201,7 @@ footer p{margin:0;max-width:none}
     <p>À un mètre, <strong>le seul projet ouvert que nous ayons trouvé qui imprime ses actionneurs est le Berkeley Humanoid Lite</strong> (Chi et al., RSS 2025)&nbsp;:
       22 réducteurs cycloïdaux imprimés sur un plateau de 200&nbsp;mm, pour moins de 5&nbsp;000&nbsp;$&nbsp;US au total, environ 133&nbsp;$ l'actionneur au plus bas. Sa taille est donnée à
       environ un mètre et 16&nbsp;kg par un article, 80&nbsp;cm par un autre&nbsp;: nous ne l'avons pas vérifiée dans l'article. Les autres&nbsp;: l'Unitree R1 (1,21&nbsp;m, 4&nbsp;900 à 5&nbsp;900&nbsp;$, fermé),
-      Poppy (85&nbsp;cm, servos Dynamixel du commerce), K-Scale (Z-Bot de 40&nbsp;cm, K-Bot de 1,4&nbsp;m à 8&nbsp;999&nbsp;$).</p>
+      Poppy (83 à 85&nbsp;cm, servos Dynamixel du commerce), K-Scale (Z-Bot de 40 à 46&nbsp;cm, K-Bot de 1,4&nbsp;m à 8&nbsp;999&nbsp;$).</p>
 
     <h2>L'actionneur</h2>
     <p class="sous">Réducteur cycloïdal 16:1 &middot; boîtier de 72&nbsp;mm &middot; tient sur un plateau de 200&nbsp;mm</p>
@@ -221,7 +221,7 @@ footer p{margin:0;max-width:none}
 
     <h2>Le couple que la marche demande</h2>
     <p class="sous">Simulation à l'échelle &middot; couple moyen / pic en N·m, jambe gauche &middot; cahier R-040</p>
-    <p>Le modèle est <strong>le robot de N1 agrandi à un mètre</strong> (15&nbsp;kg, dont 550&nbsp;g estimés par actionneur), avec des actionneurs sans limite de couple&nbsp;: on mesure ce que le mouvement
+    <p>Le modèle est <strong>le robot de N1 agrandi à un mètre</strong> (14,7&nbsp;kg, dont 550&nbsp;g estimés par actionneur), avec des actionneurs sans limite de couple&nbsp;: on mesure ce que le mouvement
       <em>demande</em>. La même marche à quinze réglages que pour N1 a été cherchée trois fois sans plafond, puis avec un plafond de 55&nbsp;N·m, puis de 18&nbsp;N·m.
       Aucune marche ne tombe.</p>
     <figure class="video">
@@ -230,17 +230,18 @@ footer p{margin:0;max-width:none}
       <figcaption>Le robot de N1 agrandi, plafonné à 18&nbsp;N·m par articulation (graine 2)&nbsp;: 12&nbsp;s. Un pas lent.</figcaption>
     </figure>
     <div class="defile"><table><thead><tr><th>Série</th><th>Graine</th><th>Avance, 12 s</th><th>Hanche, côté</th><th>Hanche, avant</th><th>Genou</th><th>Cheville, avant</th><th>Cheville, côté</th></tr></thead><tbody><tr><td class="n">sans plafond</td><td class="n">1</td><td class="n">98&nbsp;cm</td><td class="n">41&nbsp;/&nbsp;131</td><td class="n">3&nbsp;/&nbsp;14</td><td class="n">3&nbsp;/&nbsp;20</td><td class="n">4&nbsp;/&nbsp;22</td><td class="n">10&nbsp;/&nbsp;57</td></tr><tr><td class="n">sans plafond</td><td class="n">2</td><td class="n">127&nbsp;cm</td><td class="n">41&nbsp;/&nbsp;135</td><td class="n">4&nbsp;/&nbsp;15</td><td class="n">4&nbsp;/&nbsp;14</td><td class="n">5&nbsp;/&nbsp;22</td><td class="n">8&nbsp;/&nbsp;47</td></tr><tr><td class="n">sans plafond</td><td class="n">3</td><td class="n">33&nbsp;cm</td><td class="n">22&nbsp;/&nbsp;66</td><td class="n">3&nbsp;/&nbsp;10</td><td class="n">4&nbsp;/&nbsp;8</td><td class="n">5&nbsp;/&nbsp;12</td><td class="n">7&nbsp;/&nbsp;38</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">1</td><td class="n">94&nbsp;cm</td><td class="n">24&nbsp;/&nbsp;55</td><td class="n">5&nbsp;/&nbsp;11</td><td class="n">5&nbsp;/&nbsp;13</td><td class="n">5&nbsp;/&nbsp;26</td><td class="n">9&nbsp;/&nbsp;55</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">2</td><td class="n">62&nbsp;cm</td><td class="n">5&nbsp;/&nbsp;14</td><td class="n">5&nbsp;/&nbsp;21</td><td class="n">5&nbsp;/&nbsp;19</td><td class="n">8&nbsp;/&nbsp;50</td><td class="n">4&nbsp;/&nbsp;21</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">3</td><td class="n">28&nbsp;cm</td><td class="n">21&nbsp;/&nbsp;55</td><td class="n">5&nbsp;/&nbsp;14</td><td class="n">3&nbsp;/&nbsp;8</td><td class="n">4&nbsp;/&nbsp;19</td><td class="n">6&nbsp;/&nbsp;21</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">1</td><td class="n">28&nbsp;cm</td><td class="n">8&nbsp;/&nbsp;18</td><td class="n">7&nbsp;/&nbsp;18</td><td class="n">8&nbsp;/&nbsp;17</td><td class="n">8&nbsp;/&nbsp;18</td><td class="n">4&nbsp;/&nbsp;18</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">2</td><td class="n">57&nbsp;cm</td><td class="n">10&nbsp;/&nbsp;18</td><td class="n">3&nbsp;/&nbsp;13</td><td class="n">3&nbsp;/&nbsp;10</td><td class="n">4&nbsp;/&nbsp;18</td><td class="n">5&nbsp;/&nbsp;18</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">3</td><td class="n">31&nbsp;cm</td><td class="n">5&nbsp;/&nbsp;15</td><td class="n">8&nbsp;/&nbsp;18</td><td class="n">7&nbsp;/&nbsp;14</td><td class="n">8&nbsp;/&nbsp;18</td><td class="n">3&nbsp;/&nbsp;10</td></tr></tbody></table></div>
-    <p class="sources">Les bras demandent au plus 2,7&nbsp;N·m et le cou 0,1&nbsp;N·m. Accroupi sur deux jambes à 90° de genou&nbsp;: le genou demande 3,6&nbsp;N·m en moyenne,
+    <p class="sources">Les bras demandent au plus 3,1&nbsp;N·m et le cou 0,1&nbsp;N·m. Accroupi sur deux jambes à 90° de genou&nbsp;: le genou demande 3,6&nbsp;N·m en moyenne,
       6,8 au pic. Modèle simplifié&nbsp;; masses d'actionneur et d'électronique estimées&nbsp;; marches réglées sur le modèle lui-même.</p>
 
     <h3>Ce que ça dit du réducteur imprimé</h3>
     <ul class="liste">
       <li><b>Ce qu'on a trouvé sur les réducteurs imprimés.</b><span>3,43&nbsp;N·m mesurés comme couple de service pour un 13:1 amateur&nbsp;; 18,3&nbsp;N·m au maximum pour un disque de PLA 24:1 (taille inconnue)&nbsp;;
         55&nbsp;N·m de pointe pour un 20:1 du projet OpenCycloid. Ce sont des chiffres de sources différentes, de tailles différentes, qu'on ne peut pas comparer au nôtre.</span></li>
-      <li><b>Les bras et le cou</b><span>demandent au plus 2,7&nbsp;N·m&nbsp;: à portée d'un réducteur imprimé.</span></li>
-      <li><b>La hanche de côté et les chevilles</b><span>demandent des moyennes de 5 à 41&nbsp;N·m et des pics de 15 à 135&nbsp;N·m&nbsp;: bien au-delà du couple de service trouvé. <strong>Il faut un banc, ou un réducteur
+      <li><b>Les bras et le cou</b><span>demandent au plus 3,1&nbsp;N·m&nbsp;: à portée d'un réducteur imprimé.</span></li>
+      <li><b>Les articulations les plus chargées.</b><span>La hanche de côté demande 5 à 41&nbsp;N·m en moyenne et 14 à 135&nbsp;N·m au pic&nbsp;; les chevilles, 3 à 10&nbsp;N·m
+        en moyenne et 10 à 57&nbsp;N·m au pic&nbsp;: au-delà du couple de service trouvé, surtout au pic. <strong>Il faut un banc, ou un réducteur
         du commerce à ces articulations.</strong></span></li>
-      <li><b>Le genou et la hanche d'avant</b><span>demandent 3 à 8&nbsp;N·m en moyenne&nbsp;: au-dessus de 3,4&nbsp;N·m, en dessous de 18&nbsp;N·m. Indécidable sur ces sources.</span></li>
+      <li><b>Le genou et la hanche d'avant</b><span>demandent 3 à 8&nbsp;N·m en moyenne&nbsp;: autour de 3,4&nbsp;N·m, en dessous de 18&nbsp;N·m. Indécidable sur ces sources.</span></li>
     </ul>
 
     <h2>Le robot entier, dessiné</h2>
@@ -262,7 +263,7 @@ footer p{margin:0;max-width:none}
         Les deux modèles diffèrent par plusieurs choses à la fois (masses, centre de masse, écart des pieds)&nbsp;: nous n'avons pas isolé la cause. <strong>Les deux chiffres sont à garder en tête.</strong></span></li>
       <li><b>La cheville d'avant</b><span>est maintenant la plus exposée au pic (19 à 28&nbsp;N·m sans plafond).</span></li>
       <li><b>Une marche fragile.</b><span>Rejouer les mêmes réglages après avoir changé de quelques pour cent l'inertie des segments a fait passer l'avance de 89 à 37&nbsp;cm. Ces couples sont l'ordre de grandeur
-        d'une marche par graine, pas un budget&nbsp;; une marche réglée sur huit variantes du modèle à la fois (électronique, frottement, inertie, raideur&hellip;) tient aux huit (quatre réglages sur quatre, 15 à 57&nbsp;cm en 12&nbsp;s, couples du même ordre)&nbsp;: elle est plus courte, mais elle se transporte mieux.</span></li>
+        d'une marche par graine, pas un budget&nbsp;; une marche réglée sur 8 variantes du modèle à la fois (électronique, frottement, inertie, raideur&hellip;) tient aux 8 (4 réglages sur 4, 17 à 57&nbsp;cm en 12&nbsp;s sur le modèle nominal, au moins 15&nbsp;cm sur chaque variante, couples du même ordre)&nbsp;: elle est plus courte, mais elle se transporte mieux.</span></li>
     </ul>
 
     <h2>Ce qu'on ne sait pas</h2>
@@ -275,13 +276,13 @@ footer p{margin:0;max-width:none}
     </ul>
 
     <h2>La sécurité d'abord</h2>
-    <p>À un mètre et quinze kilos, un robot qui tombe blesse. Aucune norme publiée ne dit à partir de quel couple ou de quelle masse un humanoïde est sûr (ISO 13482:2014 le dit elle-même pour les impacts&nbsp;; ISO 25785-1, pour les robots à
+    <p>À un mètre et quatorze kilos, un robot qui tombe blesse. Aucune norme publiée ne dit à partir de quel couple ou de quelle masse un humanoïde est sûr (ISO 13482:2014 le dit elle-même pour les impacts&nbsp;; ISO 25785-1, pour les robots à
       stabilité active, n'est pas encore publiée à notre connaissance). Navitek N2 ne se dira donc pas «&nbsp;conforme&nbsp;». Il prévoit un arrêt d'urgence matériel qui coupe la puissance sans logiciel, une limite de couple et
       de vitesse dans chaque variateur, des actionneurs qu'on retourne à la main, des carters, et des premiers essais sur un portique, loin de tout public.</p>
 
     <h2>Et après</h2>
     <p>Imprimer <strong>un seul actionneur</strong> et le mesurer sur un banc&nbsp;: couple de rupture, couple continu, jeu, température. Ensuite seulement, décider articulation par articulation entre l'imprimé et le commerce,
-      régler la marche sur plusieurs modèles, imprimer une jambe. <a class="lien" href="/navitek/n1/">N1</a> (63&nbsp;cm, servos à bus) est la version qui peut s'imprimer d'abord&nbsp;; N3, la taille d'un adulte, est décrit dans
+      corriger le modèle par ces mesures et y régler la marche de nouveau, imprimer une jambe. <a class="lien" href="/navitek/n1/">N1</a> (63&nbsp;cm, servos à bus) est la version qui peut s'imprimer d'abord&nbsp;; N3, la taille d'un adulte, est décrit dans
       <a class="lien" href="/navitek/n3/">sa page</a>.</p>
 
     <h2 id="fichiers">Les fichiers</h2>
@@ -290,7 +291,7 @@ footer p{margin:0;max-width:none}
       <a class="fichier" href="fichiers/navitek-n2-stl.zip" download><span class="n">Les pièces imprimées en STL</span>
         <span class="d">Boîtier, bride, disques, platines, pied.</span><span class="u">0,3&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n2-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
-        <span class="d">Chaque pièce, la jambe, et <code>n2.py</code>, le script FreeCAD qui les dessine.</span><span class="u">3,4&nbsp;Mo &middot; ZIP</span></a>
+        <span class="d">Chaque pièce, la jambe, <code>n2.py</code> et <code>n2_robot.py</code>, les scripts FreeCAD qui les dessinent (le STEP du robot entier se régénère).</span><span class="u">3,4&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n2-simulation.zip" download><span class="n">La simulation à l'échelle</span>
         <span class="d">Le modèle, les scripts des essais et les résultats en JSON.</span><span class="u">0,2&nbsp;Mo &middot; ZIP</span></a>
     </div>
