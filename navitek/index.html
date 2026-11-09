@@ -144,7 +144,7 @@ footer .plan{margin:0 0 10px;line-height:2}
 footer .plan b{color:var(--gold);font-weight:400}
 footer p{margin:0;max-width:none}
 @media (max-width:760px){.plateaux{grid-template-columns:1fr 1fr}.chiffres{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:560px){.fichiers,.broches{grid-template-columns:1fr}.plateaux{gap:12px}.commandes .sep{display:none}}
+@media (max-width:560px){.route thead{display:none}.route,.route tbody,.route tr,.route td{display:block;width:100%}.route tr{padding:8px 0;border-bottom:1px solid var(--line)}.route td{border:0;padding:3px 12px}.route td[data-l]:not([data-l=""])::before{content:attr(data-l) " : ";font-family:var(--mono);font-size:12px;color:var(--dim)}.route td.n{white-space:normal}.fichiers,.broches{grid-template-columns:1fr}.plateaux{gap:12px}.commandes .sep{display:none}}
 @media (max-width:480px){.bar .in{flex-direction:column;align-items:flex-start;gap:8px}.chiffres{grid-template-columns:1fr 1fr}#scene{height:68vh}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
@@ -612,13 +612,29 @@ footer p{margin:0;max-width:none}
     <p>Le câblage et le programme ont été écrits avec la CAO&nbsp;; ni l'un ni l'autre n'a encore été essayé.
       <a class="lien" href="fichiers/etalonner.py" download>Télécharger etalonner.py</a>.</p>
 
-    <h2>Et après</h2>
-    <p class="sous">Un petit robot pour apprendre</p>
+    <h2 id="feuille-de-route">Et après&nbsp;: de N0 à N3</h2>
+    <p class="sous">Quatre robots &middot; le même principe &middot; chacun simulé avant d'être imprimé</p>
     <p>N0 sert à apprendre à tenir debout, à marcher, et à écrire un programme qui découvre lui-même ce que son corps
-      peut faire&nbsp;: quelle force a chaque servo, jusqu'où va chaque articulation, où est son équilibre. C'est l'idée de
-      Navitek&nbsp;: que n'importe qui puisse imprimer son robot, et que le cerveau s'ajuste au corps qu'on lui donne.
-      La suite, N1&nbsp;: le même module répété, deux fois plus grand, avec des servos qui disent où ils sont
-      (<a class="lien" href="#aveugles">plus haut</a>).</p>
+      peut faire. C'est l'idée de Navitek&nbsp;: <strong>que n'importe quel foyer puisse imprimer son humanoïde, et que son
+      cerveau s'ajuste au corps qu'on lui donne</strong>. Pour y arriver, une série de quatre robots, du plus petit au
+      plus grand. Chacun garde le même principe (un module d'articulation répété, une pièce cassée se réimprime), chacun est
+      simulé avant d'être imprimé, et chaque chiffre a sa source ou dit qu'il est une estimation.</p>
+    <div class="defile"><table class="servos route"><thead><tr><th>Version</th><th>Taille</th><th>Actionneurs</th><th>À prouver</th></tr></thead>
+      <tbody>
+      <tr class="repond"><td data-l=""><b>N0</b><span class="role">en ligne, à imprimer</span></td><td data-l="Taille" class="n">33&nbsp;cm</td><td data-l="Actionneurs">servos SG90 et MG90S, qui n'ont aucun retour</td><td data-l="À prouver">Debout, accroupi, la démonstration&nbsp;: <b>fait</b> (ci-dessus). La marche reste un trottinement&nbsp;: sans retour d'information, on n'ira pas plus loin.</td></tr>
+      <tr><td data-l=""><b>N1</b><span class="role">prochaine</span></td><td data-l="Taille" class="n">environ 60&nbsp;cm</td><td data-l="Actionneurs">servos à bus qui renvoient leur position et leur charge (le Feetech STS3215 est le candidat, à comparer à ses concurrents)</td><td data-l="À prouver">Une marche avec retour d'information, et se relever. 17 à 19 articulations (la hanche latérale s'ajoute).</td></tr>
+      <tr><td data-l=""><b>N2</b><span class="role">ensuite</span></td><td data-l="Taille" class="n">environ 1&nbsp;m</td><td data-l="Actionneurs">moteurs sans balais avec un réducteur imprimé, commande en boucle fermée, codeur magnétique</td><td data-l="À prouver">Une marche robuste, encaisser une poussée. Le couple de chaque articulation est tiré de la simulation à l'échelle avant de dessiner l'actionneur. Une sécurité d'abord&nbsp;: des gens vivent autour d'un robot de cette taille.</td></tr>
+      <tr><td data-l=""><b>N3</b><span class="role">le but de la série</span></td><td data-l="Taille" class="n">1,4 à 1,6&nbsp;m</td><td data-l="Actionneurs">actionneurs plus forts, avec des renforts en métal là où le plastique ne suffit pas</td><td data-l="À prouver">Des tâches de maison simples. Le document dit d'abord ce qui ne peut pas s'imprimer, ce que coûtent les actionneurs et comment on garde un robot de cette taille sans danger.</td></tr>
+      </tbody></table></div>
+    <p class="sources">Les tailles et les cibles sont des intentions, pas des promesses&nbsp;: chaque version ne sort que si la précédente a tenu en simulation, puis sur le banc.</p>
+    <ul class="liste">
+      <li><b>La mission.</b><span>Un humanoïde imprimable par tous, ouvert (fichiers en CC BY 4.0), dont le cerveau apprend le corps qu'on lui donne.</span></li>
+      <li><b>La règle de la série.</b><span>Un module répété&nbsp;; simulé avant d'être imprimé&nbsp;; chaque chiffre sourcé. Quand le temps manque, ce qui sert ces trois règles passe avant le détail.</span></li>
+      <li><b>Ce qui passe avant tout.</b><span>La sécurité (couple et courant bornés, arrêt d'urgence dès N2, batterie protégée) et la mesure (aucun chiffre sans source&nbsp;; une estimation se dit estimation).</span></li>
+    </ul>
+    <p>La suite immédiate&nbsp;: N1, le même module, deux fois plus grand, avec des servos qui disent où ils sont
+      (<a class="lien" href="#aveugles">le pourquoi, plus haut</a>). Cette page recevra une page par version quand
+      chacune existera.</p>
 
     <h2 id="fichiers">Les fichiers</h2>
     <p class="sous">Licence CC BY 4.0&nbsp;: imprimez, modifiez, partagez, en nommant Navitek N0</p>
