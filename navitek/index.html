@@ -101,6 +101,11 @@ td .role{display:block;color:var(--dim);font-size:13.5px;min-width:16em}
 td.n{font-family:var(--mono);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
 tfoot td{font-family:var(--mono);font-size:13px;background:var(--tint);font-weight:600}
 
+.sources{font-size:13.5px;line-height:1.55;color:var(--dim);margin:12px 0 0;max-width:none}
+tr.repond td{background:#fbf4e8}
+.servos td .role{min-width:0}
+.servos td:first-child{min-width:9em}
+.servos td.n{white-space:normal;min-width:5.5em}
 .liste{list-style:none;padding:0;margin:18px 0 0;border-top:1px solid var(--line)}
 .liste li{border-bottom:1px solid var(--line);padding:14px 0}
 .liste b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px;display:block;margin-bottom:2px;line-height:1.3}
@@ -303,7 +308,7 @@ footer p{margin:0;max-width:none}
     <p class="sous">Ce qui ne s'imprime pas</p>
     <ul class="liste">
       <li><b>8 servos MG90S</b><span>Engrenages en métal, pour les hanches, les genoux et les chevilles&nbsp;: ce sont eux qui
-        portent le poids.</span></li>
+        portent le poids. <a class="lien" href="#servos">Pourquoi ces servos, et pas de plus gros</a></span></li>
       <li><b>5 servos SG90</b><span>Pour les épaules, les coudes et le cou. Un MG90S convient partout aussi&nbsp;: même taille.</span></li>
       <li><b>1 Raspberry Pi Pico 2 W</b><span>Il pilote les 13 servos directement, une broche chacun. Le Wi-Fi servira à
         le commander du téléphone.</span></li>
@@ -354,7 +359,8 @@ footer p{margin:0;max-width:none}
     <p class="sous">MicroPython &middot; un fichier &middot; une broche par servo</p>
     <p>Le Pico donne à chaque servo une impulsion de 50 par seconde, de 0,5 à 2,5&nbsp;ms&nbsp;: c'est tout ce qu'il faut
       pour un servo de modélisme. Chaque articulation a ses bornes, pour que le robot ne se cogne pas lui-même. Le
-      programme a été écrit avec la CAO&nbsp;: il n'a pas encore tourné sur un robot imprimé.</p>
+      programme a été écrit avec la CAO&nbsp;: il n'a pas encore tourné sur un robot imprimé.
+      <a class="lien" href="fichiers/main.py" download>Télécharger main.py</a>.</p>
     <div class="broches">
       <div class="defile"><table><thead><tr><th>Articulation</th><th>Broche</th></tr></thead><tbody>
       <tr><td>Hanche gauche</td><td class="n">GP2</td></tr>
@@ -373,12 +379,130 @@ footer p{margin:0;max-width:none}
       </tbody></table></div>
     </div>
 
+    <h2 id="servos">Pourquoi des SG90 et des MG90S</h2>
+    <p class="sous">Et pas des MG996R, des DS3218 ou des DS3240</p>
+    <p><strong>C'est la taille du servo qui fixe la taille du robot, pas l'inverse.</strong> Les gros servos de la robotique
+      amateur sont bons&nbsp;; ils font simplement un autre robot, plus grand, plus cher, plus long à imprimer et plus
+      exigeant à alimenter. Pour un premier robot qui doit apprendre à tenir debout, le petit servo est le bon choix.</p>
+  </div>
+  <div class="large">
+    <div class="defile">
+      <table class="servos">
+        <thead><tr><th>Servo</th><th>Dit où il est&nbsp;?</th><th>Poids</th><th>Couple annoncé (kg·cm)</th><th>Boîtier (mm)</th><th>Courant bloqué</th></tr></thead>
+        <tbody>
+          <tr><td><b>SG90</b></td><td>Non</td><td class="n">9 g</td><td class="n">1,8 à 4,8 V</td><td class="n">≈ 23&nbsp;×&nbsp;12&nbsp;×&nbsp;29</td><td class="n">0,5 à 0,8 A</td></tr>
+          <tr><td><b>MG90S</b><span class="role">engrenages en métal</span></td><td>Non</td><td class="n">13,4 g</td><td class="n">1,8 à 4,8 V<br>2,2 à 6 V</td><td class="n">22,8&nbsp;×&nbsp;12,2&nbsp;×&nbsp;28,5</td><td class="n">non publié</td></tr>
+          <tr><td><b>MG996R</b></td><td>Non</td><td class="n">55 g</td><td class="n">9,4 à 4,8 V<br>11 à 6 V</td><td class="n">≈ 41&nbsp;×&nbsp;20&nbsp;×&nbsp;43</td><td class="n">2,5 A à 6 V</td></tr>
+          <tr><td><b>DS3218</b></td><td>Non</td><td class="n">60 g</td><td class="n">19 à 5 V<br>21,5 à 6,8 V</td><td class="n">40&nbsp;×&nbsp;20&nbsp;×&nbsp;40,5</td><td class="n">1,8 A à 5 V<br>2,6 A à 6,8 V</td></tr>
+          <tr><td><b>DS3240</b><span class="role">fiches contradictoires</span></td><td>Non</td><td class="n">≈ 60 g</td><td class="n">35 à 45</td><td class="n">40&nbsp;×&nbsp;20&nbsp;×&nbsp;40,5</td><td class="n">3,1 à 3,9 A</td></tr>
+          <tr class="repond"><td><b>STS3215</b><span class="role">Feetech, servo «&nbsp;bus&nbsp;»&nbsp;: position sur 4096 pas, vitesse, charge, tension, température</span></td><td><b>Oui</b></td><td class="n">≈ 55 g</td><td class="n">16,5 à 6 V<br>19,5 à 7,4 V<br>30 en 12 V</td><td class="n">45,2&nbsp;×&nbsp;24,7&nbsp;×&nbsp;35</td><td class="n">2 A à 6 V</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="wrap">
+      <p class="sources">Valeurs annoncées par les fabricants et leurs revendeurs, relevées le 8 novembre 2026&nbsp;; les copies
+        varient, mesurez les vôtres. Courant bloqué du SG90&nbsp;: mesures d'amateurs. Sources&nbsp;:
+        <a class="lien" href="https://bit.nkust.edu.tw/~csshieh/teach/111A/mc/datasheet/SG90.pdf">SG90</a>,
+        <a class="lien" href="https://components101.com/motors/mg90s-metal-gear-servo-motor">MG90S</a>,
+        <a class="lien" href="https://people.ece.cornell.edu/land/courses/ece4760/FinalProjects/f2017/kmv48_rp625/kmv48_rp625/kmv48_rp625/MG996RTowerPro.pdf">MG996R</a>,
+        <a class="lien" href="https://manuals.plus/asin/B07FMBBPD2">DS3218</a>
+        (<a class="lien" href="https://aifitlab.com/products/dsservo-ds3218-mg-servo-motor">courant</a>),
+        <a class="lien" href="https://aifitlab.com/products/dsservo-ds3240-sg-servo-motor">DS3240</a>,
+        <a class="lien" href="https://core-electronics.com.au/attachments/uploads/sts3215-smart-servo-datasheet-translated.pdf">STS3215</a>
+        (<a class="lien" href="https://eu.robotshop.com/products/feetech-12v-30kgcm-magnetic-encoding-servo-sts3215">12 V</a>).</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <ul class="liste">
+      <li><b>La loi d'échelle.</b><span>Doublez la taille d'un robot&nbsp;: sa masse est multipliée par 8 (le volume) et ses
+        bras de levier par 2. Le couple demandé à chaque articulation est donc multiplié par environ 16. Un DS3240 fait
+        40&nbsp;mm de long, presque la cuisse entière de N0 (environ 5&nbsp;cm d'un axe à l'autre)&nbsp;: autour de lui, le
+        robot fait 60&nbsp;cm ou plus.</span></li>
+      <li><b>L'impression.</b><span>N0 se tranche à 15&nbsp;h&nbsp;21 et 256&nbsp;g de PLA. Au double de la taille, le
+        volume suit le cube&nbsp;: de l'ordre de 120 heures et de 2&nbsp;kg, et le torse ne tient plus sur un plateau de
+        220&nbsp;mm. C'est une règle de trois, pas un tranchage.</span></li>
+      <li><b>Le courant.</b><span>N0 tourne sur 4 piles AA. Treize DS3240 qui forcent en même temps peuvent tirer de 40 à
+        50&nbsp;A (3,1 à 3,9&nbsp;A chacun, d'après sa fiche)&nbsp;: une batterie au lithium, un régulateur de 15 à 20&nbsp;A
+        et un fusible deviennent obligatoires.</span></li>
+      <li><b>La sécurité, et le prix d'une erreur.</b><span>Un servo de 40&nbsp;kg·cm pince un doigt d'enfant&nbsp;; un robot
+        d'un demi-kilo qui tombe ne casse rien, ni lui ni la table. On va casser des choses en apprenant à le faire
+        marcher&nbsp;: mieux vaut que ce soient des servos qui coûtent plusieurs fois moins cher.</span></li>
+    </ul>
+    <p><strong>La marge de N0, estimée, pas mesurée.</strong> Environ 570&nbsp;g en tout&nbsp;: 253&nbsp;g de pièces,
+      152&nbsp;g de servos, environ 110&nbsp;g de piles, le reste en vis, fils et carte. Sur une jambe, genou plié de 20°,
+      le genou porte environ 510&nbsp;g à 1,8&nbsp;cm de son axe, à peu près 1&nbsp;kg·cm. Un MG90S en donne 1,8 au
+      blocage, à 4,8&nbsp;V. Une marge d'environ 2&nbsp;: assez pour tenir debout et marcher lentement, genoux peu
+      pliés&nbsp;; pas pour sauter, ni pour s'accroupir sur une jambe.</p>
+    <p><strong>Le MG996R, on le saute.</strong> Sa fiche d'origine annonce 11&nbsp;kg·cm à 6&nbsp;V pour 55&nbsp;g. Un
+      DS3218, dans le même gabarit de 40 × 20&nbsp;mm, en annonce 21,5 pour 60&nbsp;g&nbsp;: presque deux fois le couple
+      pour 5 grammes de plus. Et le MG996R est l'un des servos les plus copiés&nbsp;: des revendeurs lui prêtent 13 ou
+      15&nbsp;kg·cm, plus que l'original. Pour un robot qui doit tenir son équilibre, un servo dont on ne connaît pas la
+      vraie force est un mauvais départ.</p>
+
+    <h2 id="aveugles">Le vrai trou&nbsp;: des servos aveugles</h2>
+    <p class="sous">Ils obéissent, mais ne disent pas où ils sont</p>
+    <p>Les cinq premiers servos du tableau ne renvoient rien. Le Pico leur envoie un angle&nbsp;; il ne sait ni s'ils y
+      sont arrivés, ni s'ils forcent, ni s'ils chauffent. Or l'idée de Navitek, c'est un programme qui teste lui-même son
+      corps&nbsp;: sa force, ses limites, son équilibre. Avec des servos aveugles, il n'a rien à mesurer. Deux chemins&nbsp;:</p>
+    <ul class="liste">
+      <li><b>Pour N1&nbsp;: des servos qui répondent.</b><span>Le Feetech STS3215 se branche sur un seul fil commun à tous
+        les servos et renvoie sa position sur 4096 pas par tour, sa vitesse, sa charge, sa tension et sa température.
+        C'est le servo des bras ouverts SO-100 et SO-101 de
+        <a class="lien" href="https://huggingface.co/docs/lerobot/so101">LeRobot</a> (Hugging Face)&nbsp;: tout un
+        écosystème de logiciels existe déjà. Le plan pour N1, environ deux fois N0&nbsp;: la version 12&nbsp;V
+        (30&nbsp;kg·cm annoncés) aux hanches, aux genoux et aux chevilles, la version 7,4&nbsp;V aux bras et au cou, et le
+        même module boîtier-étrier, redessiné pour 45 × 25 × 35&nbsp;mm et des vis M3. Les DS3218 et DS3240 restent la
+        voie forte, mais aveugle.</span></li>
+      <li><b>Pour N0&nbsp;: le hack du potentiomètre.</b><span>Chaque SG90 contient déjà un capteur de position&nbsp;: le
+        potentiomètre qui dit à sa propre carte où est l'arbre. Un fil de plus, et le Pico le lit aussi. C'est la section
+        suivante.</span></li>
+    </ul>
+
+    <h2 id="sentir">Option&nbsp;: le N0 qui sent ses articulations</h2>
+    <p class="sous">Le hack du potentiomètre &middot; un fil par servo &middot; un multiplexeur</p>
+    <p>Ce que ça donne&nbsp;: la vraie position de chaque articulation, sa vraie plage (là où elle touche une pièce), et
+      une mesure de l'effort&nbsp;: robot debout, l'écart entre l'angle commandé et l'angle mesuré grandit avec la charge.
+      C'est le premier pas vers un programme qui apprend son corps.</p>
+    <ul class="liste">
+      <li><b>13 fils fins</b><span>Un par servo, soudé sur la patte du milieu de son potentiomètre (le curseur). Il sort par
+        la fente du câble du boîtier, qui a la place.</span></li>
+      <li><b>1 multiplexeur analogique 16 voies CD74HC4067</b><span>Un petit module&nbsp;: les 13 fils y entrent, le Pico
+        choisit celui qu'il lit avec 4 broches, et la lecture se fait sur une seule entrée analogique. Autre façon&nbsp;:
+        quatre modules ADS1115 (4 entrées chacun, sur I2C), plus précis, avec plus de fils.</span></li>
+      <li><b>Peut-être 26 résistances</b><span>Seulement si la mesure dépasse 3,3&nbsp;V (étape 3)&nbsp;: un pont de
+        120&nbsp;kΩ et 150&nbsp;kΩ par fil ramène 5,6&nbsp;V (piles neuves) à 3,1&nbsp;V. Des valeurs hautes, pour ne pas
+        déranger le servo, qui lit le même curseur.</span></li>
+      <li><b>Ou rien à ouvrir</b><span>Adafruit vend un micro-servo dont le fil du curseur sort déjà, en 4ᵉ fil
+        (<a class="lien" href="https://core-electronics.com.au/analog-feedback-servo.html">«&nbsp;analog feedback servo&nbsp;»</a>).
+        Sa taille est à vérifier dans le gabarit.</span></li>
+    </ul>
+    <ol class="etapes">
+      <li><b>Commencer par un seul servo, sur le gabarit.</b><span>On ouvre un servo&nbsp;: on peut l'abîmer. Retirer les
+        vis du dessous et sortir la petite carte sans tirer sur les fils du moteur.</span></li>
+      <li><b>Souder le fil sur la patte du milieu du potentiomètre.</b><span>Les deux pattes des côtés sont les bornes&nbsp;;
+        celle du milieu, le curseur, porte la position. Refermer, et faire sortir le fil avec le câble
+        (<a class="lien" href="https://www.instructables.com/Using-SG90-or-MG90-Servo-Feedback-Modification-for">un pas-à-pas en photos</a>).</span></li>
+      <li><b>Mesurer avant de brancher.</b><span>Le servo alimenté, le faire balayer d'une butée à l'autre et lire au
+        multimètre la tension entre le nouveau fil et la masse. Sous 3,3&nbsp;V partout&nbsp;: branchement direct.
+        Au-dessus&nbsp;: le pont de résistances. Le Pico ne supporte pas plus de 3,3&nbsp;V sur une entrée.</span></li>
+      <li><b>Brancher le multiplexeur.</b><span>Les 13 fils sur les canaux 0 à 12, dans l'ordre du tableau des broches
+        (canal 0&nbsp;: hanche gauche). S0 à S3 sur GP15 à GP18, SIG sur GP26, VCC sur le 3,3&nbsp;V du Pico, EN et GND
+        sur la masse.</span></li>
+      <li><b>Lancer l'étalonnage, robot suspendu.</b><span>Ouvrir <code>etalonner.py</code> dans Thonny et cliquer
+        Exécuter. Chaque articulation fait un petit balayage, puis avance de 5° en 5° jusqu'à ce que la mesure ne suive
+        plus&nbsp;: c'est sa butée, et le servo n'y force jamais plus d'un pas. Résultat&nbsp;: la plage réelle de chaque
+        articulation, enregistrée sur le Pico, qui remplace les bornes écrites à la main dans <code>main.py</code>.</span></li>
+    </ol>
+    <p>Le câblage et le programme ont été écrits avec la CAO&nbsp;; ni l'un ni l'autre n'a encore été essayé.
+      <a class="lien" href="fichiers/etalonner.py" download>Télécharger etalonner.py</a>.</p>
+
     <h2>Et après</h2>
     <p class="sous">Un petit robot pour apprendre</p>
     <p>N0 sert à apprendre à tenir debout, à marcher, et à écrire un programme qui découvre lui-même ce que son corps
       peut faire&nbsp;: quelle force a chaque servo, jusqu'où va chaque articulation, où est son équilibre. C'est l'idée de
       Navitek&nbsp;: que n'importe qui puisse imprimer son robot, et que le cerveau s'ajuste au corps qu'on lui donne.
-      La suite reprendra le même principe, un module répété, avec des servos plus forts.</p>
+      La suite, N1&nbsp;: le même module répété, deux fois plus grand, avec des servos qui disent où ils sont
+      (<a class="lien" href="#aveugles">plus haut</a>).</p>
 
     <h2 id="fichiers">Les fichiers</h2>
     <p class="sous">Licence CC BY 4.0&nbsp;: imprimez, modifiez, partagez, en nommant Navitek N0</p>
@@ -389,8 +513,8 @@ footer p{margin:0;max-width:none}
         <span class="d">Prêts à ouvrir dans OrcaSlicer ou Bambu Studio.</span><span class="u">0,4&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n0-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
         <span class="d">Chaque pièce et l'assemblage complet, plus <code>n0.py</code>, le script FreeCAD qui les dessine.</span><span class="u">0,5&nbsp;Mo &middot; ZIP</span></a>
-      <a class="fichier" href="fichiers/main.py" download><span class="n">Le programme du robot</span>
-        <span class="d"><code>main.py</code> pour le Pico 2 W, en MicroPython&nbsp;: le centrage et la démonstration.</span><span class="u">Python</span></a>
+      <a class="fichier" href="fichiers/navitek-n0-programmes.zip" download><span class="n">Les programmes du robot</span>
+        <span class="d"><code>main.py</code> (le centrage, la démonstration) et <code>etalonner.py</code> (l'option des capteurs), en MicroPython.</span><span class="u">4&nbsp;ko &middot; ZIP</span></a>
     </div>
   </div>
 
