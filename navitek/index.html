@@ -101,6 +101,10 @@ td .role{display:block;color:var(--dim);font-size:13.5px;min-width:16em}
 td.n{font-family:var(--mono);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
 tfoot td{font-family:var(--mono);font-size:13px;background:var(--tint);font-weight:600}
 
+h3{font-family:var(--display);font-weight:600;color:var(--navy);font-size:20px;line-height:1.25;margin:34px 0 8px}
+.video{margin:22px 0 0}
+.video video{display:block;width:100%;height:auto;aspect-ratio:4/3;background:#000;border:1px solid var(--line)}
+.video figcaption{font-size:14.5px;color:var(--dim);margin-top:8px;line-height:1.5;max-width:36em}
 .schema{margin:22px auto 0;max-width:620px}
 .schema svg{display:block;width:100%;height:auto}
 .schema figcaption{font-size:14.5px;color:var(--dim);margin-top:10px;text-align:center}
@@ -430,6 +434,64 @@ footer p{margin:0;max-width:none}
       </tbody></table></div>
     </div>
 
+
+    <h2 id="simulation">En simulation&nbsp;: ce que N0 peut faire, avant de l'imprimer</h2>
+    <p class="sous">MuJoCo 3.8 &middot; le modèle est tiré de la CAO &middot; simulé, pas testé</p>
+    <p>Le robot a été reconstruit dans un simulateur de physique, à partir des mêmes fichiers que cette page&nbsp;: la géométrie des
+      pièces, les grammes du tranchage, un servo par articulation borné au couple de blocage de sa fiche (1,8&nbsp;kg·cm, soit
+      0,177&nbsp;N·m à 4,8&nbsp;V). Ce qui suit est <strong>simulé&nbsp;: le vrai robot peut en différer</strong>. Les
+      hypothèses du modèle (l'inertie du moteur, le frottement, la masse de l'électronique) sont écrites dans
+      <code>modele_n0.py</code>&nbsp;; le dernier tableau dit lesquelles le banc doit mesurer en premier.</p>
+
+    <figure class="video">
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la démonstration de main.py : le non de la tête, le salut, deux accroupis">
+        <source src="simulation/t3-demo.mp4" type="video/mp4"></video>
+      <figcaption>La démonstration de <code>main.py</code>, rejouée à l'identique (poses, durées, interpolation)&nbsp;: le
+        non de la tête, le salut, deux accroupis. <b>Elle ne tombe pas</b>&nbsp;: 0,5° d'inclinaison au plus.
+        Mais l'épaule droite, le coude droit et le cou touchent leur couple de blocage pendant les gestes rapides.</figcaption>
+    </figure>
+
+    <h3>S'accroupir</h3>
+    <p>Part du couple de blocage que le genou doit fournir, en moyenne sur la dernière seconde, puis au pic. À deux jambes, il reste
+      sous le tiers du blocage en moyenne jusqu'à 70° de genou&nbsp;; <strong>sur une jambe, il sature à 70°</strong> et le robot
+      ne tient plus. La «&nbsp;marge d'environ 2&nbsp;» estimée à la main plus haut est prudente&nbsp;: la hanche et la
+      cheville ramènent la charge au-dessus du pied, et le genou travaille moins qu'on ne le pensait.</p>
+    <div class="defile"><table><thead><tr><th>Genou</th><th>Deux jambes (moyen / pic)</th><th>Une jambe (moyen / pic)</th><th>Une jambe</th></tr></thead>
+      <tbody><tr><td class="n">20°</td><td class="n">10&nbsp;% / 19&nbsp;%</td><td class="n">12&nbsp;% / 68&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">40°</td><td class="n">16&nbsp;% / 34&nbsp;%</td><td class="n">29&nbsp;% / 51&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">60°</td><td class="n">22&nbsp;% / 50&nbsp;%</td><td class="n">56&nbsp;% / 100&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">70°</td><td class="n">25&nbsp;% / 58&nbsp;%</td><td class="n">100&nbsp;% / 100&nbsp;%</td><td class="n">tombe</td></tr></tbody></table></div>
+    <p class="sources">L'équilibre sur une jambe est cherché par un décalage fixe de la cheville, sans retour d'information&nbsp;: la
+      colonne «&nbsp;une jambe&nbsp;» est un ordre de grandeur. Détail&nbsp;: cahier R-036, essai T2.</p>
+
+    <h3>Jusqu'où chaque articulation peut tourner</h3>
+    <p>Chaque articulation a été balayée seule, par pas de 1°, en cherchant le premier contact entre deux pièces du robot (sur les
+      maillages réels). Les butées de <code>main.py</code> (±&nbsp;60°) ne heurtent rien, sauf une.</p>
+    <div class="defile"><table><thead><tr><th>Articulation</th><th>Plage sans collision</th><th>Ce qui bute</th></tr></thead>
+      <tbody><tr><td><b>Hanche</b></td><td class="n">−118° à +116°</td><td>le boîtier du genou contre le torse ou le dos</td></tr><tr><td><b>Genou</b></td><td class="n">±&nbsp;120° et plus</td><td>rien (le servo, lui, s'arrête à 90°)</td></tr><tr><td><b>Cheville, avant-arrière</b></td><td class="n">±&nbsp;120° et plus</td><td>rien</td></tr><tr class="repond"><td><b>Cheville, côté</b></td><td class="n">7° vers l'intérieur</td><td>les deux pieds se touchent, tout près l'un de l'autre&nbsp;: c'est la seule butée de <code>main.py</code> qui change</td></tr><tr><td><b>Épaule</b></td><td class="n">−118° à +120°</td><td>le boîtier du coude contre le torse</td></tr><tr><td><b>Coude</b></td><td class="n">±&nbsp;120° et plus</td><td>rien</td></tr><tr><td><b>Cou</b></td><td class="n">±&nbsp;120° et plus</td><td>rien</td></tr></tbody></table></div>
+
+    <h3>Marcher, sans rien sentir</h3>
+    <figure class="video">
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche lente de N0">
+        <source src="simulation/t5-marche-g2.mp4" type="video/mp4"></video>
+      <figcaption>La marche lente retenue (graine 2)&nbsp;: 10&nbsp;s, 8,2&nbsp;cm. Un trottinement.</figcaption>
+    </figure>
+    <p>Une marche périodique à onze réglages (période, amplitudes de la hanche, du genou, de la cheville et du balancement latéral)
+      a été cherchée par l'algorithme CMA-ES, trois fois, avec trois graines. Les trois trouvent le même genre de pas, qui
+      tient debout dix secondes sans que rien ne dise au robot où il est. <strong>Elle avance de six à huit centimètres en dix
+      secondes&nbsp;: un trottinement, pas une marche.</strong> C'est le plafond d'un robot aveugle, et la raison de N1.</p>
+    <div class="defile"><table><thead><tr><th>Graine</th><th>Avance en 10 s</th><th>Période du pas</th><th>Fin</th><th>Couple max</th></tr></thead>
+      <tbody><tr><td class="n">1</td><td class="n">5,7&nbsp;cm</td><td class="n">1,72&nbsp;s</td><td class="n">debout</td><td class="n">84&nbsp;%</td></tr><tr><td class="n">2</td><td class="n">8,2&nbsp;cm</td><td class="n">1,61&nbsp;s</td><td class="n">debout</td><td class="n">84&nbsp;%</td></tr><tr><td class="n">3</td><td class="n">7,6&nbsp;cm</td><td class="n">1,83&nbsp;s</td><td class="n">debout</td><td class="n">82&nbsp;%</td></tr></tbody></table></div>
+
+    <h3>Ce qui fait tomber la marche</h3>
+    <p>Chaque hypothèse du modèle a été divisée par deux, puis multipliée par un et demi, et la meilleure marche rejouée telle quelle.
+      Trois hypothèses la font tomber&nbsp;; trois autres ne changent presque rien. Ce sont les trois premières que le banc à la
+      webcam doit mesurer, en commençant par le plus simple&nbsp;: <strong>peser le bloc des piles, du boîtier, du Pico et des fils</strong>.</p>
+    <div class="defile"><table><thead><tr><th>Hypothèse</th><th>Divisée par 2</th><th>Multipliée par 1,5</th></tr></thead>
+      <tbody><tr class="repond"><td><b>Masse de l'électronique (165&nbsp;g)</b></td><td class="n">tient, 5,2&nbsp;cm</td><td class="n">tombe à 4&nbsp;s</td></tr><tr class="repond"><td><b>Couple de blocage des servos</b></td><td class="n">tombe à 3,3&nbsp;s</td><td class="n">tient, 8,2&nbsp;cm</td></tr><tr class="repond"><td><b>Raideur de position des servos</b></td><td class="n">tombe à 3,6&nbsp;s</td><td class="n">tient, 4,8&nbsp;cm</td></tr><tr><td><b>Frottement du sol</b></td><td class="n">tient, 7,8&nbsp;cm</td><td class="n">tient, 7,1&nbsp;cm</td></tr><tr><td><b>Inertie du rotor</b></td><td class="n">tient, 7,9&nbsp;cm</td><td class="n">tient, 7,5&nbsp;cm</td></tr><tr><td><b>Amortissement des charnières</b></td><td class="n">tient, 7,6&nbsp;cm</td><td class="n">tient, 7,7&nbsp;cm</td></tr></tbody></table></div>
+    <p class="sources">Un seul modèle de servo, parfait (sans jeu, sans chute de tension, sans échauffement)&nbsp;; la marche est
+      réglée sur le modèle lui-même, donc elle peut en exploiter un défaut&nbsp;; trois graines. Les fichiers de la simulation sont
+      dans <a class="lien" href="#fichiers">les fichiers</a>&nbsp;; les hypothèses, écrites avant chaque essai, sont au cahier R-036
+      du journal de recherche.</p>
+
+
     <h2 id="servos">Pourquoi des SG90 et des MG90S</h2>
     <p class="sous">Et pas des MG996R, des DS3218 ou des DS3240</p>
     <p><strong>C'est la taille du servo qui fixe la taille du robot, pas l'inverse.</strong> Les gros servos de la robotique
@@ -479,11 +541,14 @@ footer p{margin:0;max-width:none}
         d'un demi-kilo qui tombe ne casse rien, ni lui ni la table. On va casser des choses en apprenant à le faire
         marcher&nbsp;: mieux vaut que ce soient des servos qui coûtent plusieurs fois moins cher.</span></li>
     </ul>
-    <p><strong>La marge de N0, estimée, pas mesurée.</strong> Environ 570&nbsp;g en tout&nbsp;: 253&nbsp;g de pièces,
-      152&nbsp;g de servos, environ 110&nbsp;g de piles, le reste en vis, fils et carte. Sur une jambe, genou plié de 20°,
-      le genou porte environ 510&nbsp;g à 1,8&nbsp;cm de son axe, à peu près 1&nbsp;kg·cm. Un MG90S en donne 1,8 au
-      blocage, à 4,8&nbsp;V. Une marge d'environ 2&nbsp;: assez pour tenir debout et marcher lentement, genoux peu
-      pliés&nbsp;; pas pour sauter, ni pour s'accroupir sur une jambe.</p>
+    <p><strong>La marge de N0, estimée à la main, puis simulée.</strong> Environ 570&nbsp;g en tout&nbsp;: 253&nbsp;g de pièces,
+      152&nbsp;g de servos, environ 110&nbsp;g de piles, le reste en vis, fils et carte (le modèle simulé pèse 587&nbsp;g). Sur
+      une jambe, genou plié de 20°, le genou porte environ 510&nbsp;g à 1,8&nbsp;cm de son axe, à peu près 1&nbsp;kg·cm,
+      contre 1,8 au blocage d'un MG90S à 4,8&nbsp;V&nbsp;: une marge d'environ 2, par ce calcul à la main. <strong>La
+      simulation la trouve plus large</strong>&nbsp;: à deux jambes le genou ne fournit en moyenne que le quart du blocage, même
+      accroupi à 70° (58&nbsp;% au pic, pendant le mouvement), parce que la hanche et la cheville ramènent la charge au-dessus du pied. Elle confirme le reste&nbsp;:
+      assez pour tenir debout et marcher lentement, pas pour s'accroupir sur une jambe, et rien n'est encore mesuré sur un vrai
+      robot (<a class="lien" href="#simulation">les essais</a>).</p>
     <p><strong>Le MG996R, on le saute.</strong> Sa fiche d'origine annonce 11&nbsp;kg·cm à 6&nbsp;V pour 55&nbsp;g. Un
       DS3218, dans le même gabarit de 40 × 20&nbsp;mm, en annonce 21,5 pour 60&nbsp;g&nbsp;: presque deux fois le couple
       pour 5 grammes de plus. Et le MG996R est l'un des servos les plus copiés&nbsp;: des revendeurs lui prêtent 13 ou
@@ -565,7 +630,9 @@ footer p{margin:0;max-width:none}
       <a class="fichier" href="fichiers/navitek-n0-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
         <span class="d">Chaque pièce et l'assemblage complet, plus <code>n0.py</code>, le script FreeCAD qui les dessine.</span><span class="u">0,5&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n0-programmes.zip" download><span class="n">Les programmes du robot</span>
-        <span class="d"><code>main.py</code> (le centrage, la démonstration) et <code>etalonner.py</code> (l'option des capteurs), en MicroPython.</span><span class="u">4&nbsp;ko &middot; ZIP</span></a>
+        <span class="d"><code>main.py</code> (le centrage, la démonstration) et <code>etalonner.py</code> (l'option des capteurs), en MicroPython.</span><span class="u">5&nbsp;ko &middot; ZIP</span></a>
+      <a class="fichier" href="fichiers/navitek-n0-simulation.zip" download><span class="n">La simulation MuJoCo</span>
+        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0&nbsp;Mo &middot; ZIP</span></a>
     </div>
   </div>
 
