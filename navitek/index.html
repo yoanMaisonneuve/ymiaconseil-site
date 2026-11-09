@@ -320,12 +320,13 @@ footer p{margin:0;max-width:none}
       <li><b>1 Raspberry Pi Pico 2 W</b><span>Ou un Pico 2 WH, dont les pattes sont déjà soudées. Il pilote les 13 servos directement, une broche chacun. Le Wi-Fi servira à
         le commander du téléphone.</span></li>
       <li><b>4 piles AA NiMH et un boîtier 2&nbsp;×&nbsp;2 avec interrupteur</b><span>4,8&nbsp;V, la tension des servos, sans
-        régulateur. Le boîtier se loge dans le bas du torse. Des NiMH rechargeables seulement, jamais des alcalines
+        régulateur. Le boîtier est prévu dans le bas du torse&nbsp;: il y entre en volume, mais il n'est pas encore dessiné, et posé
+        à plat il couvrirait la moitié des fentes des câbles des jambes (à vérifier au montage). Des NiMH rechargeables seulement, jamais des alcalines
         (<a class="lien" href="#cablage">pourquoi</a>).</span></li>
       <li><b>1 diode Schottky, 1 condensateur, 1 bornier, du fil</b><span>Une 1N5817 ou semblable, pour alimenter le Pico
-        par sa broche VSYS. Un condensateur de 1000&nbsp;µF (16&nbsp;V) sur l'alimentation des servos. Une petite plaque à
+        par sa broche VSYS. Un condensateur de 1000&nbsp;µF (16&nbsp;V&nbsp;: un choix, plus de deux fois la tension des piles) sur l'alimentation des servos. Une petite plaque à
         trous avec 13 rangées de 3 broches mâles, où se branchent les servos. Six rallonges de servo de 15&nbsp;cm pour les
-        genoux et les chevilles. <a class="lien" href="#cablage">Le schéma</a></span></li>
+        genoux et les chevilles (une longueur estimée, pas mesurée sur la CAO&nbsp;: à vérifier au montage). <a class="lien" href="#cablage">Le schéma</a></span></li>
       <li><b>72 vis M2 autotaraudeuses</b><span>40 de 6&nbsp;mm (les articulations, les hanches, les pieds, les mains),
         16 de 16&nbsp;mm (à travers les rallonges), 8 de 10&nbsp;mm (les épaules, à travers le rebord), 4 de 8&nbsp;mm (le dos),
         4 de 5&nbsp;mm (le Pico). Les vis des servos et des palonniers sont dans le sac des servos.</span></li>
@@ -337,7 +338,7 @@ footer p{margin:0;max-width:none}
       <li><b>Imprimer le gabarit et y essayer un servo.</b><span>Le servo entre dans la poche sans forcer, ses deux vis
         d'oreilles mordent, le palonnier entre dans la poche du bras de l'étrier. Sinon, corriger le jeu (<code>JEU</code>)
         ou les cotes du servo en tête de <code>n0.py</code>, relancer FreeCAD et réimprimer le gabarit.</span></li>
-      <li><b>Imprimer les plateaux P1 à P5.</b><span>15&nbsp;h&nbsp;21 en tout, en cinq fois. Orange pour P1, P3 et P4&nbsp;; gris
+      <li><b>Imprimer les plateaux P1 à P5.</b><span>15&nbsp;h&nbsp;07 en tout, en cinq fois. Orange pour P1, P3 et P4&nbsp;; gris
         pour P2 et P5.</span></li>
       <li><b>Centrer les 13 servos avant de poser un seul palonnier.</b><span>Copier <code>main.py</code> sur le
         Pico (il démarre en <code>MODE = "centrer"</code>) et brancher les servos&nbsp;: chacun va à 90° et y reste.
@@ -388,9 +389,9 @@ footer p{margin:0;max-width:none}
         les servos tremblent ou ne réagissent pas&nbsp;: le signal n'a pas de référence.</span></li>
       <li><b>La diode vers VSYS.</b><span>Les piles alimentent aussi le Pico quand le robot marche seul. Branché en USB en
         même temps, la diode empêche les deux sources de se battre. La bague de la diode va du côté du Pico.</span></li>
-      <li><b>Des piles NiMH seulement.</b><span>Quatre NiMH donnent 4,8&nbsp;V (5,6 tout juste chargées). Quatre alcalines
-        neuves donnent environ 6,4&nbsp;V&nbsp;: même après la diode, c'est plus que les 5,5&nbsp;V que le Pico supporte sur
-        VSYS, et plus que les 6&nbsp;V des SG90.</span></li>
+      <li><b>Des piles NiMH seulement.</b><span>Quatre NiMH donnent 4,8&nbsp;V (5,6 tout juste chargées, à 1,4&nbsp;V par élément, une valeur usuelle). Quatre alcalines
+        neuves donnent environ 6,4&nbsp;V (1,6&nbsp;V par élément, valeur usuelle)&nbsp;: même après la diode, c'est plus que les 5,5&nbsp;V que le Pico supporte sur
+        VSYS, et plus que les 4,8 à 6&nbsp;V annoncés pour les SG90 et les MG90S.</span></li>
       <li><b>On branche interrupteur coupé.</b><span>Et le condensateur dans le bon sens&nbsp;: la bande blanche du côté
         du rail brun.</span></li>
     </ul>
@@ -448,16 +449,17 @@ footer p{margin:0;max-width:none}
         <source src="simulation/t3-demo.mp4" type="video/mp4"></video>
       <figcaption>La démonstration de <code>main.py</code>, rejouée à l'identique (poses, durées, interpolation)&nbsp;: le
         non de la tête, le salut, deux accroupis. <b>Elle ne tombe pas</b>&nbsp;: 0,5° d'inclinaison au plus.
-        Mais l'épaule droite, le coude droit et le cou touchent leur couple de blocage pendant les gestes rapides.</figcaption>
+        Mais le cou (100&nbsp;%), l'épaule droite (100&nbsp;%), le genou gauche (96&nbsp;%), le genou droit (94&nbsp;%) et le coude droit (94&nbsp;%) montent à 90&nbsp;% de leur couple de blocage ou plus&nbsp;: au pic des gestes rapides (le salut, le non) et de l'accroupi.</figcaption>
     </figure>
 
     <h3>S'accroupir</h3>
     <p>Part du couple de blocage que le genou doit fournir, en moyenne sur la dernière seconde, puis au pic. À deux jambes, il reste
       sous le tiers du blocage en moyenne jusqu'à 70° de genou&nbsp;; <strong>sur une jambe, il sature à 70°</strong> et le robot
-      ne tient plus. La «&nbsp;marge d'environ 2&nbsp;» estimée à la main plus haut est prudente&nbsp;: la hanche et la
-      cheville ramènent la charge au-dessus du pied, et le genou travaille moins qu'on ne le pensait.</p>
+      ne tient plus. Sur une jambe tendue (0°), il tombe aussi&nbsp;: sans retour d'information, l'équilibre ne tient qu'à un réglage. La «&nbsp;marge d'environ 2&nbsp;» estimée à la main plus haut (une jambe, 20°) est prudente
+      une fois la pose tenue (12&nbsp;% du blocage&nbsp;: la hanche et la cheville ramènent la charge au-dessus du pied),
+      mais trop large pendant la mise en place (68&nbsp;% au pic).</p>
     <div class="defile"><table><thead><tr><th>Genou</th><th>Deux jambes (moyen / pic)</th><th>Une jambe (moyen / pic)</th><th>Une jambe</th></tr></thead>
-      <tbody><tr><td class="n">20°</td><td class="n">10&nbsp;% / 19&nbsp;%</td><td class="n">12&nbsp;% / 68&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">40°</td><td class="n">16&nbsp;% / 34&nbsp;%</td><td class="n">29&nbsp;% / 51&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">60°</td><td class="n">22&nbsp;% / 50&nbsp;%</td><td class="n">56&nbsp;% / 100&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">70°</td><td class="n">25&nbsp;% / 58&nbsp;%</td><td class="n">100&nbsp;% / 100&nbsp;%</td><td class="n">tombe</td></tr></tbody></table></div>
+      <tbody><tr><td class="n">0°</td><td class="n">3&nbsp;% / 3&nbsp;%</td><td class="n">13&nbsp;% / 33&nbsp;%</td><td class="n">tombe</td></tr><tr><td class="n">20°</td><td class="n">10&nbsp;% / 19&nbsp;%</td><td class="n">12&nbsp;% / 68&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">40°</td><td class="n">16&nbsp;% / 34&nbsp;%</td><td class="n">29&nbsp;% / 51&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">60°</td><td class="n">22&nbsp;% / 50&nbsp;%</td><td class="n">56&nbsp;% / 100&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">70°</td><td class="n">25&nbsp;% / 58&nbsp;%</td><td class="n">100&nbsp;% / 100&nbsp;%</td><td class="n">tombe</td></tr></tbody></table></div>
     <p class="sources">L'équilibre sur une jambe est cherché par un décalage fixe de la cheville, sans retour d'information&nbsp;: la
       colonne «&nbsp;une jambe&nbsp;» est un ordre de grandeur. Détail&nbsp;: cahier R-036, essai T2.</p>
 
@@ -475,10 +477,12 @@ footer p{margin:0;max-width:none}
     </figure>
     <p>Une marche périodique à onze réglages (période, amplitudes de la hanche, du genou, de la cheville et du balancement latéral)
       a été cherchée par l'algorithme CMA-ES, trois fois, avec trois graines. Les trois trouvent le même genre de pas, qui
-      tient debout dix secondes sans que rien ne dise au robot où il est. <strong>Elle avance de six à huit centimètres en dix
+      tient debout dix secondes sans que rien ne dise au robot où il est. <strong>Elle avance de 6 à 8&nbsp;centimètres en dix
       secondes&nbsp;: un trottinement, pas une marche.</strong> C'est le plafond d'un robot aveugle, et la raison de N1.</p>
     <div class="defile"><table><thead><tr><th>Graine</th><th>Avance en 10 s</th><th>Période du pas</th><th>Fin</th><th>Couple max</th></tr></thead>
       <tbody><tr><td class="n">1</td><td class="n">5,7&nbsp;cm</td><td class="n">1,72&nbsp;s</td><td class="n">debout</td><td class="n">84&nbsp;%</td></tr><tr><td class="n">2</td><td class="n">8,2&nbsp;cm</td><td class="n">1,61&nbsp;s</td><td class="n">debout</td><td class="n">84&nbsp;%</td></tr><tr><td class="n">3</td><td class="n">7,6&nbsp;cm</td><td class="n">1,83&nbsp;s</td><td class="n">debout</td><td class="n">82&nbsp;%</td></tr></tbody></table></div>
+    <p>Ce sont de petits pas&nbsp;: un pied est en l'air 26&nbsp;% à 44&nbsp;% du temps, les pieds se lèvent de 3 à 12&nbsp;mm,
+      et ils glissent au sol de 3,2 à 4,6&nbsp;cm en dix secondes, moins que la distance parcourue (cahier R-044).</p>
 
     <h3>Ce qui fait tomber la marche</h3>
     <p>Chaque hypothèse du modèle a été divisée par deux, puis multipliée par un et demi, et la meilleure marche rejouée telle quelle.
@@ -508,7 +512,7 @@ footer p{margin:0;max-width:none}
       <table class="servos">
         <thead><tr><th>Servo</th><th>Dit où il est&nbsp;?</th><th>Poids</th><th>Couple annoncé (kg·cm)</th><th>Boîtier (mm)</th><th>Courant bloqué</th></tr></thead>
         <tbody>
-          <tr><td><b>SG90</b></td><td>Non</td><td class="n">9 g</td><td class="n">1,8 à 4,8 V</td><td class="n">≈ 23&nbsp;×&nbsp;12&nbsp;×&nbsp;29</td><td class="n">0,5 à 0,8 A</td></tr>
+          <tr><td><b>SG90</b></td><td>Non</td><td class="n">9 g</td><td class="n">1,8 à 4,8 V</td><td class="n">22,2&nbsp;×&nbsp;11,8&nbsp;×&nbsp;31 (fiche)&nbsp;; 23&nbsp;×&nbsp;12,2&nbsp;×&nbsp;29 (revendeurs)</td><td class="n">0,5 à 0,8 A</td></tr>
           <tr><td><b>MG90S</b><span class="role">engrenages en métal</span></td><td>Non</td><td class="n">13,4 g</td><td class="n">1,8 à 4,8 V<br>2,2 à 6 V</td><td class="n">22,8&nbsp;×&nbsp;12,2&nbsp;×&nbsp;28,5</td><td class="n">non publié</td></tr>
           <tr><td><b>MG996R</b></td><td>Non</td><td class="n">55 g</td><td class="n">9,4 à 4,8 V<br>11 à 6 V</td><td class="n">≈ 41&nbsp;×&nbsp;20&nbsp;×&nbsp;43</td><td class="n">2,5 A à 6 V</td></tr>
           <tr><td><b>DS3218</b></td><td>Non</td><td class="n">60 g</td><td class="n">19 à 5 V<br>21,5 à 6,8 V</td><td class="n">40&nbsp;×&nbsp;20&nbsp;×&nbsp;40,5</td><td class="n">1,8 A à 5 V<br>2,6 A à 6,8 V</td></tr>
@@ -535,23 +539,26 @@ footer p{margin:0;max-width:none}
       <li><b>La loi d'échelle.</b><span>Doublez la taille d'un robot&nbsp;: sa masse est multipliée par 8 (le volume) et ses
         bras de levier par 2. Le couple demandé à chaque articulation est donc multiplié par environ 16. Un DS3240 fait
         40&nbsp;mm de long, presque la cuisse entière de N0 (environ 5&nbsp;cm d'un axe à l'autre)&nbsp;: autour de lui, le
-        robot fait 60&nbsp;cm ou plus.</span></li>
-      <li><b>L'impression.</b><span>N0 se tranche à 15&nbsp;h&nbsp;21 et 256&nbsp;g de PLA. Au double de la taille, le
-        volume suit le cube&nbsp;: de l'ordre de 120 heures et de 2&nbsp;kg, et le torse ne tient plus sur un plateau de
-        220&nbsp;mm. C'est une règle de trois, pas un tranchage.</span></li>
+        robot fait de l'ordre de 60&nbsp;cm (N1, dessiné depuis autour d'un servo de 45&nbsp;mm, fait 63,5&nbsp;cm).</span></li>
+      <li><b>L'impression.</b><span>N0 se tranche à 15&nbsp;h&nbsp;21 et 256&nbsp;g de PLA. Au double de la taille, si le
+        volume suivait le cube, ce serait de l'ordre de 120 heures et de 2&nbsp;kg, et le torse ne tiendrait plus sur un plateau de
+        220&nbsp;mm. N1, redessiné à environ deux fois N0, se tranche en fait à 49&nbsp;h&nbsp;39 et 980&nbsp;g, et son torse
+        tient sur 220&nbsp;mm&nbsp;: en partie parce que les parois gardent leur épaisseur, et que N1 n'est pas N0 agrandi mais redessiné.</span></li>
       <li><b>Le courant.</b><span>N0 tourne sur 4 piles AA. Treize DS3240 qui forcent en même temps peuvent tirer de 40 à
         50&nbsp;A (3,1 à 3,9&nbsp;A chacun, d'après sa fiche)&nbsp;: une batterie au lithium, un régulateur de 15 à 20&nbsp;A
-        et un fusible deviennent obligatoires.</span></li>
+        (un ordre de grandeur&nbsp;: tous ne bloquent pas ensemble) et un fusible deviennent obligatoires.</span></li>
       <li><b>La sécurité, et le prix d'une erreur.</b><span>Un servo de 40&nbsp;kg·cm pince un doigt d'enfant&nbsp;; un robot
         d'un demi-kilo qui tombe ne casse rien, ni lui ni la table. On va casser des choses en apprenant à le faire
-        marcher&nbsp;: mieux vaut que ce soient des servos qui coûtent plusieurs fois moins cher.</span></li>
+        marcher&nbsp;: mieux vaut que ce soient des servos qui coûtent moins cher.</span></li>
     </ul>
-    <p><strong>La marge de N0, estimée à la main, puis simulée.</strong> Environ 570&nbsp;g en tout&nbsp;: 253&nbsp;g de pièces,
-      152&nbsp;g de servos, environ 110&nbsp;g de piles, le reste en vis, fils et carte (le modèle simulé pèse 587&nbsp;g). Sur
+    <p><strong>La marge de N0, estimée à la main, puis simulée.</strong> Environ 570&nbsp;g en tout, estimés à la main&nbsp;: 253&nbsp;g de pièces,
+      152&nbsp;g de servos, le reste en piles, boîtier, vis, fils et carte. Le modèle simulé pèse 587&nbsp;g, dont 165&nbsp;g d'électronique
+      estimés (104&nbsp;g de piles, 15 de boîtier, 4 de Pico, 20 de fils, 22 de vis). Sur
       une jambe, genou plié de 20°, le genou porte environ 510&nbsp;g à 1,8&nbsp;cm de son axe, à peu près 1&nbsp;kg·cm,
       contre 1,8 au blocage d'un MG90S à 4,8&nbsp;V&nbsp;: une marge d'environ 2, par ce calcul à la main. <strong>La
-      simulation la trouve plus large</strong>&nbsp;: à deux jambes le genou ne fournit en moyenne que le quart du blocage, même
-      accroupi à 70° (58&nbsp;% au pic, pendant le mouvement), parce que la hanche et la cheville ramènent la charge au-dessus du pied. Elle confirme le reste&nbsp;:
+      simulation la trouve plus large au maintien, plus serrée au pic</strong>&nbsp;: sur une jambe à 20°, le genou fournit 12&nbsp;% du blocage
+      une fois en place (une marge d'environ 8), mais 68&nbsp;% pendant la mise en place (une marge d'environ 1,5). À deux jambes, il ne fournit en moyenne
+      que le quart du blocage, même accroupi à 70° (58&nbsp;% au pic, pendant le mouvement), parce que la hanche et la cheville ramènent la charge au-dessus du pied. Elle confirme le reste&nbsp;:
       assez pour tenir debout et marcher lentement, pas pour s'accroupir sur une jambe, et rien n'est encore mesuré sur un vrai
       robot (<a class="lien" href="#simulation">les essais</a>).</p>
     <p><strong>Le MG996R, on le saute.</strong> Sa fiche d'origine annonce 11&nbsp;kg·cm à 6&nbsp;V pour 55&nbsp;g. Un
@@ -570,8 +577,8 @@ footer p{margin:0;max-width:none}
         les servos et renvoie sa position sur 4096 pas par tour, sa vitesse, sa charge, sa tension et sa température.
         C'est le servo des bras ouverts SO-100 et SO-101 de
         <a class="lien" href="https://huggingface.co/docs/lerobot/so101">LeRobot</a> (Hugging Face)&nbsp;: tout un
-        écosystème de logiciels existe déjà. Le plan pour N1, environ deux fois N0&nbsp;: la version 12&nbsp;V
-        (30&nbsp;kg·cm annoncés) aux hanches, aux genoux et aux chevilles, la version 7,4&nbsp;V aux bras et au cou, et le
+        écosystème de logiciels existe déjà. Le plan pour N1, environ deux fois N0 (<a class="lien" href="/navitek/n1/">sa page</a>)&nbsp;: la version 12&nbsp;V
+        (30&nbsp;kg·cm annoncés) aux 17 articulations, sur une pile 3S (la version 7,4&nbsp;V ne l'accepte pas), et le
         même module boîtier-étrier, redessiné pour 45 × 25 × 35&nbsp;mm et des vis M3. Les DS3218 et DS3240 restent la
         voie forte, mais aveugle.</span></li>
       <li><b>Pour N0&nbsp;: le hack du potentiomètre.</b><span>Chaque SG90 contient déjà un capteur de position&nbsp;: le
@@ -591,7 +598,7 @@ footer p{margin:0;max-width:none}
         choisit celui qu'il lit avec 4 broches, et la lecture se fait sur une seule entrée analogique. Autre façon&nbsp;:
         quatre modules ADS1115 (4 entrées chacun, sur I2C), plus précis, avec plus de fils.</span></li>
       <li><b>Peut-être 26 résistances</b><span>Seulement si la mesure dépasse 3,3&nbsp;V (étape 3)&nbsp;: un pont de
-        120&nbsp;kΩ et 150&nbsp;kΩ par fil ramène 5,6&nbsp;V (piles neuves) à 3,1&nbsp;V. Des valeurs hautes, pour ne pas
+        120&nbsp;kΩ et 150&nbsp;kΩ par fil ramène 5,6&nbsp;V (piles tout juste chargées) à 3,1&nbsp;V. Des valeurs hautes, pour ne pas
         déranger le servo, qui lit le même curseur.</span></li>
       <li><b>Ou rien à ouvrir</b><span>Adafruit vend un micro-servo dont le fil du curseur sort déjà, en 4ᵉ fil
         (<a class="lien" href="https://core-electronics.com.au/analog-feedback-servo.html">«&nbsp;analog feedback servo&nbsp;»</a>).
@@ -626,9 +633,9 @@ footer p{margin:0;max-width:none}
       simulé avant d'être imprimé, et chaque chiffre a sa source ou dit qu'il est une estimation.</p>
     <div class="defile"><table class="servos route"><thead><tr><th>Version</th><th>Taille</th><th>Actionneurs</th><th>À prouver</th></tr></thead>
       <tbody>
-      <tr class="repond"><td data-l=""><b>N0</b><span class="role">en ligne, à imprimer</span></td><td data-l="Taille" class="n">33&nbsp;cm</td><td data-l="Actionneurs">servos SG90 et MG90S, qui n'ont aucun retour</td><td data-l="À prouver">Debout, accroupi, la démonstration&nbsp;: <b>fait</b> (ci-dessus). La marche reste un trottinement&nbsp;: sans retour d'information, on n'ira pas plus loin.</td></tr>
-      <tr><td data-l=""><b><a class="lien" href="/navitek/n1/">N1</a></b><span class="role">en ligne : dessinée et simulée, un servo à mesurer</span></td><td data-l="Taille" class="n">environ 60&nbsp;cm</td><td data-l="Actionneurs">servos à bus qui renvoient leur position et leur charge (le Feetech STS3215 est le candidat, à comparer à ses concurrents)</td><td data-l="À prouver">Une marche avec retour d'information, et se relever. 17 à 19 articulations (la hanche latérale s'ajoute).</td></tr>
-      <tr><td data-l=""><b><a class="lien" href="/navitek/n2/">N2</a></b><span class="role">concept en ligne : un actionneur imprimé, une jambe, le couple simulé</span></td><td data-l="Taille" class="n">environ 1&nbsp;m</td><td data-l="Actionneurs">moteurs sans balais avec un réducteur imprimé, commande en boucle fermée, codeur magnétique</td><td data-l="À prouver">Une marche robuste, encaisser une poussée. Le couple de chaque articulation est tiré de la simulation à l'échelle avant de dessiner l'actionneur. Une sécurité d'abord&nbsp;: des gens vivent autour d'un robot de cette taille.</td></tr>
+      <tr class="repond"><td data-l=""><b>N0</b><span class="role">en ligne, à imprimer</span></td><td data-l="Taille" class="n">33&nbsp;cm</td><td data-l="Actionneurs">servos SG90 et MG90S, qui n'ont aucun retour</td><td data-l="À prouver">Debout, accroupi, la démonstration&nbsp;: <b>fait en simulation</b> (ci-dessus), pas encore sur le vrai robot. La marche reste un trottinement&nbsp;: sans retour d'information, on n'ira pas plus loin.</td></tr>
+      <tr><td data-l=""><b><a class="lien" href="/navitek/n1/">N1</a></b><span class="role">en ligne : dessinée et simulée, un servo à mesurer</span></td><td data-l="Taille" class="n">63,5&nbsp;cm</td><td data-l="Actionneurs">servos à bus qui renvoient leur position et leur charge (le Feetech STS3215 est le candidat, à comparer à ses concurrents)</td><td data-l="À prouver">Une marche avec retour d'information&nbsp;: <b>obtenue en simulation</b>, mais qui traîne les pieds. Se relever&nbsp;: <b>pas obtenu</b>. 17 articulations (la hanche de côté s'ajoute&nbsp;; la rotation de la hanche reste à dessiner).</td></tr>
+      <tr><td data-l=""><b><a class="lien" href="/navitek/n2/">N2</a></b><span class="role">concept en ligne : l'actionneur imprimé et le robot entier dessinés, la marche simulée</span></td><td data-l="Taille" class="n">environ 1&nbsp;m</td><td data-l="Actionneurs">moteurs sans balais avec un réducteur imprimé, commande en boucle fermée, codeur magnétique</td><td data-l="À prouver">Une marche robuste, encaisser une poussée. Le couple de chaque articulation est tiré de la simulation à l'échelle avant de dessiner l'actionneur. Une sécurité d'abord&nbsp;: des gens vivent autour d'un robot de cette taille.</td></tr>
       <tr><td data-l=""><b><a class="lien" href="/navitek/n3/">N3</a></b><span class="role">document de concept en ligne</span></td><td data-l="Taille" class="n">1,4 à 1,6&nbsp;m</td><td data-l="Actionneurs">actionneurs plus forts, avec des renforts en métal là où le plastique ne suffit pas</td><td data-l="À prouver">Des tâches de maison simples. Le document dit d'abord ce qui ne peut pas s'imprimer, ce que coûtent les actionneurs et comment on garde un robot de cette taille sans danger.</td></tr>
       </tbody></table></div>
     <p class="sources">Les tailles et les cibles sont des intentions, pas des promesses&nbsp;: chaque version ne sort que si la précédente a tenu en simulation, puis sur le banc.</p>
