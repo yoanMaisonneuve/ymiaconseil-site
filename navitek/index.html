@@ -544,9 +544,10 @@ footer p{margin:0;max-width:none}
         en 2 fois plus de gestes qu'un programme qui connaîtrait le bras par cœur&nbsp;; ce qu'il a appris est à 4&nbsp;% du vrai.
         Il ne se pose jamais tout à fait (il continue d'essayer, à quelques millimètres). Sur le vrai robot, il faudra voir la main&nbsp;: la caméra de la tête.</span></li>
       <li><b>Ses servos&nbsp;: à moitié.</b><span>N1 lit la position de chaque servo. En regardant ses propres échelons, il retrouve la raideur et l'inertie de ses
-        chevilles à 4&nbsp;% près, mais pas celles de ses hanches (26&nbsp;% d'écart, et la hanche de côté ne s'ajuste pas du tout)&nbsp;: une
-        articulation qui porte toute une jambe ne se comporte pas comme une charnière seule. La suite&nbsp;: ajuster trois chiffres communs à ses 17 servos
-        identiques, sur le modèle entier du robot.</span></li>
+        chevilles à 4&nbsp;% près, mais pas celles de ses hanches (jusqu'à 44&nbsp;% d'écart)&nbsp;: une articulation qui porte toute une
+        jambe ne se comporte pas comme une charnière seule. Un piège, aussi&nbsp;: un échelon plus grand que la plage de l'articulation la fait buter, et l'essai
+        mesure le contact au lieu du servo (la hanche de côté de N1, qui ne s'ouvre que de quelques degrés, s'essaie à 4° au plus).
+        La suite&nbsp;: ajuster trois chiffres communs à ses 17 servos identiques, sur le modèle entier du robot.</span></li>
       <li><b>Son équilibre, sa marche&nbsp;: non.</b><span>Rien dans ce cerveau ne les apprend. Les marches plus haut sont réglées hors ligne, par une recherche sur le
         modèle&nbsp;; un cerveau qui apprend à marcher sur le vrai robot reste à écrire.</span></li>
     </ul>
