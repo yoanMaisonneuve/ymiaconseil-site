@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navitek N2, concept d'un humanoïde d'un mètre à actionneurs imprimés</title>
+<meta name="description" content="Navitek N2, concept : un humanoïde d'environ un mètre dont les actionneurs à réducteur cycloïdal 16:1 s'impriment. Un actionneur et une jambe en CAO, le couple de chaque articulation tiré d'une simulation. Rien n'est imprimé.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1f3a">
+<meta property="og:title" content="Navitek N2, concept d'un humanoïde d'un mètre">
+<meta property="og:description" content="Un actionneur imprimé à réducteur cycloïdal et une jambe, avec le couple demandé tiré d'une simulation. Concept, pas encore imprimé.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ymiaconseil.com/navitek/n2/">
+<link rel="canonical" href="https://ymiaconseil.com/navitek/n2/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Lora:ital,wght@0,400..600;1,400..500&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --navy-3:#16355e; --gold:#d4a843; --gold-small:#8a6b18;
+  --ink-body:#2a2620; --dim:#5c5c5c; --line:#e4e2dd; --paper:#fff; --tint:#f6f4f0;
+  --orange:#f26b1d; --orange-texte:#b5490c; --gris:#7d838c;
+  --display:'Newsreader',Georgia,serif; --body:'Lora',Georgia,serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink-body);font-family:var(--body);font-size:17px;line-height:1.66;display:flex;flex-direction:column}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar .in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.bar a.logo{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar a.logo span{color:var(--gold)}
+.bar a.autre{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#a8bad0;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.45);white-space:nowrap}
+.bar a.autre:hover{color:#fff}
+main{flex:1;padding:44px 20px 8px}
+.wrap{max-width:660px;margin:0 auto;width:100%}
+.large{max-width:900px;margin:0 auto;width:100%}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(30px,7vw,46px);line-height:1.1;margin:0 0 16px;text-wrap:balance}
+h1 em{font-style:italic;color:var(--orange-texte)}
+.chapeau{font-size:18.5px;color:#3c3830;margin:0 0 22px;max-width:34em}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(22px,4.4vw,28px);line-height:1.2;margin:48px 0 4px;text-wrap:balance}
+.sous{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-small);margin:0 0 16px;max-width:none}
+p{margin:0 0 15px;max-width:34em}
+strong{font-weight:600;color:#1a1814}
+code{font-family:var(--mono);font-size:.84em;background:var(--tint);padding:1px 5px;border-radius:3px}
+.lien{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
+.lien:hover{background:var(--tint)}
+
+/* la vue 3D */
+.atelier{margin:26px auto 0;border:1px solid var(--line);background:linear-gradient(#fbfaf7,#f1eee8)}
+#scene{position:relative;height:min(78vh,640px);min-height:380px;touch-action:none;cursor:grab}
+#scene canvas{display:block;width:100%;height:100%}
+#scene:active{cursor:grabbing}
+#etat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--dim)}
+#etat[hidden]{display:none}
+#etat img{max-height:100%;max-width:100%}
+.commandes{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 14px;border-top:1px solid var(--line);background:var(--paper)}
+.commandes button{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--paper);color:var(--navy);border:1px solid #cfcac0;border-radius:100px;padding:8px 14px;cursor:pointer}
+.commandes button:hover{background:var(--tint)}
+.commandes button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.commandes .sep{flex:1}
+#info{padding:12px 16px 14px;border-top:1px solid var(--line);background:var(--paper);font-size:15px;line-height:1.5;min-height:3.6em}
+#info b{font-family:var(--display);font-size:17px;color:var(--navy)}
+#info .d{color:var(--dim)}
+#info button{font:inherit;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;border:0;background:none;color:var(--gold-small);border-bottom:1px solid rgba(212,168,67,.6);padding:0;margin-left:8px;cursor:pointer}
+
+/* les chiffres */
+.chiffres{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:22px auto 0}
+.chiffres div{background:var(--paper);padding:14px 12px}
+.chiffres b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(22px,4vw,30px);color:var(--navy);line-height:1.1;font-variant-numeric:tabular-nums}
+.chiffres span{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+
+.loi{margin:26px 0;padding:20px 22px;background:var(--navy);border-left:5px solid var(--gold)}
+.loi p{margin:0;max-width:30em;font-family:var(--display);font-size:clamp(19px,3.8vw,23px);line-height:1.35;color:#fff}
+.loi .src{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:#a8bad0;margin-top:12px;max-width:none;line-height:1.7}
+
+/* les plateaux */
+.plateaux{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:20px auto 0}
+.plateau{margin:0;border:1px solid var(--line);background:var(--paper)}
+.plateau img{display:block;width:100%;height:auto;aspect-ratio:1;background:#eceff3}
+.plateau figcaption{padding:12px 14px 14px;display:flex;flex-direction:column;gap:2px;font-size:15px;line-height:1.4}
+.plateau .pn{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.plateau b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:17px}
+.plateau .pc{font-family:var(--mono);font-size:12.5px;color:var(--ink-body);font-variant-numeric:tabular-nums}
+.plateau a{align-self:flex-start;margin-top:6px;font-size:14.5px}
+.pastille{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 6px 0 8px;vertical-align:0}
+.pastille.orange{background:var(--orange)} .pastille.gris{background:var(--gris)}
+.reglages{font-size:15.5px;color:var(--dim);margin-top:16px}
+
+/* les tableaux */
+.defile{overflow-x:auto;margin:18px 0 0;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.4}
+th{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:left;padding:10px 12px;background:var(--tint);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:16px}
+td .role{display:block;color:var(--dim);font-size:13.5px;min-width:16em}
+td.n{font-family:var(--mono);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+tfoot td{font-family:var(--mono);font-size:13px;background:var(--tint);font-weight:600}
+
+h3{font-family:var(--display);font-weight:600;color:var(--navy);font-size:20px;line-height:1.25;margin:34px 0 8px}
+.video{margin:22px 0 0}
+.video video{display:block;width:100%;height:auto;aspect-ratio:4/3;background:#000;border:1px solid var(--line)}
+.video figcaption{font-size:14.5px;color:var(--dim);margin-top:8px;line-height:1.5;max-width:36em}
+.schema{margin:22px auto 0;max-width:620px}
+.schema svg{display:block;width:100%;height:auto}
+.schema figcaption{font-size:14.5px;color:var(--dim);margin-top:10px;text-align:center}
+.sources{font-size:13.5px;line-height:1.55;color:var(--dim);margin:12px 0 0;max-width:none}
+tr.repond td{background:#fbf4e8}
+.servos td .role{min-width:0}
+.servos td:first-child{min-width:9em}
+.servos td.n{white-space:normal;min-width:5.5em}
+.liste{list-style:none;padding:0;margin:18px 0 0;border-top:1px solid var(--line)}
+.liste li{border-bottom:1px solid var(--line);padding:14px 0}
+.liste b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px;display:block;margin-bottom:2px;line-height:1.3}
+.liste span{display:block;max-width:36em}
+.etapes{counter-reset:e;list-style:none;padding:0;margin:18px 0 0}
+.etapes li{counter-increment:e;position:relative;padding:0 0 22px 52px}
+.etapes li::before{content:counter(e);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;font-family:var(--mono);font-size:14px;display:flex;align-items:center;justify-content:center}
+.etapes b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18.5px;display:block;line-height:1.3;margin-bottom:4px;padding-top:5px}
+.etapes span{display:block;max-width:36em}
+.broches{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.broches table{font-size:14px}
+
+.fichiers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 0}
+.fichier{border:1px solid var(--line);border-left:3px solid var(--orange);padding:14px 16px;text-decoration:none;color:inherit;display:block}
+.fichier:hover{background:var(--tint)}
+.fichier .n{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px;display:block;margin-bottom:2px}
+.fichier .d{font-size:14.5px;color:var(--dim);display:block;line-height:1.45}
+.fichier .u{font-family:var(--mono);font-size:11.5px;color:var(--gold-small);display:block;margin-top:8px}
+
+.fin{margin:52px 0 0;padding:26px 0 0;border-top:3px solid var(--gold)}
+.fin .note{font-size:15.5px;color:var(--dim)}
+.btn{display:inline-block;background:var(--navy);color:#fff;font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;padding:14px 22px;border-radius:100px;text-decoration:none;margin:10px 0 0}
+.btn:hover{background:var(--navy-3)}
+.tel{display:block;font-family:var(--display);font-size:19px;color:var(--navy);text-decoration:none;margin:16px 0 0}
+.apres{margin-top:20px;font-size:15.5px;color:var(--dim)}
+footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
+footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
+footer .plan{margin:0 0 10px;line-height:2}
+footer .plan b{color:var(--gold);font-weight:400}
+footer p{margin:0;max-width:none}
+@media (max-width:760px){.plateaux{grid-template-columns:1fr 1fr}.chiffres{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:560px){.route thead{display:none}.route,.route tbody,.route tr,.route td{display:block;width:100%}.route tr{padding:8px 0;border-bottom:1px solid var(--line)}.route td{border:0;padding:3px 12px}.route td[data-l]:not([data-l=""])::before{content:attr(data-l) " : ";font-family:var(--mono);font-size:12px;color:var(--dim)}.route td.n{white-space:normal}.fichiers,.broches{grid-template-columns:1fr}.plateaux{gap:12px}.commandes .sep{display:none}}
+@media (max-width:480px){.bar .in{flex-direction:column;align-items:flex-start;gap:8px}.chiffres{grid-template-columns:1fr 1fr}#scene{height:68vh}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+
+<div class="bar"><div class="in">
+  <a class="logo" href="/">YM <span>IA</span> Conseil</a>
+  <a class="autre" href="/navitek/">Navitek N0</a>
+</div></div>
+
+<main>
+<article>
+
+  <div class="wrap">
+    <p class="code">Navitek &middot; N2 &middot; concept &middot; 9 novembre 2026</p>
+    <h1>Un humanoïde d'un mètre, <em>dont les actionneurs s'impriment</em>.</h1>
+    <p class="chapeau">N2 est encore un concept&nbsp;: un actionneur à réducteur cycloïdal imprimé et une jambe de cinq actionneurs, dessinés en CAO, avec
+      le couple de chaque articulation tiré d'une simulation. <strong>Rien n'est imprimé, et aucun calcul de résistance n'est fait</strong>&nbsp;:
+      la page dit ce qu'on sait et ce qu'on ne sait pas.</p>
+  </div>
+
+  <div class="large">
+    <div class="atelier">
+      <div id="scene" aria-label="Une jambe du concept Navitek N2 en 3D : faites-la tourner du doigt ou de la souris">
+        <div id="etat">Chargement des pièces…</div>
+      </div>
+      <div class="commandes" role="group" aria-label="Vue">
+        <button type="button" data-vue="face" aria-pressed="true">Face</button>
+        <button type="button" data-vue="cote" aria-pressed="false">Côté</button>
+        <button type="button" data-vue="dos" aria-pressed="false">Dos</button>
+        <span class="sep"></span>
+        <button type="button" id="eclater" aria-pressed="false">Éclater</button>
+      </div>
+      <div id="info" aria-live="polite"><span class="d">Touchez une pièce pour la reconnaître. Glissez pour tourner, pincez pour approcher.</span></div>
+    </div>
+    <div class="chiffres">
+      <div><b>56,2&nbsp;cm</b><span>jambe, du sol à la hanche</span></div>
+      <div><b>5</b><span>actionneurs par jambe</span></div>
+      <div><b>16:1</b><span>rapport du réducteur</span></div>
+      <div><b>72&nbsp;mm</b><span>de diamètre</span></div>
+      <div><b>76&nbsp;g</b><span>de PLA par actionneur</span></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="loi">
+      <p>Un concept&nbsp;: dessiné, contrôlé en collisions, simulé. Pas imprimé. Pas dimensionné en résistance.</p>
+      <p class="src">Les deux disques engrènent sur les 17 goupilles sans mordre (volume de morsure sous 0,5&nbsp;mm³) &middot; aucune collision entre les cinq
+        actionneurs &middot; la simulation est celle du robot de N1 agrandi, pas de la CAO de N2.</p>
+    </div>
+
+    <h2>Ce qui existe déjà à cette échelle</h2>
+    <p class="sous">Recherche en ligne le 8 novembre 2026 &middot; cahier R-039</p>
+    <p>À un mètre, <strong>le seul projet ouvert que nous ayons trouvé qui imprime ses actionneurs est le Berkeley Humanoid Lite</strong> (Chi et al., RSS 2025)&nbsp;:
+      22 réducteurs cycloïdaux imprimés sur un plateau de 200&nbsp;mm, pour moins de 5&nbsp;000&nbsp;$&nbsp;US au total, environ 133&nbsp;$ l'actionneur au plus bas. Sa taille est donnée à
+      environ un mètre et 16&nbsp;kg par un article, 80&nbsp;cm par un autre&nbsp;: nous ne l'avons pas vérifiée dans l'article. Les autres&nbsp;: l'Unitree R1 (1,21&nbsp;m, 4&nbsp;900 à 5&nbsp;900&nbsp;$, fermé),
+      Poppy (85&nbsp;cm, servos Dynamixel du commerce), K-Scale (Z-Bot de 40&nbsp;cm, K-Bot de 1,4&nbsp;m à 8&nbsp;999&nbsp;$).</p>
+
+    <h2>L'actionneur</h2>
+    <p class="sous">Réducteur cycloïdal 16:1 &middot; boîtier de 72&nbsp;mm &middot; tient sur un plateau de 200&nbsp;mm</p>
+    <p>Un moteur sans balais fait tourner un arbre à deux excentriques à 180°. Deux disques à 16 lobes, excentrés de 1,2&nbsp;mm, roulent dans 17 goupilles d'acier
+      logées dans le boîtier&nbsp;; à chaque tour du moteur, ils avancent d'un lobe. Six axes les relient à la bride de sortie. Seuls le boîtier, la bride et les disques sont imprimés
+      (76&nbsp;g et 4&nbsp;h&nbsp;15 par actionneur)&nbsp;; <strong>le moteur, les roulements, les goupilles, la visserie et l'électronique sont du commerce</strong>.</p>
+    <div class="defile"><table><thead><tr><th>Pièce imprimée</th><th>Qté (jambe)</th><th>Taille (mm)</th><th>Temps</th><th>PLA</th><th></th></tr></thead><tbody>
+      <tr><td><b>Boîtier</b><span class="role">porte 17 goupilles d'acier dans ses gorges ; se visse au moteur par 6 vis M3</span></td><td class="n">5</td><td class="n">72 × 72 × 36</td><td class="n">2&nbsp;h&nbsp;11</td><td class="n">41,2&nbsp;g</td><td><a class="lien" href="fichiers/stl/boitier.stl" download>STL</a></td></tr>
+      <tr><td><b>Bride de sortie</b><span class="role">reçoit les 6 axes qui traversent les disques ; se visse à la platine</span></td><td class="n">5</td><td class="n">66 × 66 × 30</td><td class="n">1&nbsp;h&nbsp;05</td><td class="n">17,4&nbsp;g</td><td><a class="lien" href="fichiers/stl/bride-sortie.stl" download>STL</a></td></tr>
+      <tr><td><b>Disque cycloïdal A</b><span class="role">16 lobes ; engrène sur les 17 goupilles ; excentré de +1,2 mm</span></td><td class="n">5</td><td class="n">51,5 × 51,5 × 8</td><td class="n">30&nbsp;min</td><td class="n">8,5&nbsp;g</td><td><a class="lien" href="fichiers/stl/disque-a.stl" download>STL</a></td></tr>
+      <tr><td><b>Disque cycloïdal B</b><span class="role">même profil tourné d'un demi-pas ; excentré de −1,2 mm</span></td><td class="n">5</td><td class="n">52,4 × 52,4 × 8</td><td class="n">30&nbsp;min</td><td class="n">8,5&nbsp;g</td><td><a class="lien" href="fichiers/stl/disque-b.stl" download>STL</a></td></tr>
+      <tr><td><b>Platine de cuisse</b><span class="role">relie les axes du genou et de la hanche</span></td><td class="n">1</td><td class="n">8 × 44 × 160</td><td class="n">2&nbsp;h&nbsp;08</td><td class="n">36&nbsp;g</td><td><a class="lien" href="fichiers/stl/platine-cuisse.stl" download>STL</a></td></tr>
+      <tr><td><b>Platine de tibia</b><span class="role">relie les axes de la cheville et du genou</span></td><td class="n">1</td><td class="n">8 × 44 × 160</td><td class="n">2&nbsp;h&nbsp;08</td><td class="n">36&nbsp;g</td><td><a class="lien" href="fichiers/stl/platine-tibia.stl" download>STL</a></td></tr>
+      <tr><td><b>Platine de liaison</b><span class="role">relie les deux axes d'une paire de hanche ou de cheville</span></td><td class="n">2</td><td class="n">8 × 44 × 80</td><td class="n">1&nbsp;h&nbsp;04</td><td class="n">18,2&nbsp;g</td><td><a class="lien" href="fichiers/stl/platine-pas.stl" download>STL</a></td></tr>
+      <tr><td><b>Pied</b><span class="role">se visse sur la cheville-roulis</span></td><td class="n">1</td><td class="n">190 × 90 × 10</td><td class="n">2&nbsp;h&nbsp;54</td><td class="n">71,3&nbsp;g</td><td><a class="lien" href="fichiers/stl/pied.stl" download>STL</a></td></tr>
+    </tbody></table></div>
+
+    <h2>Le couple que la marche demande</h2>
+    <p class="sous">Simulation à l'échelle &middot; couple moyen / pic en N·m, jambe gauche &middot; cahier R-040</p>
+    <p>Le modèle est <strong>le robot de N1 agrandi à un mètre</strong> (15&nbsp;kg, dont 550&nbsp;g estimés par actionneur), avec des actionneurs sans limite de couple&nbsp;: on mesure ce que le mouvement
+      <em>demande</em>. La même marche à quinze réglages que pour N1 a été cherchée trois fois sans plafond, puis avec un plafond de 55&nbsp;N·m, puis de 18&nbsp;N·m.
+      Aucune marche ne tombe.</p>
+    <figure class="video">
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche du N2 simplifié avec un plafond de 18 newtons-mètres">
+        <source src="simulation/n2-marche.mp4" type="video/mp4"></video>
+      <figcaption>Le robot de N1 agrandi, plafonné à 18&nbsp;N·m par articulation (graine 2)&nbsp;: 12&nbsp;s. Un pas lent.</figcaption>
+    </figure>
+    <div class="defile"><table><thead><tr><th>Série</th><th>Graine</th><th>Avance, 12 s</th><th>Hanche, côté</th><th>Hanche, avant</th><th>Genou</th><th>Cheville, avant</th><th>Cheville, côté</th></tr></thead><tbody><tr><td class="n">sans plafond</td><td class="n">1</td><td class="n">98&nbsp;cm</td><td class="n">41&nbsp;/&nbsp;131</td><td class="n">3&nbsp;/&nbsp;14</td><td class="n">3&nbsp;/&nbsp;20</td><td class="n">4&nbsp;/&nbsp;22</td><td class="n">10&nbsp;/&nbsp;57</td></tr><tr><td class="n">sans plafond</td><td class="n">2</td><td class="n">127&nbsp;cm</td><td class="n">41&nbsp;/&nbsp;135</td><td class="n">4&nbsp;/&nbsp;15</td><td class="n">4&nbsp;/&nbsp;14</td><td class="n">5&nbsp;/&nbsp;22</td><td class="n">8&nbsp;/&nbsp;47</td></tr><tr><td class="n">sans plafond</td><td class="n">3</td><td class="n">33&nbsp;cm</td><td class="n">22&nbsp;/&nbsp;66</td><td class="n">3&nbsp;/&nbsp;10</td><td class="n">4&nbsp;/&nbsp;8</td><td class="n">5&nbsp;/&nbsp;12</td><td class="n">7&nbsp;/&nbsp;38</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">1</td><td class="n">94&nbsp;cm</td><td class="n">24&nbsp;/&nbsp;55</td><td class="n">5&nbsp;/&nbsp;11</td><td class="n">5&nbsp;/&nbsp;13</td><td class="n">5&nbsp;/&nbsp;26</td><td class="n">9&nbsp;/&nbsp;55</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">2</td><td class="n">62&nbsp;cm</td><td class="n">5&nbsp;/&nbsp;14</td><td class="n">5&nbsp;/&nbsp;21</td><td class="n">5&nbsp;/&nbsp;19</td><td class="n">8&nbsp;/&nbsp;50</td><td class="n">4&nbsp;/&nbsp;21</td></tr><tr><td class="n">plafond 55 N·m</td><td class="n">3</td><td class="n">28&nbsp;cm</td><td class="n">21&nbsp;/&nbsp;55</td><td class="n">5&nbsp;/&nbsp;14</td><td class="n">3&nbsp;/&nbsp;8</td><td class="n">4&nbsp;/&nbsp;19</td><td class="n">6&nbsp;/&nbsp;21</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">1</td><td class="n">28&nbsp;cm</td><td class="n">8&nbsp;/&nbsp;18</td><td class="n">7&nbsp;/&nbsp;18</td><td class="n">8&nbsp;/&nbsp;17</td><td class="n">8&nbsp;/&nbsp;18</td><td class="n">4&nbsp;/&nbsp;18</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">2</td><td class="n">57&nbsp;cm</td><td class="n">10&nbsp;/&nbsp;18</td><td class="n">3&nbsp;/&nbsp;13</td><td class="n">3&nbsp;/&nbsp;10</td><td class="n">4&nbsp;/&nbsp;18</td><td class="n">5&nbsp;/&nbsp;18</td></tr><tr><td class="n">plafond 18 N·m</td><td class="n">3</td><td class="n">31&nbsp;cm</td><td class="n">5&nbsp;/&nbsp;15</td><td class="n">8&nbsp;/&nbsp;18</td><td class="n">7&nbsp;/&nbsp;14</td><td class="n">8&nbsp;/&nbsp;18</td><td class="n">3&nbsp;/&nbsp;10</td></tr></tbody></table></div>
+    <p class="sources">Les bras demandent au plus 2,7&nbsp;N·m et le cou 0,1&nbsp;N·m. Accroupi sur deux jambes à 90° de genou&nbsp;: le genou demande 3,6&nbsp;N·m en moyenne,
+      6,8 au pic. Modèle simplifié&nbsp;; masses d'actionneur et d'électronique estimées&nbsp;; marches réglées sur le modèle lui-même.</p>
+
+    <h3>Ce que ça dit du réducteur imprimé</h3>
+    <ul class="liste">
+      <li><b>Ce qu'on a trouvé sur les réducteurs imprimés.</b><span>3,43&nbsp;N·m mesurés comme couple de service pour un 13:1 amateur&nbsp;; 18,3&nbsp;N·m au maximum pour un disque de PLA 24:1 (taille inconnue)&nbsp;;
+        55&nbsp;N·m de pointe pour un 20:1 du projet OpenCycloid. Ce sont des chiffres de sources différentes, de tailles différentes, qu'on ne peut pas comparer au nôtre.</span></li>
+      <li><b>Les bras et le cou</b><span>demandent au plus 2,7&nbsp;N·m&nbsp;: à portée d'un réducteur imprimé.</span></li>
+      <li><b>La hanche de côté et les chevilles</b><span>demandent des moyennes de 5 à 41&nbsp;N·m et des pics de 15 à 135&nbsp;N·m&nbsp;: bien au-delà du couple de service trouvé. <strong>Il faut un banc, ou un réducteur
+        du commerce à ces articulations.</strong></span></li>
+      <li><b>Le genou et la hanche d'avant</b><span>demandent 3 à 8&nbsp;N·m en moyenne&nbsp;: au-dessus de 3,4&nbsp;N·m, en dessous de 18&nbsp;N·m. Indécidable sur ces sources.</span></li>
+    </ul>
+
+    <h2>Ce qu'on ne sait pas</h2>
+    <ul class="liste">
+      <li><b>La durée de vie.</b><span>Nous n'avons trouvé aucune donnée vérifiée sur le nombre de cycles d'un réducteur cycloïdal ou planétaire imprimé. Un blogue met en garde contre la fatigue du PLA
+        aux courbes des lobes&nbsp;; nous ne savons pas si c'est vrai à cette taille.</span></li>
+      <li><b>La résistance en compression.</b><span>Les goupilles appuient sur les disques&nbsp;: c'est la compression qui compte. Nous n'avons trouvé que des données de traction (PLA de 43,5 à 59&nbsp;MPa selon la source).</span></li>
+      <li><b>Le jeu, le bruit, l'échauffement.</b><span>Un mémoire de l'Université de Twente note que l'impression augmente le jeu&nbsp;; il propose un disque conique ou un pignon fendu.</span></li>
+      <li><b>Le prix.</b><span>Aucun moteur sans balais du bon calibre n'a été relevé. Le seul repère est le Berkeley Humanoid Lite (moins de 5&nbsp;000&nbsp;$ US pour le robot, 133&nbsp;$ l'actionneur au plus bas).</span></li>
+    </ul>
+
+    <h2>La sécurité d'abord</h2>
+    <p>À un mètre et quinze kilos, un robot qui tombe blesse. Aucune norme publiée ne dit à partir de quel couple ou de quelle masse un humanoïde est sûr (ISO 13482:2014 le dit elle-même pour les impacts&nbsp;; ISO 25785-1, pour les robots à
+      stabilité active, n'est pas encore publiée à notre connaissance). Navitek N2 ne se dira donc pas «&nbsp;conforme&nbsp;». Il prévoit un arrêt d'urgence matériel qui coupe la puissance sans logiciel, une limite de couple et
+      de vitesse dans chaque variateur, des actionneurs qu'on retourne à la main, des carters, et des premiers essais sur un portique, loin de tout public.</p>
+
+    <h2>Et après</h2>
+    <p>Imprimer <strong>un seul actionneur</strong> et le mesurer sur un banc&nbsp;: couple de rupture, couple continu, jeu, température. Ensuite seulement, décider articulation par articulation entre l'imprimé et le commerce,
+      dessiner le torse, simuler la vraie CAO, imprimer une jambe. <a class="lien" href="/navitek/n1/">N1</a> (63&nbsp;cm, servos à bus) est la version qui peut s'imprimer d'abord&nbsp;; N3, la taille d'un adulte, est décrit dans
+      <a class="lien" href="/navitek/n3/">sa page</a>.</p>
+
+    <h2 id="fichiers">Les fichiers</h2>
+    <p class="sous">Licence CC BY 4.0&nbsp;: imprimez, modifiez, partagez, en nommant Navitek N2</p>
+    <div class="fichiers">
+      <a class="fichier" href="fichiers/navitek-n2-stl.zip" download><span class="n">Les pièces imprimées en STL</span>
+        <span class="d">Boîtier, bride, disques, platines, pied.</span><span class="u">0,2&nbsp;Mo &middot; ZIP</span></a>
+      <a class="fichier" href="fichiers/navitek-n2-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
+        <span class="d">Chaque pièce, la jambe, et <code>n2.py</code>, le script FreeCAD qui les dessine.</span><span class="u">3,4&nbsp;Mo &middot; ZIP</span></a>
+      <a class="fichier" href="fichiers/navitek-n2-simulation.zip" download><span class="n">La simulation à l'échelle</span>
+        <span class="d">Le modèle, les scripts des essais et les résultats en JSON.</span><span class="u">0&nbsp;Mo &middot; ZIP</span></a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="fin">
+      <p class="note">Concept&nbsp;: tout peut changer à la première mesure. Ce qui est vérifié et ce qui ne l'est pas est dit plus haut, sans arrondi.</p>
+      <h2 style="margin-top:30px">Vous imprimez des réducteurs&nbsp;?</h2>
+      <p>Dites-nous le couple de rupture et le nombre de cycles que vous avez mesurés sur un réducteur imprimé, en quelle matière et à quelle taille. C'est la donnée qui nous manque le plus.</p>
+      <a class="btn" href="mailto:yoan@ymiaconseil.com?subject=Navitek%20N2&amp;body=Bonjour%20Yoan%2C%0A%0AR%C3%A9ducteur%20imprim%C3%A9%20%3A%20%0AMati%C3%A8re%20et%20taille%20%3A%20%0ACouple%20et%20cycles%20mesur%C3%A9s%20%3A%20%0A%0AMerci.">Écrire à Yoan</a>
+      <a class="tel" href="tel:+15149268633">ou appelez&nbsp;: 514 926-8633</a>
+      <p class="apres"><a class="lien" href="/navitek/">Navitek N0</a> &middot; <a class="lien" href="/navitek/n1/">Navitek N1</a> &middot; <a class="lien" href="/navitek/n3/">Navitek N3</a> &middot;
+        <a class="lien" href="/methode/">La méthode</a> &middot; <a class="lien" href="/">Retour à l'accueil</a></p>
+    </div>
+  </div>
+
+</article>
+</main>
+
+<footer>
+  <nav class="plan" aria-label="Plan du site"><a href="/">Accueil</a> &middot; <a href="/pourquoi/">Pourquoi</a> &middot; <a href="/methode/">La méthode</a> &middot; <a href="/formation/">Formation</a> &middot; <a href="/plan/">PlanJump</a> &middot; <a href="/easyread/">Syllabes Faciles</a> &middot; <a href="/navitek/">Navitek</a> &middot; <b>N2</b></nav>
+  <p>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a> &middot; <a href="tel:+15149268633">514 926-8633</a></p>
+</footer>
+
+<script type="module">
+import { visionneuse } from "./visionneuse.js";
+const INFO = {"moteur": {"nom": "Moteur sans balais (volume)", "role": "du commerce ; calibre non choisi", "n": 5, "imprimee": false}, "boitier": {"nom": "Boîtier", "role": "porte 17 goupilles d'acier dans ses gorges ; se visse au moteur par 6 vis M3", "n": 5, "imprimee": true, "temps": "2 h 11", "g": "41,2", "plateau": "", "couleur": ""}, "excentrique": {"nom": "Arbre excentrique (volume)", "role": "du commerce ou usiné ; deux excentriques à 180°", "n": 5, "imprimee": false}, "disque-a": {"nom": "Disque cycloïdal A", "role": "16 lobes ; engrène sur les 17 goupilles ; excentré de +1,2 mm", "n": 5, "imprimee": true, "temps": "30 min", "g": "8,5", "plateau": "", "couleur": ""}, "disque-b": {"nom": "Disque cycloïdal B", "role": "même profil tourné d'un demi-pas ; excentré de −1,2 mm", "n": 5, "imprimee": true, "temps": "30 min", "g": "8,5", "plateau": "", "couleur": ""}, "bride-sortie": {"nom": "Bride de sortie", "role": "reçoit les 6 axes qui traversent les disques ; se visse à la platine", "n": 5, "imprimee": true, "temps": "1 h 05", "g": "17,4", "plateau": "", "couleur": ""}, "goupille": {"nom": "Goupille d'acier de 6 mm", "role": "du commerce ; 17 par actionneur", "n": 85, "imprimee": false}, "pied": {"nom": "Pied", "role": "se visse sur la cheville-roulis", "n": 1, "imprimee": true, "temps": "2 h 54", "g": "71,3", "plateau": "", "couleur": ""}, "platine-pas": {"nom": "Platine de liaison", "role": "relie les deux axes d'une paire de hanche ou de cheville", "n": 2, "imprimee": true, "temps": "1 h 04", "g": "18,2", "plateau": "", "couleur": ""}, "platine-tibia": {"nom": "Platine de tibia", "role": "relie les axes de la cheville et du genou", "n": 1, "imprimee": true, "temps": "2 h 08", "g": "36", "plateau": "", "couleur": ""}, "platine-cuisse": {"nom": "Platine de cuisse", "role": "relie les axes du genou et de la hanche", "n": 1, "imprimee": true, "temps": "2 h 08", "g": "36", "plateau": "", "couleur": ""}};
+const etat = document.getElementById("etat");
+const info = document.getElementById("info");
+const aide = info.innerHTML;
+let v = null;
+function montrer(inst) {
+  if (!inst) { v.surligner(null); info.innerHTML = aide; return; }
+  const p = INFO[inst.piece];
+  v.surligner(inst.piece);
+  const imp = p.imprimee ? " · imprimée : " + p.temps + ", " + p.g + " g" : " · du commerce";
+  info.innerHTML = "<b></b> <span class='d'></span><br><span class='d'></span><button type='button'>Tout montrer</button>";
+  info.querySelector("b").textContent = p.nom;
+  info.querySelectorAll(".d")[0].textContent = p.n + " dans la jambe" + imp;
+  info.querySelectorAll(".d")[1].textContent = p.role[0].toUpperCase() + p.role.slice(1) + ".";
+  info.querySelector("button").onclick = () => montrer(null);
+}
+try {
+  v = await visionneuse(document.getElementById("scene"), "pieces/", {
+    vue: "cote",
+    progres: f => { etat.textContent = "Chargement des pièces… " + Math.round(f * 100) + " %"; },
+    choisir: inst => montrer(inst),
+  });
+  etat.hidden = true;
+  const boutonsVue = document.querySelectorAll("[data-vue]");
+  boutonsVue.forEach(b => b.addEventListener("click", () => {
+    boutonsVue.forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    v.cadrer(b.dataset.vue);
+  }));
+  document.querySelector("[data-vue=face]").setAttribute("aria-pressed", "false");
+  document.querySelector("[data-vue=cote]").setAttribute("aria-pressed", "true");
+  const be = document.getElementById("eclater");
+  be.addEventListener("click", () => {
+    const vers = be.getAttribute("aria-pressed") === "true" ? 0 : 0.8;
+    be.setAttribute("aria-pressed", String(vers > 0));
+    be.textContent = vers > 0 ? "Assembler" : "Éclater";
+    const de = v.getEclat(), t0 = performance.now();
+    (function pas(t) {
+      const k = Math.min(1, (t - t0) / 900), e = k * k * (3 - 2 * k);
+      v.eclater(de + (vers - de) * e);
+      v.cadrer();
+      if (k < 1) requestAnimationFrame(pas);
+    })(t0);
+  });
+  window.N0_PRET = true;
+} catch (e) {
+  etat.textContent = "La vue 3D ne s'ouvre pas sur cet appareil.";
+  info.textContent = "Les fichiers sont plus bas.";
+  window.N0_PRET = true;
+}
+</script>
+</body>
+</html>

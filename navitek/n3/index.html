@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navitek N3, un humanoïde de 1,5 m : ce qui s'imprime et ce qui ne s'imprime pas</title>
+<meta name="description" content="Navitek N3, document de concept d'un humanoïde de 1,4 à 1,6 m : ce qui ne peut pas être imprimé, la sécurité d'un robot de taille adulte, ce que coûtent les actionneurs, le couple demandé selon une simulation à l'échelle. Aucune CAO, rien de construit.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1f3a">
+<meta property="og:title" content="Navitek N3, un humanoïde de 1,5 m : un document de concept">
+<meta property="og:description" content="Ce qui ne s'imprime pas, la sécurité, le coût des actionneurs, le couple. Aucune CAO, rien de construit.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ymiaconseil.com/navitek/n3/">
+<link rel="canonical" href="https://ymiaconseil.com/navitek/n3/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Lora:ital,wght@0,400..600;1,400..500&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --navy-3:#16355e; --gold:#d4a843; --gold-small:#8a6b18;
+  --ink-body:#2a2620; --dim:#5c5c5c; --line:#e4e2dd; --paper:#fff; --tint:#f6f4f0;
+  --orange:#f26b1d; --orange-texte:#b5490c; --gris:#7d838c;
+  --display:'Newsreader',Georgia,serif; --body:'Lora',Georgia,serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink-body);font-family:var(--body);font-size:17px;line-height:1.66;display:flex;flex-direction:column}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar .in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.bar a.logo{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar a.logo span{color:var(--gold)}
+.bar a.autre{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#a8bad0;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.45);white-space:nowrap}
+.bar a.autre:hover{color:#fff}
+main{flex:1;padding:44px 20px 8px}
+.wrap{max-width:660px;margin:0 auto;width:100%}
+.large{max-width:900px;margin:0 auto;width:100%}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(30px,7vw,46px);line-height:1.1;margin:0 0 16px;text-wrap:balance}
+h1 em{font-style:italic;color:var(--orange-texte)}
+.chapeau{font-size:18.5px;color:#3c3830;margin:0 0 22px;max-width:34em}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(22px,4.4vw,28px);line-height:1.2;margin:48px 0 4px;text-wrap:balance}
+.sous{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-small);margin:0 0 16px;max-width:none}
+p{margin:0 0 15px;max-width:34em}
+strong{font-weight:600;color:#1a1814}
+code{font-family:var(--mono);font-size:.84em;background:var(--tint);padding:1px 5px;border-radius:3px}
+.lien{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
+.lien:hover{background:var(--tint)}
+
+/* la vue 3D */
+.atelier{margin:26px auto 0;border:1px solid var(--line);background:linear-gradient(#fbfaf7,#f1eee8)}
+#scene{position:relative;height:min(78vh,640px);min-height:380px;touch-action:none;cursor:grab}
+#scene canvas{display:block;width:100%;height:100%}
+#scene:active{cursor:grabbing}
+#etat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--dim)}
+#etat[hidden]{display:none}
+#etat img{max-height:100%;max-width:100%}
+.commandes{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 14px;border-top:1px solid var(--line);background:var(--paper)}
+.commandes button{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--paper);color:var(--navy);border:1px solid #cfcac0;border-radius:100px;padding:8px 14px;cursor:pointer}
+.commandes button:hover{background:var(--tint)}
+.commandes button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.commandes .sep{flex:1}
+#info{padding:12px 16px 14px;border-top:1px solid var(--line);background:var(--paper);font-size:15px;line-height:1.5;min-height:3.6em}
+#info b{font-family:var(--display);font-size:17px;color:var(--navy)}
+#info .d{color:var(--dim)}
+#info button{font:inherit;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;border:0;background:none;color:var(--gold-small);border-bottom:1px solid rgba(212,168,67,.6);padding:0;margin-left:8px;cursor:pointer}
+
+/* les chiffres */
+.chiffres{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:22px auto 0}
+.chiffres div{background:var(--paper);padding:14px 12px}
+.chiffres b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(22px,4vw,30px);color:var(--navy);line-height:1.1;font-variant-numeric:tabular-nums}
+.chiffres span{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+
+.loi{margin:26px 0;padding:20px 22px;background:var(--navy);border-left:5px solid var(--gold)}
+.loi p{margin:0;max-width:30em;font-family:var(--display);font-size:clamp(19px,3.8vw,23px);line-height:1.35;color:#fff}
+.loi .src{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:#a8bad0;margin-top:12px;max-width:none;line-height:1.7}
+
+/* les plateaux */
+.plateaux{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:20px auto 0}
+.plateau{margin:0;border:1px solid var(--line);background:var(--paper)}
+.plateau img{display:block;width:100%;height:auto;aspect-ratio:1;background:#eceff3}
+.plateau figcaption{padding:12px 14px 14px;display:flex;flex-direction:column;gap:2px;font-size:15px;line-height:1.4}
+.plateau .pn{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.plateau b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:17px}
+.plateau .pc{font-family:var(--mono);font-size:12.5px;color:var(--ink-body);font-variant-numeric:tabular-nums}
+.plateau a{align-self:flex-start;margin-top:6px;font-size:14.5px}
+.pastille{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 6px 0 8px;vertical-align:0}
+.pastille.orange{background:var(--orange)} .pastille.gris{background:var(--gris)}
+.reglages{font-size:15.5px;color:var(--dim);margin-top:16px}
+
+/* les tableaux */
+.defile{overflow-x:auto;margin:18px 0 0;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.4}
+th{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:left;padding:10px 12px;background:var(--tint);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:16px}
+td .role{display:block;color:var(--dim);font-size:13.5px;min-width:16em}
+td.n{font-family:var(--mono);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+tfoot td{font-family:var(--mono);font-size:13px;background:var(--tint);font-weight:600}
+
+h3{font-family:var(--display);font-weight:600;color:var(--navy);font-size:20px;line-height:1.25;margin:34px 0 8px}
+.video{margin:22px 0 0}
+.video video{display:block;width:100%;height:auto;aspect-ratio:4/3;background:#000;border:1px solid var(--line)}
+.video figcaption{font-size:14.5px;color:var(--dim);margin-top:8px;line-height:1.5;max-width:36em}
+.schema{margin:22px auto 0;max-width:620px}
+.schema svg{display:block;width:100%;height:auto}
+.schema figcaption{font-size:14.5px;color:var(--dim);margin-top:10px;text-align:center}
+.sources{font-size:13.5px;line-height:1.55;color:var(--dim);margin:12px 0 0;max-width:none}
+tr.repond td{background:#fbf4e8}
+.servos td .role{min-width:0}
+.servos td:first-child{min-width:9em}
+.servos td.n{white-space:normal;min-width:5.5em}
+.liste{list-style:none;padding:0;margin:18px 0 0;border-top:1px solid var(--line)}
+.liste li{border-bottom:1px solid var(--line);padding:14px 0}
+.liste b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px;display:block;margin-bottom:2px;line-height:1.3}
+.liste span{display:block;max-width:36em}
+.etapes{counter-reset:e;list-style:none;padding:0;margin:18px 0 0}
+.etapes li{counter-increment:e;position:relative;padding:0 0 22px 52px}
+.etapes li::before{content:counter(e);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;font-family:var(--mono);font-size:14px;display:flex;align-items:center;justify-content:center}
+.etapes b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18.5px;display:block;line-height:1.3;margin-bottom:4px;padding-top:5px}
+.etapes span{display:block;max-width:36em}
+.broches{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.broches table{font-size:14px}
+
+.fichiers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 0}
+.fichier{border:1px solid var(--line);border-left:3px solid var(--orange);padding:14px 16px;text-decoration:none;color:inherit;display:block}
+.fichier:hover{background:var(--tint)}
+.fichier .n{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px;display:block;margin-bottom:2px}
+.fichier .d{font-size:14.5px;color:var(--dim);display:block;line-height:1.45}
+.fichier .u{font-family:var(--mono);font-size:11.5px;color:var(--gold-small);display:block;margin-top:8px}
+
+.fin{margin:52px 0 0;padding:26px 0 0;border-top:3px solid var(--gold)}
+.fin .note{font-size:15.5px;color:var(--dim)}
+.btn{display:inline-block;background:var(--navy);color:#fff;font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;padding:14px 22px;border-radius:100px;text-decoration:none;margin:10px 0 0}
+.btn:hover{background:var(--navy-3)}
+.tel{display:block;font-family:var(--display);font-size:19px;color:var(--navy);text-decoration:none;margin:16px 0 0}
+.apres{margin-top:20px;font-size:15.5px;color:var(--dim)}
+footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
+footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
+footer .plan{margin:0 0 10px;line-height:2}
+footer .plan b{color:var(--gold);font-weight:400}
+footer p{margin:0;max-width:none}
+@media (max-width:760px){.plateaux{grid-template-columns:1fr 1fr}.chiffres{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:560px){.route thead{display:none}.route,.route tbody,.route tr,.route td{display:block;width:100%}.route tr{padding:8px 0;border-bottom:1px solid var(--line)}.route td{border:0;padding:3px 12px}.route td[data-l]:not([data-l=""])::before{content:attr(data-l) " : ";font-family:var(--mono);font-size:12px;color:var(--dim)}.route td.n{white-space:normal}.fichiers,.broches{grid-template-columns:1fr}.plateaux{gap:12px}.commandes .sep{display:none}}
+@media (max-width:480px){.bar .in{flex-direction:column;align-items:flex-start;gap:8px}.chiffres{grid-template-columns:1fr 1fr}#scene{height:68vh}}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="in">
+  <a class="logo" href="/">YM <span>IA</span> Conseil</a>
+  <a class="autre" href="/navitek/">Navitek N0</a>
+</div></div>
+
+<main>
+<article>
+
+  <div class="wrap">
+    <p class="code">Navitek &middot; N3 &middot; document de concept &middot; 9 novembre 2026</p>
+    <h1>Un humanoïde de 1,5&nbsp;m&nbsp;: <em>ce qui s'imprime, et ce qui ne s'imprime pas</em>.</h1>
+    <p class="chapeau">N3 est le but de la série, pas un projet de construction. Ce document dit ce qu'on a trouvé, ce qu'une simulation simplifiée donne comme couple, et surtout ce
+      qu'on ne sait pas. <strong>Aucune CAO de N3 n'existe, rien n'est construit.</strong></p>
+  </div>
+
+  <div class="large">
+    <figure class="video">
+      <img src="quatre-robots.png" alt="Les quatre robots de la série Navitek de la même taille de caméra : N0 de 33 centimètres, N1 de 63 centimètres, N2 d'un mètre et N3 d'un mètre et demi" style="display:block;width:100%;height:auto;background:#000;border:1px solid var(--line)">
+      <figcaption>De gauche à droite&nbsp;: N0 (33&nbsp;cm), N1 (63,5&nbsp;cm), N2 (1&nbsp;m) et N3 (1,5&nbsp;m), à la même échelle. N0 et N1 sont des CAO&nbsp;; <strong>N2 et N3 sont le robot de N1 agrandi</strong>, un modèle
+        de simulation, pas un dessin de ces versions.</figcaption>
+    </figure>
+    <div class="chiffres">
+      <div><b>1,4 à 1,6&nbsp;m</b><span>de haut</span></div>
+      <div><b>27&nbsp;kg</b><span>simulés (estimation)</span></div>
+      <div><b>25+</b><span>articulations (17 simulées)</span></div>
+      <div><b>0</b><span>pièce dessinée</span></div>
+      <div><b>0</b><span>pièce imprimée</span></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="loi">
+      <p>Un document, pas un plan de fabrication. Il fixe ce qu'il faut prouver avant de construire.</p>
+      <p class="src">Chaque chiffre dit sa source ou dit qu'il est une estimation. Les fourchettes de coût viennent de sites spécialisés et d'analystes, pas de devis.</p>
+    </div>
+
+    <h2>N3 n'est pas «&nbsp;entièrement imprimé&nbsp;»</h2>
+    <p class="sous">Entièrement réimprimable pour sa structure, achetée pour le reste</p>
+    <div class="defile"><table class="servos"><thead><tr><th>Pièce</th><th>Pourquoi on l'achète</th></tr></thead><tbody>
+      <tr><td><b>Roulements, axes, goupilles, visserie</b></td><td>La précision et la dureté que le plastique n'a pas. Même les actionneurs imprimés du Berkeley Humanoid Lite utilisent roulements, inserts et vis du commerce.</td></tr>
+      <tr><td><b>Moteurs sans balais</b></td><td>Du cuivre, des aimants, de l'acier de stator&nbsp;: un stator qui n'est pas en tôles d'acier ne fonctionne pas (forum SimpleFOC).</td></tr>
+      <tr><td><b>Réducteurs de hanche et de genou</b></td><td>Les couples demandés (plus bas) dépassent ce que des réducteurs imprimés ont été vus tenir&nbsp;; pas de donnée de durée de vie.</td></tr>
+      <tr><td><b>Batterie et sa protection, variateurs, carte, capteurs, caméra, câbles</b></td><td>De la chimie et de l'électronique.</td></tr>
+      <tr><td><b>Pièces très chargées</b> (bassin, fémur, pied, cadre du torse)</td><td>Le plastique y est limite&nbsp;: PLA de 43,5 à 59&nbsp;MPa en traction selon la source, nylon chargé de carbone 74,5&nbsp;MPa dans une étude&nbsp;; <strong>aucune donnée de compression relevée</strong>. Des renforts en métal là où il le faut.</td></tr>
+      <tr><td><b>Structure, carters, membres</b></td><td><b>S'impriment et se réimpriment.</b> C'est la partie qui reste fidèle à la mission&nbsp;: une pièce cassée se refait.</td></tr>
+    </tbody></table></div>
+
+    <h2>La sécurité d'un robot de taille adulte</h2>
+    <p class="sous">Aucune norme publiée ne dit où est la limite</p>
+    <p>ISO 13482:2014, la norme des robots de soins personnels, dit elle-même que pour les impacts «&nbsp;aucune donnée exhaustive et reconnue internationalement, par exemple des limites de
+      douleur ou de blessure, n'existe&nbsp;». ISO 25785-1, pour les robots à stabilité activement commandée (les humanoïdes en font partie), vise les milieux industriels où le public est exclu&nbsp;; son stade
+      est donné de façon contradictoire par nos sources (projet de comité ou projet de travail) et il faut le vérifier sur le site de l'ISO. <strong>Navitek N3 ne se dira donc jamais «&nbsp;conforme&nbsp;»</strong>. Il prend des précautions,
+      et refuse de marcher près de gens tant qu'elles ne sont pas toutes en place&nbsp;:</p>
+    <ul class="liste">
+      <li><b>Un arrêt d'urgence matériel</b><span>qui coupe la puissance sans passer par un logiciel.</span></li>
+      <li><b>Une limite de couple et de vitesse</b><span>dans chaque variateur, et des actionneurs qu'on retourne à la main.</span></li>
+      <li><b>Des carters</b><span>aux endroits qui pincent&nbsp;; une batterie avec protection et fusible&nbsp;; une masse aussi basse que possible (le modèle simulé pèse environ 27&nbsp;kg).</span></li>
+      <li><b>Des premiers essais sur un portique</b><span>sans public ni enfant, jamais seul.</span></li>
+    </ul>
+
+    <h2>Ce que coûtent les actionneurs</h2>
+    <p class="sous">Des ordres de grandeur d'analystes, pas des devis</p>
+    <p>Dans un actionneur rotatif de robot humanoïde, un fournisseur donne la répartition du coût&nbsp;: le réducteur harmonique environ 36&nbsp;%, le capteur de couple 30&nbsp;%, le moteur sans cadre 13,5&nbsp;%. Un réducteur harmonique haut de gamme se
+      chiffre à 800 à 1&nbsp;500&nbsp;$&nbsp;; un jeu planétaire à un cinquième environ&nbsp;; les actionneurs planétaires à faible rapport de l'Unitree G1 seraient autour de 300&nbsp;$ pièce (estimation d'un site, pas un prix de catalogue)&nbsp;;
+      à l'autre bout, un actionneur imprimé ouvert est estimé de 40 à 133&nbsp;$. Pour 25 articulations, cela donne <strong>de l'ordre de 1&nbsp;000&nbsp;$ (tout imprimé) à plusieurs dizaines de milliers de dollars (hanches et genoux harmoniques avec capteur de couple)</strong>.
+      Ce n'est pas un prix&nbsp;: c'est l'étendue de ce qu'on ne sait pas.</p>
+
+    <h2>Le couple à 1,5 m, selon une simulation simplifiée</h2>
+    <p class="sous">Le robot de N1 agrandi &middot; couple en N·m &middot; cahier R-042</p>
+    <p>Le modèle est <strong>le robot de N1 agrandi à 1,5&nbsp;m</strong> (structure plus légère d'un facteur 0,6 par hypothèse, 900&nbsp;g par actionneur et 3,5&nbsp;kg de pile et d'électronique, estimés), à 17 articulations
+      (ni les mains ni la rotation de la hanche ne sont modélisées), avec des actionneurs sans limite de couple&nbsp;: on mesure ce que le mouvement demande. La loi d'échelle (couple proportionnel à la masse et à la longueur)
+      prévoit environ 2,7 fois les couples de N2&nbsp;; elle se vérifie sur la statique&nbsp;:</p>
+    <div class="defile"><table><thead><tr><th>Genou</th><th>N2 : genou moyen / pic</th><th>N3 : genou moyen / pic</th></tr></thead><tbody><tr><td class="n">40°</td><td class="n">1,6&nbsp;/&nbsp;2,6</td><td class="n">4,8&nbsp;/&nbsp;6,2</td></tr><tr><td class="n">70°</td><td class="n">2,8&nbsp;/&nbsp;5</td><td class="n">8&nbsp;/&nbsp;12</td></tr><tr><td class="n">90°</td><td class="n">3,6&nbsp;/&nbsp;6,8</td><td class="n">9,8&nbsp;/&nbsp;16,4</td></tr></tbody></table></div>
+    <p class="sources">Accroupi sur deux jambes. Moyen sur la dernière seconde, pic après la mise en place.</p>
+    <figure class="video">
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche du N3 simplifié">
+        <source src="simulation/n3-marche.mp4" type="video/mp4"></video>
+      <figcaption>Le robot de N1 agrandi à 1,5&nbsp;m, actionneurs sans limite (graine 3)&nbsp;: 12&nbsp;s.</figcaption>
+    </figure>
+    <p>En marche, la même marche à quinze réglages que pour N1, cherchée trois fois, demande ceci à la jambe gauche (couple moyen en valeur absolue / pic, en N·m)&nbsp;:</p>
+    <div class="defile"><table><thead><tr><th>Graine</th><th>Avance, 12 s</th><th>Fin</th><th>Hanche, côté</th><th>Hanche, avant</th><th>Genou</th><th>Cheville, avant</th><th>Cheville, côté</th></tr></thead><tbody><tr><td class="n">1</td><td class="n">29&nbsp;cm</td><td class="n">debout</td><td class="n">34&nbsp;/&nbsp;130</td><td class="n">20&nbsp;/&nbsp;141</td><td class="n">32&nbsp;/&nbsp;158</td><td class="n">39&nbsp;/&nbsp;200</td><td class="n">19&nbsp;/&nbsp;155</td></tr><tr><td class="n">2</td><td class="n">34&nbsp;cm</td><td class="n">debout</td><td class="n">7&nbsp;/&nbsp;19</td><td class="n">8&nbsp;/&nbsp;34</td><td class="n">8&nbsp;/&nbsp;34</td><td class="n">12&nbsp;/&nbsp;49</td><td class="n">6&nbsp;/&nbsp;23</td></tr><tr><td class="n">3</td><td class="n">117&nbsp;cm</td><td class="n">debout</td><td class="n">42&nbsp;/&nbsp;119</td><td class="n">8&nbsp;/&nbsp;38</td><td class="n">8&nbsp;/&nbsp;31</td><td class="n">8&nbsp;/&nbsp;27</td><td class="n">15&nbsp;/&nbsp;39</td></tr></tbody></table></div>
+    <p class="sources">Les bras demandent au plus 12,8&nbsp;N·m. La hanche de côté monte à 19 à 130&nbsp;N·m au pic&nbsp;: une articulation qu'aucun réducteur imprimé
+      trouvé n'approche, et qui dit qu'<strong>un robot de cette taille balance son poids de côté avec beaucoup de force</strong>. Les marches sont réglées sur le modèle lui-même, avec des actionneurs qui n'ont pas de limite&nbsp;: un robot réel marcherait autrement.</p>
+
+    <h2>Ce que N3 ne prouve pas</h2>
+    <ul class="liste">
+      <li><b>Des tâches de maison.</b><span>Aucune n'est simulée. Les mains à tendons ne sont pas conçues.</span></li>
+      <li><b>La résistance, la durée de vie, l'échauffement</b><span>des actionneurs&nbsp;: aucune donnée.</span></li>
+      <li><b>Un prix, une CAO, une nomenclature.</b><span>Rien de cela n'existe.</span></li>
+      <li><b>La sécurité.</b><span>Aucune norme ne la fixe. Nous ne la prétendons pas.</span></li>
+    </ul>
+
+    <h2>Et avant tout ça</h2>
+    <p>Le chemin passe par <a class="lien" href="/navitek/">N0</a> (à imprimer, 33&nbsp;cm), <a class="lien" href="/navitek/n1/">N1</a> (63&nbsp;cm, servos à bus, à mesurer puis imprimer) et <a class="lien" href="/navitek/n2/">N2</a> (un mètre, un actionneur imprimé à
+      mesurer sur un banc). Chaque version ne sort que si la précédente a tenu en simulation, puis sur le banc.</p>
+
+    <h2 id="fichiers">Les fichiers</h2>
+    <p class="sous">Licence CC BY 4.0&nbsp;: refaites les essais chez vous</p>
+    <div class="fichiers">
+      <a class="fichier" href="fichiers/navitek-n3-simulation.zip" download><span class="n">La simulation simplifiée</span>
+        <span class="d">Le modèle (le robot de N1 agrandi), les scripts des essais et leurs résultats en JSON.</span><span class="u">0&nbsp;Mo &middot; ZIP</span></a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="fin">
+      <p class="note">Document de concept&nbsp;: tout peut changer à la première mesure.</p>
+      <h2 style="margin-top:30px">Vous travaillez sur la sécurité ou les actionneurs&nbsp;?</h2>
+      <p>Dites-nous ce que vous savez des limites de couple et de vitesse d'un robot qui marche près de gens, ou des durées de vie de réducteurs imprimés. Ce sont deux trous de ce document.</p>
+      <a class="btn" href="mailto:yoan@ymiaconseil.com?subject=Navitek%20N3&amp;body=Bonjour%20Yoan%2C%0A%0ACe%20que%20je%20sais%20%3A%20%0A%0AMerci.">Écrire à Yoan</a>
+      <a class="tel" href="tel:+15149268633">ou appelez&nbsp;: 514 926-8633</a>
+      <p class="apres"><a class="lien" href="/navitek/">Navitek N0</a> &middot; <a class="lien" href="/navitek/n1/">Navitek N1</a> &middot; <a class="lien" href="/navitek/n2/">Navitek N2</a> &middot;
+        <a class="lien" href="/methode/">La méthode</a> &middot; <a class="lien" href="/">Retour à l'accueil</a></p>
+    </div>
+  </div>
+
+</article>
+</main>
+
+<footer>
+  <nav class="plan" aria-label="Plan du site"><a href="/">Accueil</a> &middot; <a href="/pourquoi/">Pourquoi</a> &middot; <a href="/methode/">La méthode</a> &middot; <a href="/formation/">Formation</a> &middot; <a href="/plan/">PlanJump</a> &middot; <a href="/easyread/">Syllabes Faciles</a> &middot; <a href="/navitek/">Navitek</a> &middot; <b>N3</b></nav>
+  <p>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a> &middot; <a href="tel:+15149268633">514 926-8633</a></p>
+</footer>
+</body>
+</html>
