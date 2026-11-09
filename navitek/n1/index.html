@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navitek N1, un humanoïde de 63,5 cm à servos qui parlent</title>
+<meta name="description" content="Navitek N1 : un humanoïde de 63,5 cm à imprimer, 17 servos à bus Feetech STS3215 qui renvoient leur position et leur charge. CAO par code, simulation MuJoCo, fichiers STL, STEP et 3MF. Pas encore imprimé.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1f3a">
+<meta property="og:title" content="Navitek N1, un humanoïde de 63,5 cm">
+<meta property="og:description" content="17 servos à bus, 48 pièces imprimées, simulé avant d'être imprimé. Fichiers ouverts.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ymiaconseil.com/navitek/n1/">
+<link rel="canonical" href="https://ymiaconseil.com/navitek/n1/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Lora:ital,wght@0,400..600;1,400..500&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --navy-3:#16355e; --gold:#d4a843; --gold-small:#8a6b18;
+  --ink-body:#2a2620; --dim:#5c5c5c; --line:#e4e2dd; --paper:#fff; --tint:#f6f4f0;
+  --orange:#f26b1d; --orange-texte:#b5490c; --gris:#7d838c;
+  --display:'Newsreader',Georgia,serif; --body:'Lora',Georgia,serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink-body);font-family:var(--body);font-size:17px;line-height:1.66;display:flex;flex-direction:column}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar .in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.bar a.logo{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar a.logo span{color:var(--gold)}
+.bar a.autre{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#a8bad0;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.45);white-space:nowrap}
+.bar a.autre:hover{color:#fff}
+main{flex:1;padding:44px 20px 8px}
+.wrap{max-width:660px;margin:0 auto;width:100%}
+.large{max-width:900px;margin:0 auto;width:100%}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(30px,7vw,46px);line-height:1.1;margin:0 0 16px;text-wrap:balance}
+h1 em{font-style:italic;color:var(--orange-texte)}
+.chapeau{font-size:18.5px;color:#3c3830;margin:0 0 22px;max-width:34em}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(22px,4.4vw,28px);line-height:1.2;margin:48px 0 4px;text-wrap:balance}
+.sous{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-small);margin:0 0 16px;max-width:none}
+p{margin:0 0 15px;max-width:34em}
+strong{font-weight:600;color:#1a1814}
+code{font-family:var(--mono);font-size:.84em;background:var(--tint);padding:1px 5px;border-radius:3px}
+.lien{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
+.lien:hover{background:var(--tint)}
+
+/* la vue 3D */
+.atelier{margin:26px auto 0;border:1px solid var(--line);background:linear-gradient(#fbfaf7,#f1eee8)}
+#scene{position:relative;height:min(78vh,640px);min-height:380px;touch-action:none;cursor:grab}
+#scene canvas{display:block;width:100%;height:100%}
+#scene:active{cursor:grabbing}
+#etat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--dim)}
+#etat[hidden]{display:none}
+#etat img{max-height:100%;max-width:100%}
+.commandes{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 14px;border-top:1px solid var(--line);background:var(--paper)}
+.commandes button{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--paper);color:var(--navy);border:1px solid #cfcac0;border-radius:100px;padding:8px 14px;cursor:pointer}
+.commandes button:hover{background:var(--tint)}
+.commandes button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.commandes .sep{flex:1}
+#info{padding:12px 16px 14px;border-top:1px solid var(--line);background:var(--paper);font-size:15px;line-height:1.5;min-height:3.6em}
+#info b{font-family:var(--display);font-size:17px;color:var(--navy)}
+#info .d{color:var(--dim)}
+#info button{font:inherit;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;border:0;background:none;color:var(--gold-small);border-bottom:1px solid rgba(212,168,67,.6);padding:0;margin-left:8px;cursor:pointer}
+
+/* les chiffres */
+.chiffres{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:22px auto 0}
+.chiffres div{background:var(--paper);padding:14px 12px}
+.chiffres b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(22px,4vw,30px);color:var(--navy);line-height:1.1;font-variant-numeric:tabular-nums}
+.chiffres span{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+
+.loi{margin:26px 0;padding:20px 22px;background:var(--navy);border-left:5px solid var(--gold)}
+.loi p{margin:0;max-width:30em;font-family:var(--display);font-size:clamp(19px,3.8vw,23px);line-height:1.35;color:#fff}
+.loi .src{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:#a8bad0;margin-top:12px;max-width:none;line-height:1.7}
+
+/* les plateaux */
+.plateaux{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:20px auto 0}
+.plateau{margin:0;border:1px solid var(--line);background:var(--paper)}
+.plateau img{display:block;width:100%;height:auto;aspect-ratio:1;background:#eceff3}
+.plateau figcaption{padding:12px 14px 14px;display:flex;flex-direction:column;gap:2px;font-size:15px;line-height:1.4}
+.plateau .pn{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.plateau b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:17px}
+.plateau .pc{font-family:var(--mono);font-size:12.5px;color:var(--ink-body);font-variant-numeric:tabular-nums}
+.plateau a{align-self:flex-start;margin-top:6px;font-size:14.5px}
+.pastille{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 6px 0 8px;vertical-align:0}
+.pastille.orange{background:var(--orange)} .pastille.gris{background:var(--gris)}
+.reglages{font-size:15.5px;color:var(--dim);margin-top:16px}
+
+/* les tableaux */
+.defile{overflow-x:auto;margin:18px 0 0;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.4}
+th{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:left;padding:10px 12px;background:var(--tint);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:16px}
+td .role{display:block;color:var(--dim);font-size:13.5px;min-width:16em}
+td.n{font-family:var(--mono);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+tfoot td{font-family:var(--mono);font-size:13px;background:var(--tint);font-weight:600}
+
+h3{font-family:var(--display);font-weight:600;color:var(--navy);font-size:20px;line-height:1.25;margin:34px 0 8px}
+.video{margin:22px 0 0}
+.video video{display:block;width:100%;height:auto;aspect-ratio:4/3;background:#000;border:1px solid var(--line)}
+.video figcaption{font-size:14.5px;color:var(--dim);margin-top:8px;line-height:1.5;max-width:36em}
+.schema{margin:22px auto 0;max-width:620px}
+.schema svg{display:block;width:100%;height:auto}
+.schema figcaption{font-size:14.5px;color:var(--dim);margin-top:10px;text-align:center}
+.sources{font-size:13.5px;line-height:1.55;color:var(--dim);margin:12px 0 0;max-width:none}
+tr.repond td{background:#fbf4e8}
+.servos td .role{min-width:0}
+.servos td:first-child{min-width:9em}
+.servos td.n{white-space:normal;min-width:5.5em}
+.liste{list-style:none;padding:0;margin:18px 0 0;border-top:1px solid var(--line)}
+.liste li{border-bottom:1px solid var(--line);padding:14px 0}
+.liste b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px;display:block;margin-bottom:2px;line-height:1.3}
+.liste span{display:block;max-width:36em}
+.etapes{counter-reset:e;list-style:none;padding:0;margin:18px 0 0}
+.etapes li{counter-increment:e;position:relative;padding:0 0 22px 52px}
+.etapes li::before{content:counter(e);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;font-family:var(--mono);font-size:14px;display:flex;align-items:center;justify-content:center}
+.etapes b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18.5px;display:block;line-height:1.3;margin-bottom:4px;padding-top:5px}
+.etapes span{display:block;max-width:36em}
+.broches{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.broches table{font-size:14px}
+
+.fichiers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 0}
+.fichier{border:1px solid var(--line);border-left:3px solid var(--orange);padding:14px 16px;text-decoration:none;color:inherit;display:block}
+.fichier:hover{background:var(--tint)}
+.fichier .n{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px;display:block;margin-bottom:2px}
+.fichier .d{font-size:14.5px;color:var(--dim);display:block;line-height:1.45}
+.fichier .u{font-family:var(--mono);font-size:11.5px;color:var(--gold-small);display:block;margin-top:8px}
+
+.fin{margin:52px 0 0;padding:26px 0 0;border-top:3px solid var(--gold)}
+.fin .note{font-size:15.5px;color:var(--dim)}
+.btn{display:inline-block;background:var(--navy);color:#fff;font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;padding:14px 22px;border-radius:100px;text-decoration:none;margin:10px 0 0}
+.btn:hover{background:var(--navy-3)}
+.tel{display:block;font-family:var(--display);font-size:19px;color:var(--navy);text-decoration:none;margin:16px 0 0}
+.apres{margin-top:20px;font-size:15.5px;color:var(--dim)}
+footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
+footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
+footer .plan{margin:0 0 10px;line-height:2}
+footer .plan b{color:var(--gold);font-weight:400}
+footer p{margin:0;max-width:none}
+@media (max-width:760px){.plateaux{grid-template-columns:1fr 1fr}.chiffres{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:560px){.route thead{display:none}.route,.route tbody,.route tr,.route td{display:block;width:100%}.route tr{padding:8px 0;border-bottom:1px solid var(--line)}.route td{border:0;padding:3px 12px}.route td[data-l]:not([data-l=""])::before{content:attr(data-l) " : ";font-family:var(--mono);font-size:12px;color:var(--dim)}.route td.n{white-space:normal}.fichiers,.broches{grid-template-columns:1fr}.plateaux{gap:12px}.commandes .sep{display:none}}
+@media (max-width:480px){.bar .in{flex-direction:column;align-items:flex-start;gap:8px}.chiffres{grid-template-columns:1fr 1fr}#scene{height:68vh}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+
+<div class="bar"><div class="in">
+  <a class="logo" href="/">YM <span>IA</span> Conseil</a>
+  <a class="autre" href="/navitek/">Navitek N0</a>
+</div></div>
+
+<main>
+<article>
+
+  <div class="wrap">
+    <p class="code">Navitek &middot; N1 &middot; version 1 &middot; 8 novembre 2026</p>
+    <h1>Un humanoïde de 63,5&nbsp;cm, <em>dont les servos parlent</em>.</h1>
+    <p class="chapeau">17 servos à bus Feetech STS3215 qui renvoient leur position, leur charge, leur tension et leur température,
+      une carte Raspberry Pi Pico&nbsp;2&nbsp;W, une centrale inertielle, et 48 pièces en PLA imprimées sans support. La suite de
+      <a class="lien" href="/navitek/">N0</a>&nbsp;: le même module d'articulation, deux fois plus grand, qui sait où il est.</p>
+  </div>
+
+  <div class="large">
+    <div class="atelier">
+      <div id="scene" aria-label="Assemblage du robot Navitek N1 en 3D : faites-le tourner du doigt ou de la souris">
+        <div id="etat">Chargement des 81 pièces de l'assemblage…</div>
+      </div>
+      <div class="commandes" role="group" aria-label="Vue">
+        <button type="button" data-vue="face" aria-pressed="true">Face</button>
+        <button type="button" data-vue="cote" aria-pressed="false">Côté</button>
+        <button type="button" data-vue="dos" aria-pressed="false">Dos</button>
+        <span class="sep"></span>
+        <button type="button" id="eclater" aria-pressed="false">Éclater</button>
+      </div>
+      <div id="info" aria-live="polite"><span class="d">Touchez une pièce pour la reconnaître. Glissez pour tourner, pincez pour approcher.</span></div>
+    </div>
+
+    <div class="chiffres">
+      <div><b>63,5&nbsp;cm</b><span>de haut</span></div>
+      <div><b>17</b><span>articulations</span></div>
+      <div><b>48</b><span>pièces imprimées</span></div>
+      <div><b>49&nbsp;h&nbsp;39</b><span>d'impression</span></div>
+      <div><b>980&nbsp;g</b><span>de PLA</span></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="loi">
+      <p>Version 1&nbsp;: dessinée, simulée et tranchée. Pas encore imprimée, et une cote du servo à mesurer d'abord.</p>
+      <p class="src">Les trous de fixation et la position de l'arbre du STS3215 ne figurent dans aucune fiche que nous avons trouvée&nbsp;:
+        la CAO les suppose, et un gabarit d'essai à imprimer en premier permet de les corriger. Aucune collision entre les 81
+        pièces de l'assemblage &middot; chaque plateau tranché dans OrcaSlicer pour une Ender-3 V3 SE &middot; la simulation est
+        <b>simulée</b>, jamais «&nbsp;testée&nbsp;».</p>
+    </div>
+
+    <h2>Ce qui change par rapport à N0</h2>
+    <p class="sous">Le même principe, deux fois plus grand, et des servos qui disent où ils sont</p>
+    <ul class="liste">
+      <li><b>Des servos qui parlent.</b><span>Les SG90 de N0 obéissent à l'aveugle. Le STS3215 se branche sur un seul fil commun aux 17
+        servos et renvoie sa position (4096 pas par tour), sa charge, sa tension et sa température. Le robot peut enfin mesurer son corps.</span></li>
+      <li><b>Dix-sept articulations au lieu de treize.</b><span>Chaque hanche gagne un mouvement de côté (le roulis), chaque épaule aussi&nbsp;:
+        le robot peut balancer son poids d'un pied à l'autre au lieu de pencher la cheville. Il manque encore la rotation de la hanche, pour tourner sur place.</span></li>
+      <li><b>Une centrale inertielle.</b><span>Un BNO055 dans le torse dit au robot de quel côté il penche. Dans la simulation, c'est ce retour d'information
+        qui fait avancer N1 près de deux fois plus loin que la même marche aveugle (plus bas).</span></li>
+      <li><b>Un cerveau en deux étages.</b><span>Le Pico commande les servos et lit la centrale&nbsp;; il porte la sécurité. Un Raspberry Pi Zero 2&nbsp;W
+        facultatif, relié au Pico, ajoute la caméra de la tête et les programmes qui apprennent. <strong>Le robot marche sans lui.</strong></span></li>
+    </ul>
+
+    <h2>Le servo, et ce qu'on sait de lui</h2>
+    <p class="sous">Feetech STS3215, version 12&nbsp;V &middot; relevé sur les fiches de revendeurs, cahier R-037</p>
+    <div class="defile"><table><thead><tr><th>Fait</th><th>Valeur</th><th>État</th></tr></thead><tbody>
+      <tr><td><b>Boîtier</b></td><td class="n">45,2 × 24,7 × 35&nbsp;mm &middot; 55&nbsp;g</td><td>relevé sur plusieurs fiches</td></tr>
+      <tr><td><b>Couple au blocage, 12&nbsp;V</b></td><td class="n">30&nbsp;kg·cm, 2,7&nbsp;A</td><td>annoncé&nbsp;: <b>un pic, pas le couple continu</b> (une fiche donne environ 5&nbsp;kg·cm de couple nominal pour la version 7,4&nbsp;V)</td></tr>
+      <tr><td><b>Capteur</b></td><td class="n">codeur magnétique 12 bits</td><td>relevé</td></tr>
+      <tr><td><b>Bus</b></td><td class="n">un fil demi-duplex, jusqu'à 1&nbsp;Mbit/s, 253 servos</td><td>relevé</td></tr>
+      <tr><td><b>Cannelure</b></td><td class="n">25 dents, arbre de 5,9&nbsp;mm</td><td>relevé</td></tr>
+      <tr class="repond"><td><b>Trous de fixation, position de l'arbre</b></td><td class="n">inconnus</td><td><b>à mesurer</b> sur le servo reçu (hypothèse dans la CAO)</td></tr>
+      <tr class="repond"><td><b>Comparaison avec d'autres servos à bus</b></td><td class="n">non faite</td><td>le STS3215 reste le candidat à cause de son écosystème (les bras ouverts SO-100 et SO-101, avec LeRobot)</td></tr>
+    </tbody></table></div>
+    <p class="sources">Sources&nbsp;: fiches Feetech relayées par servodatabase.com, DFRobot, Seeed/openelab, Waveshare ; la fiche d'origine de Feetech n'a pas pu
+      être lue (texte invisible sur des images). Les sous-modèles (C001, C018, C047) ont le même boîtier mais d'autres engrenages&nbsp;: un seul numéro de pièce dans la nomenclature.</p>
+
+    <h2 id="montage">L'électronique, en trois choix</h2>
+    <p class="sous">Le bus, la pile, la centrale &middot; chaque choix est écrit comme choix, pas comme fait</p>
+    <ul class="liste">
+      <li><b>Le bus.</b><span>Un seul UART du Pico, TX et RX réunis par une résistance, l'écho lu et rejeté&nbsp;; identifiants 1 à 17, réglés un à un avec un
+        PC et un adaptateur Feetech FE-URT-1. <em>À valider sur le banc</em>&nbsp;: le Pico n'a pas de demi-duplex matériel confirmé.</span></li>
+      <li><b>La pile.</b><span>Une 3S (9 à 12,6&nbsp;V), avec une carte de protection et un fusible, et un interrupteur d'arrêt d'urgence. Un servo de
+        7,4&nbsp;V n'accepte pas une 3S&nbsp;: ne pas mélanger les versions. Le Pico a son propre régulateur 5&nbsp;V.</span></li>
+      <li><b>La centrale.</b><span>Un BNO055 (fusion à bord, 100&nbsp;Hz au plus) plutôt qu'un MPU-6050, jugé en fin de vie. Si 100&nbsp;Hz ne suffisait pas à
+        l'équilibre, on lirait le gyroscope brut et on filtrerait soi-même.</span></li>
+    </ul>
+
+    <h2>En simulation&nbsp;: ce que N1 peut faire</h2>
+    <p class="sous">MuJoCo 3.8 &middot; modèle tiré de la CAO &middot; 2,3&nbsp;kg &middot; <b>simulé</b>, pas testé</p>
+    <p>Le modèle du robot est tiré de la CAO&nbsp;: la géométrie des pièces, les grammes du tranchage, un servo par articulation borné
+      au couple de blocage annoncé (30&nbsp;kg·cm, soit 2,94&nbsp;N·m). <strong>Ce qui suit est simulé&nbsp;: le vrai robot peut en différer.</strong>
+      Les hypothèses (inertie du moteur, masse de l'électronique, couple réel) sont écrites dans <code>modele_n1.py</code>, et le cahier R-038
+      de notre journal de recherche donne ce qu'on attendait <em>avant</em> chaque essai.</p>
+
+    <h3>S'accroupir</h3>
+    <p>Part du couple de blocage que le genou doit fournir, en moyenne puis au pic. Sur deux jambes, à peine plus du quart du blocage au pic
+      à 90° de genou&nbsp;; <strong>sur une jambe, le robot tient jusqu'à 70°</strong> (là où N0 saturait), et tombe à 90°.</p>
+    <div class="defile"><table><thead><tr><th>Genou</th><th>Deux jambes (moyen / pic)</th><th>Une jambe (moyen / pic)</th><th>Une jambe</th></tr></thead><tbody><tr><td class="n">20°</td><td class="n">3&nbsp;% / 8&nbsp;%</td><td class="n">12&nbsp;% / 34&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">40°</td><td class="n">6&nbsp;% / 15&nbsp;%</td><td class="n">16&nbsp;% / 44&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">60°</td><td class="n">8&nbsp;% / 23&nbsp;%</td><td class="n">18&nbsp;% / 58&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">70°</td><td class="n">10&nbsp;% / 28&nbsp;%</td><td class="n">27&nbsp;% / 78&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">90°</td><td class="n">12&nbsp;% / 36&nbsp;%</td><td class="n">4&nbsp;% / 17&nbsp;%</td><td class="n">tombe</td></tr></tbody></table></div>
+    <p class="sources">L'équilibre sur une jambe est cherché par un décalage fixe de la hanche et de la cheville, sans retour d'information&nbsp;: un ordre de grandeur.</p>
+
+    <h3>Marcher, avec et sans retour d'information</h3>
+    <figure class="video">
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche de N1 avec retour d'information">
+        <source src="simulation/n1-marche.mp4" type="video/mp4"></video>
+      <figcaption>La marche retenue (graine 3, avec retour d'information)&nbsp;: 12&nbsp;s, 31&nbsp;cm.</figcaption>
+    </figure>
+    <p>Une marche périodique à onze réglages, plus quatre gains qui corrigent la cheville d'après l'inclinaison du torse, a été cherchée trois fois
+      (trois graines) par l'algorithme CMA-ES, puis refaite trois fois avec les gains forcés à zéro&nbsp;: la même marche, aveugle.
+      <strong>Avec le retour, la distance moyenne est de 23&nbsp;cm en douze secondes&nbsp;; sans, de 13&nbsp;cm</strong>
+      (aucune des trois marches aveugles ne tombe).
+      À titre de repère, N0 aveugle faisait 6 à 8&nbsp;cm en dix secondes, pour un robot deux fois plus petit.</p>
+    <div class="defile"><table><thead><tr><th>Marche</th><th>Graine</th><th>Avance en 12 s</th><th>Dérive de côté</th><th>Fin</th><th>Couple max</th></tr></thead><tbody><tr><td class="n">avec retour</td><td class="n">1</td><td class="n">21&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">avec retour</td><td class="n">2</td><td class="n">19&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">avec retour</td><td class="n">3</td><td class="n">31&nbsp;cm</td><td class="n">3&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">1</td><td class="n">8&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">38&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">2</td><td class="n">12&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">3</td><td class="n">20&nbsp;cm</td><td class="n">4&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr></tbody></table></div>
+    <p class="sources">Un seul modèle de servo, parfait (sans jeu, sans chute de tension, sans échauffement)&nbsp;; les marches sont réglées sur le modèle lui-même,
+      donc elles peuvent en exploiter un défaut&nbsp;; trois graines&nbsp;; la marche avance en diagonale (la dérive de côté est dite). <strong>Se relever n'est pas encore traité.</strong>
+      Le «&nbsp;couple max&nbsp;» est la part du couple de blocage&nbsp;: 100&nbsp;% veut dire que le servo sature.</p>
+
+    <h3>Ce qui fait tomber la marche</h3>
+    <p>Chaque hypothèse du modèle a été divisée par deux, puis multipliée par un et demi, et la meilleure marche rejouée telle quelle
+      (sans la réoptimiser).</p>
+    <div class="defile"><table><thead><tr><th>Hypothèse</th><th>Divisée par 2</th><th>Multipliée par 1,5</th></tr></thead><tbody><tr class="repond"><td><b>Masse de l'électronique (330&nbsp;g)</b></td><td class="n">tient, 24&nbsp;cm</td><td class="n">tombe à 2,9&nbsp;s</td></tr><tr class="repond"><td><b>Couple de blocage des servos</b></td><td class="n">tombe à 3,7&nbsp;s</td><td class="n">tombe à 9,3&nbsp;s</td></tr><tr class="repond"><td><b>Raideur de position des servos</b></td><td class="n">tient, 15&nbsp;cm</td><td class="n">tombe à 3,2&nbsp;s</td></tr><tr class="repond"><td><b>Frottement du sol</b></td><td class="n">tient, 17&nbsp;cm</td><td class="n">tombe à 4,3&nbsp;s</td></tr><tr class="repond"><td><b>Inertie du rotor</b></td><td class="n">tient, 30&nbsp;cm</td><td class="n">tombe à 7,1&nbsp;s</td></tr><tr class="repond"><td><b>Amortissement des charnières</b></td><td class="n">tombe à 6,8&nbsp;s</td><td class="n">tient, 28&nbsp;cm</td></tr></tbody></table></div>
+
+    <h2>Ce qui s'imprime</h2>
+    <p class="sous">48 pièces &middot; 49&nbsp;h&nbsp;39 &middot; 980&nbsp;g de PLA &middot; 10 plateaux de 220 × 220&nbsp;mm</p>
+    <p>Comme pour N0, tout s'imprime sans support, sur une Ender-3 V3 SE, en PLA, 3 parois et 25&nbsp;% de remplissage. Les temps et les grammes
+      viennent du tranchage dans OrcaSlicer, pas d'une estimation. <strong>Le plateau P0 est le gabarit d'essai&nbsp;: à imprimer d'abord.</strong></p>
+    <div class="plateaux">
+    <figure class="plateau">
+      <img src="plateaux/P0-gabarit.png" alt="Vue de dessus du plateau P0 : gabarit d'essai" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P0 <i class="pastille orange"></i>orange</span>
+        <b>Le gabarit d'essai, avant tout le reste : y poser un vrai STS3215</b>
+        <span class="pc">20&nbsp;min &middot; 6&nbsp;g</span>
+        <a class="lien" href="fichiers/P0-gabarit.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P1-boitiers-a.png" alt="Vue de dessus du plateau P1 : 8 boîtiers de servo" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P1 <i class="pastille orange"></i>orange</span>
+        <b>8 boîtiers de servo</b>
+        <span class="pc">7&nbsp;h&nbsp;23 &middot; 151&nbsp;g</span>
+        <a class="lien" href="fichiers/P1-boitiers-a.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P2-boitiers-b.png" alt="Vue de dessus du plateau P2 : 8 boîtiers de servo" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P2 <i class="pastille orange"></i>orange</span>
+        <b>8 autres boîtiers de servo</b>
+        <span class="pc">7&nbsp;h&nbsp;23 &middot; 151&nbsp;g</span>
+        <a class="lien" href="fichiers/P2-boitiers-b.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P3-etriers-a.png" alt="Vue de dessus du plateau P3 : 6 étriers" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P3 <i class="pastille gris"></i>gris</span>
+        <b>6 étriers</b>
+        <span class="pc">4&nbsp;h&nbsp;26 &middot; 68&nbsp;g</span>
+        <a class="lien" href="fichiers/P3-etriers-a.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P4-etriers-b.png" alt="Vue de dessus du plateau P4 : 6 étriers" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P4 <i class="pastille gris"></i>gris</span>
+        <b>6 autres étriers</b>
+        <span class="pc">4&nbsp;h&nbsp;26 &middot; 68&nbsp;g</span>
+        <a class="lien" href="fichiers/P4-etriers-b.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P5-etriers-c.png" alt="Vue de dessus du plateau P5 : 4 étriers, 6 rallonges, visière, antenne" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P5 <i class="pastille gris"></i>gris</span>
+        <b>4 étriers, 6 rallonges, visière, antenne</b>
+        <span class="pc">5&nbsp;h&nbsp;16 &middot; 84&nbsp;g</span>
+        <a class="lien" href="fichiers/P5-etriers-c.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P6-torse.png" alt="Vue de dessus du plateau P6 : torse" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P6 <i class="pastille orange"></i>orange</span>
+        <b>Le torse, couché sur la poitrine</b>
+        <span class="pc">7&nbsp;h&nbsp;08 &middot; 161&nbsp;g</span>
+        <a class="lien" href="fichiers/P6-torse.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P7-tete.png" alt="Vue de dessus du plateau P7 : tête" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P7 <i class="pastille orange"></i>orange</span>
+        <b>La tête</b>
+        <span class="pc">6&nbsp;h&nbsp;33 &middot; 142&nbsp;g</span>
+        <a class="lien" href="fichiers/P7-tete.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P8-mains-pieds.png" alt="Vue de dessus du plateau P8 : 2 mains, pied gauche, pied droit" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P8 <i class="pastille orange"></i>orange</span>
+        <b>Mains et pieds</b>
+        <span class="pc">5&nbsp;h&nbsp;37 &middot; 121&nbsp;g</span>
+        <a class="lien" href="fichiers/P8-mains-pieds.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    <figure class="plateau">
+      <img src="plateaux/P9-dos.png" alt="Vue de dessus du plateau P9 : dos" width="440" height="440" loading="lazy">
+      <figcaption>
+        <span class="pn">P9 <i class="pastille gris"></i>gris</span>
+        <b>La plaque du dos</b>
+        <span class="pc">1&nbsp;h&nbsp;06 &middot; 28&nbsp;g</span>
+        <a class="lien" href="fichiers/P9-dos.3mf" download>Fichier 3MF</a>
+      </figcaption>
+    </figure>
+    </div>
+    <div class="defile"><table><thead><tr><th>Pièce</th><th>Qté</th><th>Taille (mm)</th><th>Temps</th><th>PLA</th><th>Plateau</th><th></th></tr></thead><tbody>
+      <tr><td><b>Gabarit d'essai</b><span class="role">à imprimer en premier, pour poser un vrai servo et mesurer ses trous</span></td><td class="n">1</td><td class="n">67,2 × 59,8 × 5</td><td class="n">20&nbsp;min</td><td class="n">5,7&nbsp;g</td><td>P0</td><td><a class="lien" href="fichiers/stl/gabarit-essai.stl" download>STL</a></td></tr>
+      <tr><td><b>Boîtier de servo</b><span class="role">tient un STS3215 ; son dos porte le carré de 4 vis M3 de l'articulation suivante</span></td><td class="n">16</td><td class="n">55,2 × 31,5 × 29,9</td><td class="n">55&nbsp;min</td><td class="n">19&nbsp;g</td><td>P1</td><td><a class="lien" href="fichiers/stl/boitier-servo.stl" download>STL</a></td></tr>
+      <tr><td><b>Étrier</b><span class="role">tourne avec le servo : un bras sur le palonnier, l'autre sur le pivot imprimé</span></td><td class="n">16</td><td class="n">51,7 × 28 × 44</td><td class="n">49&nbsp;min</td><td class="n">11,4&nbsp;g</td><td>P3</td><td><a class="lien" href="fichiers/stl/etrier.stl" download>STL</a></td></tr>
+      <tr><td><b>Rallonge</b><span class="role">allonge la cuisse, le tibia et le bras</span></td><td class="n">6</td><td class="n">18 × 31,5 × 18</td><td class="n">20&nbsp;min</td><td class="n">5,8&nbsp;g</td><td>P5</td><td><a class="lien" href="fichiers/stl/rallonge.stl" download>STL</a></td></tr>
+      <tr><td><b>Visière</b><span class="role">entre dans sa fente, sur le devant de la tête</span></td><td class="n">1</td><td class="n">16,8 × 59,2 × 3,2</td><td class="n">9&nbsp;min</td><td class="n">3&nbsp;g</td><td>P5</td><td><a class="lien" href="fichiers/stl/visiere.stl" download>STL</a></td></tr>
+      <tr><td><b>Antenne</b><span class="role">ferme le trou du tournevis, sur le dessus de la tête</span></td><td class="n">1</td><td class="n">12,6 × 12,6 × 31,4</td><td class="n">10&nbsp;min</td><td class="n">1,1&nbsp;g</td><td>P5</td><td><a class="lien" href="fichiers/stl/antenne.stl" download>STL</a></td></tr>
+      <tr><td><b>Torse</b><span class="role">porte les hanches, les épaules, le cou, la pile, la carte et la centrale</span></td><td class="n">1</td><td class="n">130 × 208 × 80</td><td class="n">7&nbsp;h&nbsp;08</td><td class="n">160,8&nbsp;g</td><td>P6</td><td><a class="lien" href="fichiers/stl/torse.stl" download>STL</a></td></tr>
+      <tr><td><b>Tête</b><span class="role">se visse sur le palonnier du servo du cou</span></td><td class="n">1</td><td class="n">86 × 80 × 80</td><td class="n">6&nbsp;h&nbsp;33</td><td class="n">142,1&nbsp;g</td><td>P7</td><td><a class="lien" href="fichiers/stl/tete.stl" download>STL</a></td></tr>
+      <tr><td><b>Main</b><span class="role">se visse sur l'étrier du coude</span></td><td class="n">2</td><td class="n">87,9 × 46 × 22</td><td class="n">1&nbsp;h&nbsp;40</td><td class="n">33,6&nbsp;g</td><td>P8</td><td><a class="lien" href="fichiers/stl/main.stl" download>STL</a></td></tr>
+      <tr><td><b>Pied gauche</b><span class="role">se visse sous l'étrier de la cheville</span></td><td class="n">1</td><td class="n">122 × 64 × 6,5</td><td class="n">1&nbsp;h&nbsp;08</td><td class="n">27&nbsp;g</td><td>P8</td><td><a class="lien" href="fichiers/stl/pied-gauche.stl" download>STL</a></td></tr>
+      <tr><td><b>Pied droit</b><span class="role">se visse sous l'étrier de la cheville</span></td><td class="n">1</td><td class="n">122 × 64 × 6,5</td><td class="n">1&nbsp;h&nbsp;08</td><td class="n">27&nbsp;g</td><td>P8</td><td><a class="lien" href="fichiers/stl/pied-droit.stl" download>STL</a></td></tr>
+      <tr><td><b>Dos</b><span class="role">ferme le torse par 4 vis</span></td><td class="n">1</td><td class="n">130 × 104 × 2,4</td><td class="n">1&nbsp;h&nbsp;06</td><td class="n">28,1&nbsp;g</td><td>P9</td><td><a class="lien" href="fichiers/stl/dos.stl" download>STL</a></td></tr>
+    </tbody></table></div>
+
+    <h2>À acheter</h2>
+    <p class="sous">Prix relevés en ligne le 8 novembre 2026, en dollars américains, hors taxes et hors livraison</p>
+    <div class="defile"><table class="servos"><thead><tr><th>Article</th><th>Qté</th><th>Prix relevé</th><th>Source</th></tr></thead><tbody>
+      <tr><td><b>Servo Feetech STS3215-C018, 12&nbsp;V, 30&nbsp;kg·cm</b></td><td class="n">17</td><td class="n">26 à 31&nbsp;$ pièce</td><td>RoboShop (31,38&nbsp;$ avec droits de douane américains), RCDrone (29&nbsp;$), AIFitLab (26&nbsp;$, devise non confirmée)</td></tr>
+      <tr><td><b>Raspberry Pi Pico 2 W</b></td><td class="n">1</td><td class="n">7 à 9&nbsp;$</td><td>prix de lancement 7&nbsp;$ ; Vilros 8,61&nbsp;$</td></tr>
+      <tr><td><b>Centrale BNO055 (Adafruit)</b></td><td class="n">1</td><td class="n">35&nbsp;$</td><td>Adafruit, 34,95&nbsp;$ l'unité</td></tr>
+      <tr><td><b>Raspberry Pi Zero 2 W</b> (facultatif)</td><td class="n">0 ou 1</td><td class="n">15 à 17&nbsp;$</td><td>prix de lancement 15&nbsp;$ ; SparkFun 17,25&nbsp;$</td></tr>
+      <tr class="repond"><td><b>Pile 3S, carte de protection, fusible, interrupteur, adaptateur FE-URT-1, vis M3, PLA, fils</b></td><td class="n">&mdash;</td><td class="n">non sourcé</td><td>à relever avant de commander</td></tr>
+    </tbody></table></div>
+    <p class="sources"><strong>Au moins 550&nbsp;$ US</strong> pour les servos, le Pico et la centrale (17 servos entre 442 et 533&nbsp;$), sans la pile, la protection,
+      les vis, le plastique, la livraison ni les droits de douane. C'est un ordre de grandeur, pas une soumission&nbsp;: les prix changent et plusieurs fiches étaient en rupture de stock.</p>
+
+    <h2>Et après</h2>
+    <p class="sous">N2, le même principe à un mètre</p>
+    <p>N1 doit encore prouver qu'il se relève et que ses cotes de servo tiennent sur un vrai boîtier. Ensuite&nbsp;: N2, environ un mètre, des
+      moteurs sans balais avec un réducteur imprimé&nbsp;; puis N3, de la taille d'un adulte. La feuille de route est sur
+      <a class="lien" href="/navitek/#feuille-de-route">la page de N0</a>.</p>
+
+    <h2 id="fichiers">Les fichiers</h2>
+    <p class="sous">Licence CC BY 4.0&nbsp;: imprimez, modifiez, partagez, en nommant Navitek N1</p>
+    <div class="fichiers">
+      <a class="fichier" href="fichiers/navitek-n1-stl.zip" download><span class="n">Les pièces en STL</span>
+        <span class="d">Les 12 pièces, orientées pour l'impression, avec le gabarit d'essai.</span><span class="u">0,2&nbsp;Mo &middot; ZIP</span></a>
+      <a class="fichier" href="fichiers/navitek-n1-plateaux-3mf.zip" download><span class="n">Les 10 plateaux en 3MF</span>
+        <span class="d">Prêts à ouvrir dans OrcaSlicer ou Bambu Studio.</span><span class="u">0,6&nbsp;Mo &middot; ZIP</span></a>
+      <a class="fichier" href="fichiers/navitek-n1-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
+        <span class="d">Chaque pièce, l'assemblage, et <code>n1.py</code>, le script FreeCAD qui les dessine (les cotes du servo à mesurer sont en tête).</span><span class="u">1&nbsp;Mo &middot; ZIP</span></a>
+      <a class="fichier" href="fichiers/navitek-n1-simulation.zip" download><span class="n">La simulation MuJoCo</span>
+        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0&nbsp;Mo &middot; ZIP</span></a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="fin">
+      <p class="note">Version 1&nbsp;: les fichiers changeront avec les premières mesures du servo et les premières impressions. Ce qui a été
+        vérifié et ce qui ne l'est pas est dit plus haut, sans arrondi.</p>
+
+      <h2 style="margin-top:30px">Vous avez un STS3215&nbsp;?</h2>
+      <p>Mesurez l'entraxe de ses trous de fixation et la distance de l'arbre au bout du boîtier, et envoyez-nous les deux chiffres, ou une photo
+        avec un pied à coulisse. C'est ce qui manque pour que N1 soit imprimable. Dites aussi ce qui accroche.</p>
+
+      <a class="btn" href="mailto:yoan@ymiaconseil.com?subject=Navitek%20N1&amp;body=Bonjour%20Yoan%2C%0A%0AJ%27ai%20un%20STS3215.%0AEntraxe%20des%20trous%20%3A%20%0ADistance%20arbre-bout%20%3A%20%0ACe%20qui%20accroche%20%3A%20%0A%0AMerci.">Écrire à Yoan</a>
+      <a class="tel" href="tel:+15149268633">ou appelez&nbsp;: 514 926-8633</a>
+
+      <p class="apres"><a class="lien" href="/navitek/">Navitek N0, le petit humanoïde</a> &middot;
+        <a class="lien" href="/methode/">Voir comment on travaille&nbsp;: la méthode</a> &middot;
+        <a class="lien" href="/">Retour à l'accueil</a></p>
+    </div>
+  </div>
+
+</article>
+</main>
+
+<footer>
+  <nav class="plan" aria-label="Plan du site"><a href="/">Accueil</a> &middot; <a href="/pourquoi/">Pourquoi</a> &middot; <a href="/methode/">La méthode</a> &middot; <a href="/formation/">Formation</a> &middot; <a href="/plan/">PlanJump</a> &middot; <a href="/easyread/">Syllabes Faciles</a> &middot; <a href="/navitek/">Navitek</a> &middot; <b>N1</b></nav>
+  <p>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a> &middot; <a href="tel:+15149268633">514 926-8633</a></p>
+</footer>
+
+<script type="module">
+import { visionneuse } from "./visionneuse.js";
+const INFO = {"boitier-servo": {"nom": "Boîtier de servo", "role": "tient un STS3215 ; son dos porte le carré de 4 vis M3 de l'articulation suivante", "n": 16, "imprimee": true, "temps": "55 min", "g": "19", "plateau": "P1", "couleur": "orange"}, "servo-sts3215": {"nom": "Servo Feetech STS3215, 12 V", "role": "à acheter : un seul numéro de pièce pour les 17", "n": 17, "imprimee": false}, "palonnier": {"nom": "Palonnier", "role": "fourni avec le servo", "n": 17, "imprimee": false}, "etrier": {"nom": "Étrier", "role": "tourne avec le servo : un bras sur le palonnier, l'autre sur le pivot imprimé", "n": 16, "imprimee": true, "temps": "49 min", "g": "11,4", "plateau": "P3", "couleur": "gris"}, "rallonge": {"nom": "Rallonge", "role": "allonge la cuisse, le tibia et le bras", "n": 6, "imprimee": true, "temps": "20 min", "g": "5,8", "plateau": "P5", "couleur": "gris"}, "pied-gauche": {"nom": "Pied gauche", "role": "se visse sous l'étrier de la cheville", "n": 1, "imprimee": true, "temps": "1 h 08", "g": "27", "plateau": "P8", "couleur": "orange"}, "pied-droit": {"nom": "Pied droit", "role": "se visse sous l'étrier de la cheville", "n": 1, "imprimee": true, "temps": "1 h 08", "g": "27", "plateau": "P8", "couleur": "orange"}, "main": {"nom": "Main", "role": "se visse sur l'étrier du coude", "n": 2, "imprimee": true, "temps": "1 h 40", "g": "33,6", "plateau": "P8", "couleur": "orange"}, "torse": {"nom": "Torse", "role": "porte les hanches, les épaules, le cou, la pile, la carte et la centrale", "n": 1, "imprimee": true, "temps": "7 h 08", "g": "160,8", "plateau": "P6", "couleur": "orange"}, "dos": {"nom": "Dos", "role": "ferme le torse par 4 vis", "n": 1, "imprimee": true, "temps": "1 h 06", "g": "28,1", "plateau": "P9", "couleur": "gris"}, "tete": {"nom": "Tête", "role": "se visse sur le palonnier du servo du cou", "n": 1, "imprimee": true, "temps": "6 h 33", "g": "142,1", "plateau": "P7", "couleur": "orange"}, "visiere": {"nom": "Visière", "role": "entre dans sa fente, sur le devant de la tête", "n": 1, "imprimee": true, "temps": "9 min", "g": "3", "plateau": "P5", "couleur": "gris"}, "antenne": {"nom": "Antenne", "role": "ferme le trou du tournevis, sur le dessus de la tête", "n": 1, "imprimee": true, "temps": "10 min", "g": "1,1", "plateau": "P5", "couleur": "gris"}};
+const etat = document.getElementById("etat");
+const info = document.getElementById("info");
+const aide = info.innerHTML;
+let v = null;
+
+function montrer(inst) {
+  if (!inst) { v.surligner(null); info.innerHTML = aide; return; }
+  const p = INFO[inst.piece];
+  v.surligner(inst.piece);
+  const combien = p.n > 1 ? p.n + " sur le robot" : "1 sur le robot";
+  const imp = p.imprimee ? " · " + p.temps + " et " + p.g + (p.n > 1 ? " g chacune" : " g") + " · plateau " + p.plateau + ", " + p.couleur : " · à acheter";
+  info.innerHTML = "<b></b> <span class='d'></span><br><span class='d'></span><button type='button'>Tout montrer</button>";
+  info.querySelector("b").textContent = p.nom;
+  info.querySelectorAll(".d")[0].textContent = combien + imp;
+  info.querySelectorAll(".d")[1].textContent = p.role[0].toUpperCase() + p.role.slice(1) + ".";
+  info.querySelector("button").onclick = () => montrer(null);
+}
+
+try {
+  v = await visionneuse(document.getElementById("scene"), "pieces/", {
+    vue: "face",
+    progres: f => { etat.textContent = "Chargement des pièces… " + Math.round(f * 100) + " %"; },
+    choisir: inst => montrer(inst),
+  });
+  etat.hidden = true;
+  const boutonsVue = document.querySelectorAll("[data-vue]");
+  boutonsVue.forEach(b => b.addEventListener("click", () => {
+    boutonsVue.forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    v.cadrer(b.dataset.vue);
+  }));
+  const be = document.getElementById("eclater");
+  be.addEventListener("click", () => {
+    const vers = be.getAttribute("aria-pressed") === "true" ? 0 : 0.8;
+    be.setAttribute("aria-pressed", String(vers > 0));
+    be.textContent = vers > 0 ? "Assembler" : "Éclater";
+    const de = v.getEclat(), t0 = performance.now();
+    (function pas(t) {
+      const k = Math.min(1, (t - t0) / 900), e = k * k * (3 - 2 * k);
+      v.eclater(de + (vers - de) * e);
+      v.cadrer();
+      if (k < 1) requestAnimationFrame(pas);
+    })(t0);
+  });
+  window.N0_PRET = true;
+} catch (e) {
+  etat.textContent = "La vue 3D ne s'ouvre pas sur cet appareil.";
+  info.textContent = "Les fichiers sont plus bas.";
+  window.N0_PRET = true;
+}
+</script>
+</body>
+</html>
