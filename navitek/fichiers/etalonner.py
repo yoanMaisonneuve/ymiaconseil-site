@@ -12,7 +12,8 @@
 # tableau à l'écran. Ensuite, lire_angle() donne la vraie position d'une articulation, et l'écart entre l'angle commandé et
 # l'angle mesuré, robot debout, dit l'effort qu'elle fournit.
 #
-# Version 0 (08.11.2026) : écrit avec la CAO, pas encore essayé sur un robot. Mesurer la tension du curseur au multimètre
+# Version 0.1 (09.11.2026) : éprouvé dans MuJoCo (R-046), qui a trouvé un défaut corrigé ici (le départ de chaque côté). Pas encore essayé sur un robot.
+# Version 0 (08.11.2026) : écrit avec la CAO. Mesurer la tension du curseur au multimètre
 # AVANT de brancher le multiplexeur : elle doit rester sous 3,3 V (sinon, un pont de résistances, voir la page).
 
 from machine import Pin, PWM, ADC
@@ -75,13 +76,27 @@ def etalonner(canal, nom):
     for nom_autre, _ in BROCHES:
         commander(nom_autre, 0)
     time.sleep_ms(400)
-    pente, zero = droite([(a, mesurer(canal, nom, a)) for a in range(-20, 21, PAS)])
+    # Version 0.1 : se poser à -20° avant la droite. La version 0 lisait -20° juste après un saut de 20° depuis le neutre : le servo n'était pas
+    # posé, la pente sortait fausse de 4 à 5 % (R-046), et l'écart de 4° était dépassé vers ±65° sans aucune butée.
+    commander(nom, -20)
+    time.sleep_ms(400)
+    points = [(a, mesurer(canal, nom, a)) for a in range(-20, 21, PAS)]
+    pente, zero = droite(points)
     if abs(pente) < 20:                   # la mesure ne bouge pas avec l'angle : le fil n'est pas branché
         commander(nom, 0)
         return {"erreur": "le capteur ne suit pas l'angle : vérifier le fil du curseur et le canal %d" % canal}
+    # Version 0.1 : si la droite elle-même ne passe pas par ses points, une butée (ou un jeu) est entre -20 et +20° : le dire, plutôt que des plages fausses.
+    pire = max(abs(m - (pente * a + zero)) / abs(pente) for a, m in points)
+    if pire > ECART_MAX:
+        commander(nom, 0)
+        return {"erreur": "butée ou jeu entre -20 et +20° (écart de %.1f° à la droite) : vérifier à la main" % pire}
     bornes = []
     for sens in (1, -1):
         a = 20
+        # Version 0.1 (09.11.2026, R-046) : aller d'abord au dernier point sûr de ce côté (±20°) et attendre. La version 0 sautait de 0 à -25°
+        # en 150 ms : en simulation, une jambe chargée n'y arrivait pas, et l'algorithme voyait une fausse butée à -20° (hanche), -55° (cheville).
+        commander(nom, sens * a)
+        time.sleep_ms(400)
         while a < MAX_DEG:
             m = mesurer(canal, nom, sens * (a + PAS))
             if abs(m - (pente * sens * (a + PAS) + zero)) / abs(pente) > ECART_MAX:

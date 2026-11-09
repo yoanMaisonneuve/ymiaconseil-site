@@ -523,6 +523,34 @@ footer p{margin:0;max-width:none}
       de blocage reste celui de la fiche&nbsp;: le banc ne le mesure pas encore. Les gestes de la première séance sont dans <code>BANC.md</code>, avec les
       programmes, dans <a class="lien" href="#fichiers">les fichiers</a>&nbsp;; le détail au cahier R-045.</p>
 
+    <h2 id="cerveau">Le cerveau apprend son corps&nbsp;: ce qui marche, ce qui ne marche pas</h2>
+    <p class="sous">Le cerveau du sprint d'avril, branché sur N0 et N1 &middot; en simulation &middot; cahier R-046</p>
+    <p>L'idée de Navitek est un cerveau qui apprend le corps qu'on lui donne. Il en existe un, écrit en avril pour un bras du commerce&nbsp;: il apprend
+      par moindres carrés, en bougeant, comment ses angles déplacent sa main (la «&nbsp;jacobienne&nbsp;»). Nous l'avons lu avant de le brancher&nbsp;: il ne
+      sait faire que cela. Il n'apprend ni les plages des articulations, ni les servos, ni l'équilibre. Voici ce que donnent, sur N0 et N1, les trois façons
+      d'apprendre son corps qu'on peut mesurer aujourd'hui.</p>
+    <figure class="video">
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation : le cerveau d'avril amène la main gauche de N1 sur trois cibles rouges">
+        <source src="simulation/cerveau-v6-n1-bras.mp4" type="video/mp4"></video>
+      <figcaption>Le cerveau d'avril, sans retouche, sur le bras gauche de N1&nbsp;: il ne connaît pas son bras, il l'apprend en bougeant, et amène sa main
+        sur trois cibles (la sphère rouge disparaît dans la main quand elle est atteinte). Simulé, servos compris.</figcaption>
+    </figure>
+    <ul class="liste">
+      <li><b>Ses plages&nbsp;: un défaut trouvé avant d'imprimer.</b><span>Le programme d'étalonnage de N0 (<code>etalonner.py</code>, plus haut) cherche la butée
+        de chaque articulation en regardant le curseur décrocher de la consigne. Essayé dans le simulateur, il voyait des butées qui n'existent pas&nbsp;:
+        40 mesures sur 90, parce qu'il lisait l'angle avant que le servo soit arrivé. Corrigé (version 0.1)&nbsp;: 0 sur 90.
+        Il ne voit pas, en revanche, le frôlement des deux pieds à 7° de cheville&nbsp;: les pièces se touchent sur moins d'un millimètre, puis se dégagent.</span></li>
+      <li><b>Sa cinématique&nbsp;: oui, sur un bras.</b><span>Le cerveau d'avril amène la main de N1 à 1&nbsp;cm de la cible dans 20 cas sur 20,
+        en 1,6 fois plus de gestes qu'un programme qui connaîtrait le bras par cœur&nbsp;; ce qu'il a appris est à 4&nbsp;% du vrai.
+        Il ne se pose jamais tout à fait (il continue d'essayer, à quelques millimètres). Sur le vrai robot, il faudra voir la main&nbsp;: la caméra de la tête.</span></li>
+      <li><b>Ses servos&nbsp;: à moitié.</b><span>N1 lit la position de chaque servo. En regardant ses propres échelons, il retrouve la raideur et l'inertie de ses
+        chevilles à 4&nbsp;% près, mais pas celles de ses hanches (24&nbsp;% d'écart, et la hanche de côté ne s'ajuste pas du tout)&nbsp;: une
+        articulation qui porte toute une jambe ne se comporte pas comme une charnière seule. La suite&nbsp;: ajuster trois chiffres communs à ses 17 servos
+        identiques, sur le modèle entier du robot.</span></li>
+      <li><b>Son équilibre, sa marche&nbsp;: non.</b><span>Rien dans ce cerveau ne les apprend. Les marches plus haut sont réglées hors ligne, par une recherche sur le
+        modèle&nbsp;; un cerveau qui apprend à marcher sur le vrai robot reste à écrire.</span></li>
+    </ul>
+
 
     <h2 id="servos">Pourquoi des SG90 et des MG90S</h2>
     <p class="sous">Et pas des MG996R, des DS3218 ou des DS3240</p>
@@ -644,7 +672,8 @@ footer p{margin:0;max-width:none}
         plus&nbsp;: c'est sa butée, et le servo n'y force jamais plus d'un pas. Résultat&nbsp;: la plage réelle de chaque
         articulation, enregistrée sur le Pico, qui remplace les bornes écrites à la main dans <code>main.py</code>.</span></li>
     </ol>
-    <p>Le câblage et le programme ont été écrits avec la CAO&nbsp;; ni l'un ni l'autre n'a encore été essayé.
+    <p>Le câblage et le programme ont été écrits avec la CAO. Le programme a été essayé dans le simulateur, qui y a trouvé deux défauts, corrigés
+      (version 0.1, <a class="lien" href="#cerveau">plus bas</a>)&nbsp;; ni le câblage ni le programme n'ont encore été essayés sur un vrai robot.
       <a class="lien" href="fichiers/etalonner.py" download>Télécharger etalonner.py</a>.</p>
 
     <h2 id="feuille-de-route">Et après&nbsp;: de N0 à N3</h2>
