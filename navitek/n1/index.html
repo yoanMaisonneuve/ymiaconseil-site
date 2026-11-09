@@ -245,7 +245,7 @@ footer p{margin:0;max-width:none}
       de notre journal de recherche donne ce qu'on attendait <em>avant</em> chaque essai.</p>
 
     <h3>S'accroupir</h3>
-    <p>Part du couple de blocage que le genou doit fournir, en moyenne puis au pic. Sur deux jambes, à peine plus du quart du blocage au pic
+    <p>Part du couple de blocage que le genou doit fournir, en moyenne puis au pic. Sur deux jambes, le genou monte à 36&nbsp;% du blocage au pic et 12&nbsp;% en moyenne
       à 90° de genou&nbsp;; <strong>sur une jambe, le robot tient jusqu'à 70°</strong> (là où N0 saturait), et tombe à 90°.</p>
     <div class="defile"><table><thead><tr><th>Genou</th><th>Deux jambes (moyen / pic)</th><th>Une jambe (moyen / pic)</th><th>Une jambe</th></tr></thead><tbody><tr><td class="n">20°</td><td class="n">3&nbsp;% / 8&nbsp;%</td><td class="n">12&nbsp;% / 34&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">40°</td><td class="n">6&nbsp;% / 15&nbsp;%</td><td class="n">16&nbsp;% / 44&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">60°</td><td class="n">8&nbsp;% / 23&nbsp;%</td><td class="n">18&nbsp;% / 58&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">70°</td><td class="n">10&nbsp;% / 28&nbsp;%</td><td class="n">27&nbsp;% / 78&nbsp;%</td><td class="n">tient</td></tr><tr><td class="n">90°</td><td class="n">12&nbsp;% / 36&nbsp;%</td><td class="n">4&nbsp;% / 17&nbsp;%</td><td class="n">tombe</td></tr></tbody></table></div>
     <p class="sources">L'équilibre sur une jambe est cherché par un décalage fixe de la hanche et de la cheville, sans retour d'information&nbsp;: un ordre de grandeur.</p>
@@ -263,7 +263,7 @@ footer p{margin:0;max-width:none}
       À titre de repère, N0 aveugle faisait 6 à 8&nbsp;cm en dix secondes, pour un robot deux fois plus petit.</p>
     <div class="defile"><table><thead><tr><th>Marche</th><th>Graine</th><th>Avance en 12 s</th><th>Dérive de côté</th><th>Fin</th><th>Couple max</th></tr></thead><tbody><tr><td class="n">avec retour</td><td class="n">1</td><td class="n">21&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">avec retour</td><td class="n">2</td><td class="n">19&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">avec retour</td><td class="n">3</td><td class="n">31&nbsp;cm</td><td class="n">3&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">1</td><td class="n">8&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">38&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">2</td><td class="n">12&nbsp;cm</td><td class="n">1&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr><tr><td class="n">aveugle</td><td class="n">3</td><td class="n">20&nbsp;cm</td><td class="n">4&nbsp;cm</td><td class="n">debout</td><td class="n">100&nbsp;%</td></tr></tbody></table></div>
     <p class="sources">Un seul modèle de servo, parfait (sans jeu, sans chute de tension, sans échauffement)&nbsp;; les marches sont réglées sur le modèle lui-même,
-      donc elles peuvent en exploiter un défaut&nbsp;; trois graines&nbsp;; la marche avance en diagonale (la dérive de côté est dite). <strong>Se relever n'est pas encore traité.</strong>
+      donc elles peuvent en exploiter un défaut&nbsp;; trois graines&nbsp;; la marche avance en diagonale (la dérive de côté est dite). <strong>Se relever&nbsp;: essayé, pas obtenu.</strong> Onze recherches de mouvements, couché sur le dos, dans le plan sagittal, même avec trois fois plus de couple&nbsp;: au mieux assis ou agenouillé, jamais debout (cahier R-038). Il manque à N1 la rotation de la hanche, que font les robots qui se relèvent.
       Le «&nbsp;couple max&nbsp;» est la part du couple de blocage&nbsp;: 100&nbsp;% veut dire que le servo sature.</p>
 
     <h3>Ce qui fait tomber la marche</h3>
@@ -409,7 +409,7 @@ footer p{margin:0;max-width:none}
 
     <h2>Et après</h2>
     <p class="sous">N2, le même principe à un mètre</p>
-    <p>N1 doit encore prouver qu'il se relève et que ses cotes de servo tiennent sur un vrai boîtier. Ensuite&nbsp;: N2, environ un mètre, des
+    <p>N1 doit encore prouver que ses cotes de servo tiennent sur un vrai boîtier, puis qu'il se relève (non obtenu en simulation). Ensuite&nbsp;: N2, environ un mètre, des
       moteurs sans balais avec un réducteur imprimé&nbsp;; puis N3, de la taille d'un adulte. La feuille de route est sur
       <a class="lien" href="/navitek/#feuille-de-route">la page de N0</a>.</p>
 
