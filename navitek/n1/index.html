@@ -332,6 +332,9 @@ footer p{margin:0;max-width:none}
       articulation cherche ses deux butées en lisant sa propre position, et les garde comme bornes&nbsp;; <b>démo</b>. Éprouvé contre des servos simulés qui parlent le même
       protocole, octet par octet&nbsp;: 8 épreuves sur 9. L'étalonnage y a trouvé, sur 13 articulations, les limites du modèle à 0,2° près,
       et sur les autres <strong>de vrais contacts</strong>, que les essais de marche ne voyaient pas (plus bas). Pas encore essayé sur un vrai bus.</p>
+    <p><b>Une limite qui reste.</b> Même sur la version 2, une hanche ne s'ouvre de côté que de 4° vers l'intérieur et 5° vers l'extérieur (maillages exacts, cahier R-047)&nbsp;:
+      vers l'intérieur, les étriers des deux chevilles se touchent&nbsp;; vers l'extérieur, la main touche la hanche, d'où les bras écartés en marchant.
+      Les marches ci-dessous font avec. Ouvrir la hanche demanderait des chevilles plus minces ou des jambes plus écartées&nbsp;: c'est à étudier pour la version suivante.</p>
 
     <h2>En simulation&nbsp;: ce que N1 peut faire</h2>
     <p class="sous">MuJoCo 3.8 &middot; modèle tiré de la CAO &middot; 2,3&nbsp;kg &middot; <b>simulé</b>, pas testé</p>
@@ -560,7 +563,7 @@ footer p{margin:0;max-width:none}
       <a class="fichier" href="fichiers/navitek-n1-step.zip" download><span class="n">La CAO en STEP, et sa source</span>
         <span class="d">Chaque pièce, l'assemblage, et <code>n1.py</code>, le script FreeCAD qui les dessine (les cotes du servo, à vérifier, sont en tête).</span><span class="u">1,2&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n1-simulation.zip" download><span class="n">La simulation MuJoCo</span>
-        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">65&nbsp;ko &middot; ZIP</span></a>
+        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">66&nbsp;ko &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n1-programme.zip" download><span class="n">Le programme du robot</span>
         <span class="d"><code>main.py</code> et <code>sts.py</code> (MicroPython) et le schéma électrique&nbsp;; éprouvés contre des servos simulés.</span><span class="u">8&nbsp;ko &middot; ZIP</span></a>
     </div>
