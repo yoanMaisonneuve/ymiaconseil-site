@@ -271,6 +271,19 @@ footer p{margin:0;max-width:none}
       (sans la réoptimiser).</p>
     <div class="defile"><table><thead><tr><th>Hypothèse</th><th>Divisée par 2</th><th>Multipliée par 1,5</th></tr></thead><tbody><tr class="repond"><td><b>Masse de l'électronique (330&nbsp;g)</b></td><td class="n">tient, 24&nbsp;cm</td><td class="n">tombe à 2,9&nbsp;s</td></tr><tr class="repond"><td><b>Couple de blocage des servos</b></td><td class="n">tombe à 3,7&nbsp;s</td><td class="n">tombe à 9,3&nbsp;s</td></tr><tr class="repond"><td><b>Raideur de position des servos</b></td><td class="n">tient, 15&nbsp;cm</td><td class="n">tombe à 3,2&nbsp;s</td></tr><tr class="repond"><td><b>Frottement du sol</b></td><td class="n">tient, 17&nbsp;cm</td><td class="n">tombe à 4,3&nbsp;s</td></tr><tr class="repond"><td><b>Inertie du rotor</b></td><td class="n">tient, 30&nbsp;cm</td><td class="n">tombe à 7,1&nbsp;s</td></tr><tr class="repond"><td><b>Amortissement des charnières</b></td><td class="n">tombe à 6,8&nbsp;s</td><td class="n">tient, 28&nbsp;cm</td></tr></tbody></table></div>
 
+    <h3>Une marche qui ne dépend pas d'un détail du modèle</h3>
+    <p>La fragilité ci-dessus vient du réglage sur <em>un seul</em> modèle, pas du robot. Une deuxième recherche a donc réglé la même marche pour tenir sur <strong>huit modèles à la fois</strong>
+      (masse de l'électronique, frottement, inertie, amortissement, couple et raideur, chacun un peu changé) : l'aptitude d'un candidat est celle de son pire modèle. Résultat&nbsp;: la marche
+      robuste tient dans les <strong>12 variations sur 12</strong> de ±50&nbsp;% (plus larges que l'entraînement), contre 5 sur 12 pour la marche réglée sur le nominal. Le prix&nbsp;:
+      20&nbsp;cm en 12&nbsp;s au lieu de 31.</p>
+    <figure class="video">
+      <video controls muted playsinline loop preload="metadata" aria-label="Simulation de la marche robuste de N1">
+        <source src="simulation/n1-marche-robuste.mp4" type="video/mp4"></video>
+      <figcaption>La marche robuste (graine 1)&nbsp;: 12&nbsp;s, 20&nbsp;cm, sans chute dans aucune des variations.</figcaption>
+    </figure>
+    <div class="defile"><table><thead><tr><th>Hypothèse (÷2 &middot; ×1,5)</th><th>Marche réglée sur le nominal</th><th>Marche robuste</th></tr></thead><tbody><tr><td><b>Masse de l'électronique (330&nbsp;g)</b></td><td class="n">tient, 24&nbsp;cm &middot; tombe à 2,9&nbsp;s</td><td class="n">tient, 19&nbsp;cm &middot; tient, 23&nbsp;cm</td></tr><tr><td><b>Couple de blocage des servos</b></td><td class="n">tombe à 3,7&nbsp;s &middot; tombe à 9,3&nbsp;s</td><td class="n">tient, 20&nbsp;cm &middot; tient, 20&nbsp;cm</td></tr><tr><td><b>Raideur de position des servos</b></td><td class="n">tient, 15&nbsp;cm &middot; tombe à 3,2&nbsp;s</td><td class="n">tient, 18&nbsp;cm &middot; tient, 25&nbsp;cm</td></tr><tr><td><b>Frottement du sol</b></td><td class="n">tient, 17&nbsp;cm &middot; tombe à 4,3&nbsp;s</td><td class="n">tient, 13&nbsp;cm &middot; tient, 18&nbsp;cm</td></tr><tr><td><b>Inertie du rotor</b></td><td class="n">tient, 30&nbsp;cm &middot; tombe à 7,1&nbsp;s</td><td class="n">tient, 20&nbsp;cm &middot; tient, 22&nbsp;cm</td></tr><tr><td><b>Amortissement des charnières</b></td><td class="n">tombe à 6,8&nbsp;s &middot; tient, 28&nbsp;cm</td><td class="n">tient, 21&nbsp;cm &middot; tient, 19&nbsp;cm</td></tr></tbody></table></div>
+    <p class="sources">Cela ne prouve pas que la marche tiendrait sur le vrai robot&nbsp;: les huit modèles sont des variations d'un même modèle simplifié (pas de jeu, pas de sol irrégulier, pas de chute de tension).</p>
+
     <h2>Ce qui s'imprime</h2>
     <p class="sous">48 pièces &middot; 49&nbsp;h&nbsp;39 &middot; 980&nbsp;g de PLA &middot; 10 plateaux de 220 × 220&nbsp;mm</p>
     <p>Comme pour N0, tout s'imprime sans support, sur une Ender-3 V3 SE, en PLA, 3 parois et 25&nbsp;% de remplissage. Les temps et les grammes
