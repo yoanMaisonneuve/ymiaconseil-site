@@ -551,6 +551,30 @@ footer p{margin:0;max-width:none}
       <li><b>Son équilibre, sa marche&nbsp;: non.</b><span>Rien dans ce cerveau ne les apprend. Les marches plus haut sont réglées hors ligne, par une recherche sur le
         modèle&nbsp;; un cerveau qui apprend à marcher sur le vrai robot reste à écrire.</span></li>
     </ul>
+    <p><b>N0 apprend son corps, dans le simulateur.</b> Un second essai (cahier R-061) donne à N0 simulé ses seuls sens d'origine&nbsp;: les angles qu'il
+      demande à ses servos et, en option, ce que lisent ses curseurs. Rien d'autre, ni capteur sous les pieds ni centrale inertielle. Il l'a vécu en trois saisons&nbsp;:
+      pendu, debout au hasard, puis en visant.</p>
+    <ul class="liste">
+      <li><b>Sentir où pèse son corps&nbsp;: oui, debout.</b><span>Ses huit curseurs de jambes lui donnent son centre de pression à 1,2&nbsp;mm près
+        (un petit réseau de neurones&nbsp;; une simple droite&nbsp;: 5&nbsp;mm), sur un centre de pression qui se promène sur
+        76 par 101&nbsp;mm. Pendu, en revanche, il lit mal sa gravité (ce qu'il apprend n'explique que
+        56&nbsp;% de ce que lisent ses hanches, 36&nbsp;% pour ses genoux), et un poids de 5 à 50&nbsp;g accroché
+        à son pied ne se remarque que dans 2 à
+        3&nbsp;% de ses poses.</span></li>
+      <li><b>Pressentir la chute&nbsp;: neuf fois sur dix.</b><span>Debout, en essayant des poses au hasard, il apprend à prédire s'il va tomber&nbsp;: 90&nbsp;% de
+        justes après 2&nbsp;000 essais, 90,9&nbsp;% après 8&nbsp;000. Le robot «&nbsp;curieux&nbsp;», qui allait chercher les poses dont il doutait, n'a pas fait mieux
+        (89,1&nbsp;%). Savoir qu'il est tombé, par ses curseurs&nbsp;: 96,9&nbsp;%, mais la pose demandée seule en dit déjà
+        91,4&nbsp;%.</span></li>
+      <li><b>Mettre son poids où on le lui demande&nbsp;: à moitié.</b><span>Avec ce sens, et la règle du cerveau d'avril (réapprendre à chaque pas comment ses angles
+        déplacent son poids), il amène son centre de pression à 3&nbsp;mm d'une cible 7 fois sur 12 d'avant en arrière, et
+        6 fois sur 12 dans deux directions, sans jamais tomber. Le même robot qui n'apprend plus
+        vise mieux d'avant en arrière (9 sur 12),
+        moins bien dans deux directions (5), et tombe 3 fois&nbsp;: réapprendre
+        à chaque pas protège de la chute, sans viser plus juste&nbsp;; un programme qui connaît son corps par cœur, 12 sur 12. Le corps peut donc
+        faire le geste&nbsp;: c'est le sens qui manque (dans deux directions, ce qu'il sent de son poids s'écarte du vrai de 2,4&nbsp;mm, pour une cible à 3&nbsp;mm).</span></li>
+    </ul>
+    <p>Tout cela est simulé, sur le modèle de N0 d'avant la correction de l'avant-bras (ERREURS E38). C'est le sens qu'il faudra vérifier en premier sur le
+      N0 imprimé&nbsp;: les curseurs des jambes disent-ils où pèse le robot&nbsp;?</p>
 
 
     <h2 id="servos">Pourquoi des SG90 et des MG90S</h2>
@@ -712,7 +736,7 @@ footer p{margin:0;max-width:none}
       <a class="fichier" href="fichiers/navitek-n0-programmes.zip" download><span class="n">Les programmes du robot</span>
         <span class="d"><code>main.py</code> (le centrage, la démonstration) et <code>etalonner.py</code> (l'option des capteurs), en MicroPython.</span><span class="u">5&nbsp;ko &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n0-simulation.zip" download><span class="n">La simulation MuJoCo</span>
-        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0,3&nbsp;Mo &middot; ZIP</span></a>
+        <span class="d">Le modèle, les scripts des essais et leurs résultats en JSON&nbsp;: refaites-les chez vous.</span><span class="u">0,4&nbsp;Mo &middot; ZIP</span></a>
       <a class="fichier" href="fichiers/navitek-n0-banc.zip" download><span class="n">Le banc d'un servo</span>
         <span class="d"><code>BANC.md</code> (les gestes), le programme du Pico, le pilote, la vision et l'ajustement, éprouvés en simulation.</span><span class="u">31&nbsp;ko &middot; ZIP</span></a>
     </div>
