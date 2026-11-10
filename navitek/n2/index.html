@@ -268,6 +268,20 @@ footer p{margin:0;max-width:none}
         Elle traîne les pieds, elle aussi.</span></li>
     </ul>
 
+
+    <h2>Encaisser une poussée</h2>
+    <p class="sous">Simulation, CAO version 2 &middot; une force sur le torse pendant 0,1&nbsp;s, de 0 à 400&nbsp;N par pas de 10&nbsp;N &middot; cahier R-058</p>
+    <p>On a poussé le torse de N2 (14&nbsp;kg) dans quatre directions, debout puis pendant ses 4 marches robustes, à quatre moments du pas, en cherchant la plus forte poussée
+      qu'il encaisse sans tomber. Entre parenthèses, la vitesse qu'elle donne au robot entier.</p>
+    <div class="defile"><table><thead><tr><th>Poussée</th><th>Debout, avec retour</th><th>En marche, au pire moment</th><th>En marche, au meilleur moment</th></tr></thead><tbody><tr><td>Vers l'avant</td><td class="n">50 à 60&nbsp;N (0,36 à 0,43&nbsp;m/s)</td><td class="n">20 à 40&nbsp;N (0,14 à 0,29&nbsp;m/s)</td><td class="n">40 à 70&nbsp;N</td></tr><tr><td>Vers l'arrière</td><td class="n">30&nbsp;N (0,21&nbsp;m/s)</td><td class="n">10 à 20&nbsp;N (0,07 à 0,14&nbsp;m/s)</td><td class="n">30&nbsp;N</td></tr><tr><td>Vers la gauche</td><td class="n">60 à 80&nbsp;N (0,43 à 0,57&nbsp;m/s)</td><td class="n">20 à 40&nbsp;N (0,14 à 0,29&nbsp;m/s)</td><td class="n">40 à 60&nbsp;N</td></tr><tr><td>Vers la droite</td><td class="n">60 à 80&nbsp;N (0,43 à 0,57&nbsp;m/s)</td><td class="n">20 à 50&nbsp;N (0,14 à 0,36&nbsp;m/s)</td><td class="n">40 à 60&nbsp;N</td></tr></tbody></table></div>
+    <p class="sources">Debout&nbsp;: la posture de chaque marche, sans ses oscillations. La résolution est de 10&nbsp;N. Un sol plat et adhérent, des masses de moteurs estimées, aucun jeu&nbsp;: le vrai seuil sera plus bas.</p>
+    <ul class="liste">
+      <li><b>Debout, il encaisse une poussée légère.</b><span>50 à 60&nbsp;N vers l'avant, mais 30&nbsp;N seulement vers l'arrière.
+        Et c'est son retour d'information qui le tient&nbsp;: sans ses gains, la posture de 3 marches sur 4 tombe d'elle-même, sans qu'on la pousse.</span></li>
+      <li><b>En marche, presque rien.</b><span>Au mauvais moment du pas, une poussée de 20&nbsp;N sur la poitrine (vers l'arrière) pendant 0,1&nbsp;s
+        (2&nbsp;N·s, 0,14&nbsp;m/s) suffit à faire tomber 3 de ses 4 marches. <strong>N2 n'encaisse donc pas encore une poussée</strong>&nbsp;: sa marche est une oscillation corrigée aux chevilles, sans pas de rattrapage (poser le pied là où le corps s'en va). C'est ce qu'il faut ajouter avant de le faire marcher près de quelqu'un.</span></li>
+    </ul>
+
     <h2>Ce qu'on ne sait pas</h2>
     <ul class="liste">
       <li><b>La durée de vie.</b><span>Nous n'avons trouvé aucune donnée vérifiée sur le nombre de cycles d'un réducteur cycloïdal ou planétaire imprimé. Un blogue met en garde contre la fatigue du PLA
