@@ -460,7 +460,7 @@
   },
   {
    "nom": "jambe-gauche-genou-etrier",
-   "piece": "etrier",
+   "piece": "etrier-genou",
    "couleur": "#7d838c",
    "groupe": "jambe-gauche",
    "imprimee": true,
@@ -477,31 +477,6 @@
     0.0,
     0.0,
     186.7,
-    0.0,
-    0.0,
-    0.0,
-    1.0
-   ]
-  },
-  {
-   "nom": "jambe-gauche-tibia-rallonge",
-   "piece": "rallonge",
-   "couleur": "#7d838c",
-   "groupe": "jambe-gauche",
-   "imprimee": true,
-   "matrice": [
-    0.0,
-    1.0,
-    0.0,
-    -0.0,
-    0.0,
-    0.0,
-    1.0,
-    69.0,
-    1.0,
-    0.0,
-    0.0,
-    159.7,
     0.0,
     0.0,
     0.0,
@@ -1260,7 +1235,7 @@
   },
   {
    "nom": "jambe-droite-genou-etrier",
-   "piece": "etrier",
+   "piece": "etrier-genou",
    "couleur": "#7d838c",
    "groupe": "jambe-droite",
    "imprimee": true,
@@ -1277,31 +1252,6 @@
     0.0,
     0.0,
     186.7,
-    0.0,
-    0.0,
-    0.0,
-    1.0
-   ]
-  },
-  {
-   "nom": "jambe-droite-tibia-rallonge",
-   "piece": "rallonge",
-   "couleur": "#7d838c",
-   "groupe": "jambe-droite",
-   "imprimee": true,
-   "matrice": [
-    0.0,
-    -1.0,
-    0.0,
-    -0.0,
-    0.0,
-    0.0,
-    -1.0,
-    -69.0,
-    1.0,
-    0.0,
-    0.0,
-    159.7,
     0.0,
     0.0,
     0.0,
@@ -3000,7 +2950,7 @@
   },
   {
    "piece": "etrier",
-   "quantite": 16,
+   "quantite": 14,
    "x": 50.8,
    "y": 23.0,
    "z": 38.5,
@@ -3013,7 +2963,7 @@
   },
   {
    "piece": "rallonge",
-   "quantite": 6,
+   "quantite": 4,
    "x": 18.0,
    "y": 33.6,
    "z": 18.0,
@@ -3155,6 +3105,19 @@
    }
   },
   {
+   "piece": "etrier-genou",
+   "quantite": 2,
+   "x": 50.8,
+   "y": 23.0,
+   "z": 56.5,
+   "volume_cm3": 13.75,
+   "plateau": {
+    "cote_min_mm": 50.8,
+    "angle_deg": 0,
+    "tient": true
+   }
+  },
+  {
    "piece": "pied-gauche",
    "quantite": 1,
    "x": 122.0,
@@ -3181,16 +3144,16 @@
    }
   }
  ],
- "version": "2.3",
+ "version": "2.4",
  "appuis": {
   "vis_dans_la_matiere": 32,
   "vis": 32
  },
  "visserie": {
   "M3 x 8": {
-   "nombre": 60,
+   "nombre": 68,
    "ou": [
-    "étrier sur le boîtier suivant (6 x 4 ; 4 mm traversés, 4 de prise)",
+    "étrier sur le boîtier suivant (8 x 4 ; 4 mm traversés, 4 de prise)",
     "étrier sous le pied (2 x 4 ; 4 mm traversés, 4 de prise)",
     "étrier sur la main (2 x 4 ; 4 mm traversés, 4 de prise)",
     "cou sur son support (1 x 4 ; 4 mm traversés, 4 de prise)",
@@ -3200,9 +3163,9 @@
    ]
   },
   "M3 x 25": {
-   "nombre": 24,
+   "nombre": 16,
    "ou": [
-    "étrier, rallonge, boîtier suivant (6 x 4 ; 22 mm traversés, 3 de prise)"
+    "étrier, rallonge, boîtier suivant (4 x 4 ; 22 mm traversés, 3 de prise)"
    ]
   },
   "M3 x 6": {
