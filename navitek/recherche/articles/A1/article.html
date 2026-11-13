@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sensing the body in a simulated humanoid</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+@page{size:Letter;margin:2.2cm 2.3cm 2.3cm}
+:root{--ink:#111;--pale:#555;--line:#bbb}
+body{margin:0;background:#fff;color:var(--ink);font-family:'STIX Two Text','Times New Roman',serif;font-size:11pt;line-height:1.45}
+.page{max-width:17.5cm;margin:0 auto;padding:24px 16px}
+h1{font-size:17pt;line-height:1.25;text-align:center;margin:0 0 10px;font-weight:600}
+.auteurs{text-align:center;margin:0 0 2px}.affil{text-align:center;color:var(--pale);font-size:10pt;margin:0}
+.date{text-align:center;color:var(--pale);font-size:10pt;margin:4px 0 18px}
+.resume{margin:0 1.2cm 14px;font-size:10pt}.resume h2{font-size:10.5pt;text-align:center;margin:0 0 4px;border:0;padding:0}
+h2{font-size:12pt;margin:18px 0 6px;font-weight:600}
+h3{font-size:11pt;margin:12px 0 4px;font-weight:600;font-style:italic}
+p{margin:6px 0;text-align:justify;hyphens:auto}
+table{border-collapse:collapse;margin:8px auto;font-size:9.5pt;line-height:1.3}
+th,td{padding:3px 7px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+thead th{border-top:1.5px solid #000;border-bottom:1px solid #000}
+tbody tr:last-child td{border-bottom:1.5px solid #000}
+caption{caption-side:top;font-size:9.5pt;text-align:left;margin-bottom:4px}
+figure{margin:10px 0;text-align:center;break-inside:avoid}figure img{max-width:100%;height:auto}
+figcaption{font-size:9.5pt;text-align:left;margin-top:4px}
+.mono{font-family:'JetBrains Mono',monospace;font-size:9pt}
+ol.refs{font-size:9.5pt;padding-left:22px}ol.refs li{margin:3px 0}
+.note{font-size:9.5pt;color:var(--pale)}
+.tableau{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Sensing the body in a simulated humanoid: the learned gait is not a pendulum, falls are felt one second ahead, and two seconds of walking reveal the terrain</h1>
+<p class="auteurs">Yoan Maisonneuve</p>
+<p class="affil">Navitek Robolabs, Montréal, Québec</p>
+<p class="date">Preprint, 12 November 2026. All results are from simulation (MuJoCo). Code, data and laboratory notebooks are openly available.</p>
+
+<div class="resume">
+<h2>Abstract</h2>
+<p>We study what a simulated 1.5&nbsp;m, 26.5&nbsp;kg humanoid (N3, 17 position-controlled joints) can learn about its own body while walking. Every experiment was pre-registered: hypotheses, thresholds and our credence were written and committed before running, and verdicts were written after. We report five findings. (1) A gait tuned by black-box search (CMA-ES) does <i>not</i> rediscover the linear inverted pendulum: its foot-placement gain has the same magnitude as the pendulum prediction (24.7 vs 24.8&nbsp;deg per m/s) but the opposite sign; substituting the pendulum gain makes the robot walk backwards. With steps lasting 0.75&nbsp;s, a 0.76&nbsp;m pendulum would diverge about fifteen-fold per step, so the gait keeps its centre of mass over its feet and regulates speed through stride length. (2) The centre of mass stays above the soles 91% of the time; with rigid feet, the contact polygon is usually a single edge. (3) A fall can be felt about one second before it happens: a learned alarm on seven proprioceptive signals announced 88% of unseen falls at least 0.3&nbsp;s ahead (median 0.97&nbsp;s) with 10% false alarms, but a single torso-tilt threshold (9.8°) did almost as well. (4) A learned reflex rediscovered the human ankle strategy with arm counterbalance; it prevented 6 of 8 push-induced falls but none of 50 falls caused by persistent adverse conditions. (5) Two seconds of walking suffice to recognise which of six conditions (nominal, slope, sensor delay, command delay, soft floor, wind) the robot is in, with 92.5% accuracy; the most informative signal is how much the body wobbles.</p>
+<h2>Résumé</h2>
+<p>Nous étudions ce qu'un humanoïde simulé de 1,5&nbsp;m peut apprendre de son propre corps en marchant, avec des hypothèses écrites et commises avant chaque essai. La marche trouvée par essais n'est pas un pendule (le gain de placement du pied a la grandeur du pendule et le signe opposé) ; le centre de masse reste au-dessus des semelles 91&nbsp;% du temps ; la chute se sent environ une seconde à l'avance ; un réflexe appris redécouvre la stratégie de cheville et rattrape les poussées, pas les terrains ; deux secondes de marche suffisent à reconnaître le terrain à 92,5&nbsp;%, par le tremblement du corps.</p>
+</div>
+
+<h2>1. Introduction</h2>
+<p>Navitek Robolabs develops open humanoid robots meant to be printed and built by anyone. Before building N3, a 1.5&nbsp;m design, we use simulation to ask what such a body can learn about itself: where its centre of mass is, how it should place its feet, when it is about to fall, and in what kind of world it is walking. Classical humanoid control answers some of these questions with models, notably the linear inverted pendulum and the capture point [1, 2, 3]. Learning-based locomotion answers them with data and randomisation [4, 5, 6]. We ask a narrower, empirical question: when a small controller is tuned only by trial and error, what does it end up knowing, and what can be read from its own sensations?</p>
+<p>The work was run as a laboratory notebook. Each experiment (R-112 to R-117) states its hypotheses, numeric thresholds and our prior credence before any run; these were committed to a timestamped git history, an excerpt of which is in the open package (Section&nbsp;7). Results that refuted us are reported as such, and so are our own mistakes (Section&nbsp;5).</p>
+
+<h2>2. Setup</h2>
+<p><b>Robot and simulator.</b> N3 is simulated in MuJoCo 3.8 [7] with a 0.5&nbsp;ms time step and the implicit-fast integrator. It weighs 26.5&nbsp;kg, is 1.5&nbsp;m tall, and has 17 position-controlled joints (stiffness 800, damping 25, torque limit 200&nbsp;N·m): hip roll and pitch, knee, ankle pitch and roll on each leg, shoulder pitch and roll and elbow on each arm, and the neck. Hip flexion reaches 135°. There is no hip yaw, no waist and no hands. Only the feet collide with the floor; feet are rigid meshes; floor friction is 0.6.</p>
+<p><b>Gait.</b> The walking controller has 19 parameters: a 15-parameter rhythmic pattern (period, amplitudes and phases of hip, knee and ankle, lateral sway, and proportional-derivative feedback of torso attitude to the ankles), a foot-placement law that adds k<sub>v</sub>&nbsp;(v&nbsp;−&nbsp;v*) degrees to the swing hip pitch and k<sub>y</sub>&nbsp;v<sub>y</sub> to the swing hip roll (v: filtered centre-of-mass velocity; v*: target speed), and a cadence law that speeds up or slows down the phase with the velocity error. The parameters were tuned with CMA-ES [8] at nominal conditions until the gait passed our judge in 100% of nominal trials, advancing 0.89&nbsp;m in 10&nbsp;s at a target of 0.10 to 0.14&nbsp;m/s.</p>
+<p><b>Judge.</b> An episode lasts 10&nbsp;s. It succeeds if the torso never tilts more than 40°, the centre of mass never drops below 60% of its standing height, the robot advances at least 0.6&nbsp;m, drifts sideways at most 0.5&nbsp;m, and spends at most 0.1&nbsp;s with no foot on the ground.</p>
+<p><b>Conditions.</b> Disturbances come from a catalogue of 26 physical axes (masses, segment lengths, actuator gains and delays, floor friction, slope, uneven and soft ground, pushes, wind, sensor noise, bias, delay and drop-outs, initial state), each with a narrow, a wide and an extreme range justified by printed-robot tolerances. Push sets draw two 0.1&nbsp;s pushes of up to 60&nbsp;N on the torso, at random times and directions.</p>
+
+<h2>3. Results</h2>
+<h3>3.1 The learned gait is not a pendulum (R-112)</h3>
+<p>For the linear inverted pendulum with height z<sub>0</sub>, ω&nbsp;=&nbsp;√(g/z<sub>0</sub>), and a step of duration T<sub>s</sub>, a first-order deadbeat correction places the foot ∂u/∂v&nbsp;=&nbsp;coth(ωT<sub>s</sub>)/ω further ahead per unit of excess speed [1, 2, 3]. We measured z<sub>0</sub>&nbsp;=&nbsp;0.762&nbsp;m (ω&nbsp;=&nbsp;3.59&nbsp;s<sup>−1</sup>) and a hip-to-ground lever L&nbsp;=&nbsp;0.650&nbsp;m in single support, and verified the sign of hip pitch both kinematically and dynamically (+10° moves the foot 0.09&nbsp;m backwards, −10° moves it 0.13&nbsp;m forwards). The pendulum then predicts k<sub>v</sub>&nbsp;≈&nbsp;−24.8°&nbsp;per&nbsp;m/s.</p>
+<div class="tableau"><table>
+<caption><b>Table 1.</b> Learned foot-placement gain versus the pendulum prediction, for three independently tuned gaits.</caption>
+<thead><tr><th>gait</th><th>learned k<sub>v</sub> (°&nbsp;per m/s)</th><th>pendulum k<sub>v</sub></th><th>|ratio|</th><th>period T</th><th>ωT<sub>s</sub></th></tr></thead>
+<tbody><tr><td>earlier tuning (R-107)</td><td>+31.7</td><td>−24.7</td><td>1.29</td><td>1.75&nbsp;s</td><td>3.14</td></tr>
+<tr><td>pre-trained gait</td><td>+24.7</td><td>−24.8</td><td>1.00</td><td>1.53&nbsp;s</td><td>2.75</td></tr>
+<tr><td>re-tuned, nominal only</td><td>+10.1</td><td>−24.8</td><td>0.41</td><td>1.49&nbsp;s</td><td>2.68</td></tr></tbody></table></div>
+<p>All three learned gains are positive while the pendulum gain is negative (Table&nbsp;1). Two of three match the pendulum's <i>magnitude</i> within 30%, which we had predicted with low credence (0.30) but which, given the opposite sign, does not mean the pendulum was found. Replacing the learned gains by the pendulum's in the pre-trained gait made it fail every nominal trial (0/10) and every push trial (0/50): it walked backwards (−0.85&nbsp;m in 10&nbsp;s). Removing foot placement altogether cost only 8 points under pushes (45/50 → 41/50 successes). The explanation is the time scale: with ωT<sub>s</sub>&nbsp;≈&nbsp;2.7, the pendulum would diverge by e<sup>2.7</sup>&nbsp;≈&nbsp;15 during one step, so a stiff, slow gait cannot rely on the next step to catch itself. It keeps its mass above the stance foot, and in such a gait a longer step means a faster walk: the positive sign regulates speed through stride length, while the pendulum's sign creates positive feedback.</p>
+
+<h3>3.2 The centre of mass stays above the soles (R-113)</h3>
+<figure><img src="fig-semelles.png" alt="Simulated N3, translucent, with the sole polygon in white, the centre of mass and its vertical line in green, and the capture point in cyan."><figcaption><b>Figure 1.</b> Visual feedback rendered in simulation: translucent body, sole polygon (white), centre of mass and its vertical projection (green), capture point ξ&nbsp;=&nbsp;x&nbsp;+&nbsp;ẋ/ω (cyan, turning red when the alarm fires).</figcaption></figure>
+<p>In 110 episodes (10 nominal, 50 with pushes, 50 under narrow random conditions; 28 falls), we tracked the centre of mass and the capture point relative to the support polygon every 0.04&nbsp;s. Using the convex hull of contact points, as planned, the feet touched the floor by only two points (one edge) in 67% of nominal readings and by one point in 12%; the centre of mass was then "inside" only 15% of the time. With a second measure registered after this first reading and before running it (the hull of sole vertices within 1&nbsp;cm of the floor, as a compliant sole would give), the centre of mass was above the soles <b>91%</b> of the time and the capture point 58.5%. Any fixed-margin alarm (3&nbsp;cm for 0.12&nbsp;s) fired in every episode, including those without a fall: weight transfer moves the capture point outside the soles at each step. For a physical N3, the edge contacts argue for a compliant sole.</p>
+
+<h3>3.3 A fall can be felt one second ahead (R-114)</h3>
+<p>We collected 330 episodes (100 narrow, 100 wide random conditions, 100 push sets, 30 nominal), learned on even-ranked episodes (165, 81 falls) and judged on odd-ranked ones never seen (165, 82 falls). Each alarm fires when its signal exceeds a threshold for 0.12&nbsp;s; thresholds were set on the learning half for at most 10% false alarms.</p>
+<div class="tableau"><table>
+<caption><b>Table 2.</b> Fall alarms on unseen episodes (82 falls, 83 non-falling).</caption>
+<thead><tr><th>alarm</th><th>threshold</th><th>falls announced ≥&nbsp;0.3&nbsp;s ahead</th><th>false alarms</th><th>median lead</th></tr></thead>
+<tbody><tr><td>torso tilt only</td><td>9.8°</td><td>72/82 (88%)</td><td>12%</td><td>0.94&nbsp;s</td></tr>
+<tr><td>capture point only</td><td>13.6&nbsp;cm outside the soles</td><td>70/82 (85%)</td><td>12%</td><td>0.62&nbsp;s</td></tr>
+<tr><td>learned (logistic, 7 signals)</td><td>p&nbsp;&gt;&nbsp;0.62</td><td>72/82 (88%)</td><td>10%</td><td>0.97&nbsp;s</td></tr></tbody></table></div>
+<figure><img src="fig2-alarme.png" alt="Four frames of a fall: a lamp above the head is green while walking and turns red when the learned alarm fires, about one second before the robot tips sideways."><figcaption><b>Figure 2.</b> An unseen fall: the lamp above the head turns red when the learned alarm fires, 0.97&nbsp;s before the robot tips sideways.</figcaption></figure>
+<p>The learned alarm weights the capture-point distance (+3.65, standardised), lateral tilt (+3.28) and centre-of-mass distance (−3.09): together, "the capture point is outside while the mass is still inside", i.e. a velocity carrying the body off its feet, mostly sideways. It announced no more falls than a single tilt threshold; it only raised slightly fewer false alarms. Falls of this quasi-static gait are slow topples.</p>
+
+<h3>3.4 A learned reflex: the ankle strategy (R-115)</h3>
+<p>When the tilt alarm fires, a reflex adds joint offsets proportional to torso roll and pitch (hip roll, ankle roll, hip pitch, a crouch, shoulder roll). Its five gains were learned with CMA-ES on 60 learning episodes (40 falls → 36). The result is the human ankle strategy with arm counterbalance: ankle roll +1.88° per degree of torso roll, shoulders −1.85, hips −1.06, almost no crouch (3.7°). On the 165 unseen episodes it prevented 8 of 82 falls (10%) and caused 2 of 83 (2%); but by condition it prevented 6 of 8 push-induced falls, 2 of 24 under narrow random conditions and 0 of 50 under wide ones. A reflex rescues accidents, not persistent adverse terrain; slow sideways falls would need a catch step.</p>
+
+<h3>3.5 Two seconds of walking reveal the terrain (R-117)</h3>
+<p>For six conditions (nominal; and, one at a time in their wide range, slope 0–8°, sensor delay 0–20&nbsp;ms, command delay 0–40&nbsp;ms, soft floor, lateral wind up to 10&nbsp;N), we ran 40 two-second walks each and summarised them with 14 proprioceptive numbers (mean and standard deviation of torso pitch, roll and their rates, of forward and lateral velocity, the fraction of double support and the number of support changes). A random forest (200 trees) trained on half the walks recognised the condition of the other half with <b>92.5%</b> accuracy (chance: 17%): nominal 100%, sensor delay, command delay and soft floor 95%, slope and wind 85% (they are confused with each other: both push the body sideways steadily). The most informative features were the standard deviations of roll rate and pitch rate: <i>how much the body wobbles</i>. Contrary to our prediction, delays were easy to recognise: they make the feedback loop oscillate.</p>
+
+<h2>4. Pre-registered predictions and verdicts</h2>
+<div class="tableau"><table>
+<caption><b>Table 3.</b> All predictions of this paper, written before the runs, with our prior credence. 8 confirmed, 13 refuted, 4 to be revisited (the measure, not the idea, failed), out of 25.</caption>
+<thead><tr><th>id</th><th>prediction (abridged)</th><th>credence</th><th>verdict</th></tr></thead>
+<tbody>
+<tr><td>H142</td><td>learned placement gain has the pendulum's sign (3 gaits)</td><td>0.70</td><td>refuted</td></tr>
+<tr><td>H143</td><td>|learned gain| within 30% of the pendulum's, 2 of 3</td><td>0.30</td><td>confirmed (magnitude only)</td></tr>
+<tr><td>H144</td><td>pendulum gains keep ≥9/10 nominal and 80% of push success</td><td>0.45</td><td>refuted (0/10, 0/50)</td></tr>
+<tr><td>H145</td><td>without placement, push success drops ≥20 points</td><td>0.55</td><td>refuted (8 points)</td></tr>
+<tr><td>H146–H147</td><td>CoM / capture point inside the contact polygon ≥80% / ≥70%</td><td>0.60 / 0.55</td><td>refuted (15%, 1.4%)</td></tr>
+<tr><td>H148, H150</td><td>contact-polygon alarm announces falls; capture point earlier than CoM</td><td>0.50 / 0.75</td><td>to revisit (alarm always on)</td></tr>
+<tr><td>H149</td><td>contact-polygon alarm ≤30% false alarms</td><td>0.40</td><td>refuted (100%)</td></tr>
+<tr><td>H151</td><td>CoM above the soles ≥80% of the time</td><td>0.60</td><td>confirmed (91%)</td></tr>
+<tr><td>H152</td><td>capture point above the soles ≥70%</td><td>0.50</td><td>refuted (58.5%)</td></tr>
+<tr><td>H153, H155</td><td>sole-polygon alarm announces falls; capture point earlier</td><td>0.50 / 0.75</td><td>to revisit (alarm always on)</td></tr>
+<tr><td>H154</td><td>sole-polygon alarm ≤30% false alarms</td><td>0.40</td><td>refuted (100%)</td></tr>
+<tr><td>H156</td><td>learned alarm: ≥70% of falls ≥0.3&nbsp;s ahead, ≤20% false alarms</td><td>0.45</td><td>confirmed (88%, 10%)</td></tr>
+<tr><td>H157</td><td>learned alarm announces more falls than tilt alone</td><td>0.60</td><td>refuted (72 vs 72)</td></tr>
+<tr><td>H158</td><td>… more than capture point alone</td><td>0.65</td><td>confirmed (72 vs 70)</td></tr>
+<tr><td>H159</td><td>median lead ≥0.5&nbsp;s</td><td>0.40</td><td>confirmed (0.97&nbsp;s)</td></tr>
+<tr><td>H160</td><td>reflex prevents ≥30% of unseen falls</td><td>0.40</td><td>refuted (10%)</td></tr>
+<tr><td>H161</td><td>reflex causes ≤5% falls</td><td>0.55</td><td>confirmed (2%)</td></tr>
+<tr><td>H162</td><td>reflex acts through legs more than arms</td><td>0.55</td><td>confirmed</td></tr>
+<tr><td>H163</td><td>reflex crouches ≥10°</td><td>0.45</td><td>refuted (3.7°)</td></tr>
+<tr><td>H168</td><td>condition recognised in ≥70% of unseen walks</td><td>0.45</td><td>confirmed (92.5%)</td></tr>
+<tr><td>H169</td><td>slope is the best recognised</td><td>0.45</td><td>refuted</td></tr>
+<tr><td>H170</td><td>sensor delay is the worst recognised</td><td>0.35</td><td>refuted</td></tr>
+</tbody></table></div>
+
+<h2>5. What we got wrong along the way</h2>
+<p>In R-112, our own analysis code first took the pendulum gain with the wrong sign; the surprising result prompted a kinematic and a dynamic check before any verdict, the run was archived, and the check is now built into the script, which aborts if the two disagree. In R-113, the planned support polygon (contact points) turned out to be degenerate with rigid feet; we kept its verdicts as measured and registered a second measure before running it. These are documented in the notebooks with the archived runs.</p>
+
+<h2>6. Limitations</h2>
+<p>Everything is simulated, with exact state; a physical robot will estimate its centre of mass and velocity with noisy sensors. One robot, one walking controller with 19 parameters, small evaluation sets (tens to hundreds of episodes), and conditions applied one at a time in R-117. The fall alarm and reflex were evaluated on the same gait they were learned for.</p>
+
+<h2>7. Data, code and notebooks</h2>
+<p>The open package contains the notebooks R-112 to R-117 (in French; hypotheses written before, verdicts after), the N3 model and meshes, all scripts, the raw results, the archived run of our sign error, and the dated commit history: <span class="mono">ymiaconseil.com/navitek/recherche/articles/</span>. The research log with every hypothesis and verdict is at <span class="mono">ymiaconseil.com/navitek/recherche/</span>. Code under the MIT licence; texts, figures and data under CC BY 4.0.</p>
+<p class="note"><b>Use of AI.</b> The experiments, analysis code and this text were produced with the assistance of Claude (Anthropic), an AI system, working under the author's direction; the author takes responsibility for the content. AI systems are not listed as authors.</p>
+
+<h2>References</h2>
+<ol class="refs">
+<li>S. Kajita, F. Kanehiro, K. Kaneko, K. Yokoi, H. Hirukawa. The 3D linear inverted pendulum mode: a simple modeling for a biped walking pattern generation. IROS, 2001.</li>
+<li>J. Pratt, J. Carff, S. Drakunov, A. Goswami. Capture point: a step toward humanoid push recovery. IEEE-RAS Humanoids, 2006.</li>
+<li>M. H. Raibert. <i>Legged Robots That Balance</i>. MIT Press, 1986.</li>
+<li>J. Tobin, R. Fong, A. Ray, J. Schneider, W. Zaremba, P. Abbeel. Domain randomization for transferring deep neural networks from simulation to the real world. IROS, 2017.</li>
+<li>X. B. Peng, M. Andrychowicz, W. Zaremba, P. Abbeel. Sim-to-real transfer of robotic control with dynamics randomization. ICRA, 2018.</li>
+<li>J. Lee, J. Hwangbo, L. Wellhausen, V. Koltun, M. Hutter. Learning quadrupedal locomotion over challenging terrain. <i>Science Robotics</i>, 2020.</li>
+<li>E. Todorov, T. Erez, Y. Tassa. MuJoCo: a physics engine for model-based control. IROS, 2012.</li>
+<li>N. Hansen, A. Ostermeier. Completely derandomized self-adaptation in evolution strategies. <i>Evolutionary Computation</i> 9(2), 2001.</li>
+</ol>
+</div>
+</body>
+</html>

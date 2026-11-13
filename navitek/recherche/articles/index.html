@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Articles — Navitek Robolabs</title>
+<meta name="description" content="Les prépublications de Navitek Robolabs : articles au format arXiv, avec le code, le modèle, les données et l'historique daté, en accès libre.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+:root{--navy:#0b1f3a;--gold:#d4a843;--gold-small:#8a6b18;--ink:#2a2620;--dim:#5c5c5c;--line:#e4e2dd;--paper:#fff;--tint:#f6f4f0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Lora',Georgia,serif;font-size:17px;line-height:1.65}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar a{font-family:'Newsreader',Georgia,serif;font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar a span{color:var(--gold)}
+main{max-width:760px;margin:0 auto;padding:40px 20px 60px}
+.code{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 12px}
+h1{font-family:'Newsreader',Georgia,serif;font-weight:600;color:var(--navy);font-size:clamp(30px,7vw,42px);line-height:1.1;margin:0 0 14px}
+.chapeau{font-size:18px;margin:0 0 26px}
+.art{border-top:1px solid var(--line);padding:22px 0}
+.art h2{font-family:'Newsreader',Georgia,serif;font-weight:600;color:var(--navy);font-size:22px;line-height:1.25;margin:0 0 8px}
+.meta{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);margin:0 0 10px}
+.liens{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.liens a{display:inline-block;padding:8px 14px;border:1px solid var(--navy);border-radius:3px;color:var(--navy);text-decoration:none;font-size:15px}
+.liens a.pdf{background:var(--navy);color:#fff}
+.note{font-size:15px;color:var(--dim);border-top:1px solid var(--line);padding-top:16px;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="bar"><a href="/navitek/">Navitek <span>Robolabs</span></a></div>
+<main>
+<p class="code">Navitek · recherche · articles</p>
+<h1>Les articles</h1>
+<p class="chapeau">Nos essais, écrits comme des articles de chercheurs : au format arXiv, en anglais pour que le monde entier puisse les lire, avec
+un résumé en français. Chaque article vient avec tout ce qu'il faut pour le refaire : le code, le modèle du robot, les données brutes, les
+cahiers de laboratoire et l'historique daté qui montre que les prédictions ont été écrites avant les essais. Les réfutations et nos erreurs
+y sont aussi. En accès libre : code sous licence MIT, textes et données sous CC BY 4.0.</p>
+<div class="art" id="A1"><h2>Sensing the body in a simulated humanoid: the learned gait is not a pendulum, falls are felt one second ahead, and two seconds of walking reveal the terrain</h2><p class="meta">Yoan Maisonneuve · Navitek Robolabs · 12 novembre 2026 · cahiers R-112 à R-117</p><p>Ce qu&#x27;un humanoïde simulé de 1,5 m apprend de son propre corps en marchant : la marche trouvée par essais n&#x27;est pas un pendule ; le centre de masse reste au-dessus des semelles ; la chute se sent environ une seconde à l&#x27;avance ; un réflexe appris redécouvre la stratégie de cheville ; deux secondes de marche suffisent à reconnaître le terrain. 25 prédictions écrites avant (8 confirmées, 13 réfutées, 4 à revoir).</p><div class="liens"><a class="pdf" href="/navitek/recherche/articles/A1/maisonneuve-2026-sensing-the-body.pdf">Lire le PDF</a><a href="/navitek/recherche/articles/A1/article.html">Version web</a><a href="/navitek/recherche/articles/A1/navitek-A1-sensing-the-body.zip">Code, modèle et données (ZIP, 4.2 Mo)</a></div></div>
+<p class="note">Tout est simulé (MuJoCo) : aucun robot Navitek n'est encore imprimé. Les expériences, le code et les textes sont faits avec
+l'aide de Claude (Anthropic), sous la direction de l'auteur ; une IA n'est pas auteure. Les cahiers de chaque essai sont sur
+<a href="/navitek/recherche/">la page de recherche</a>.</p>
+</main>
+</body>
+</html>
