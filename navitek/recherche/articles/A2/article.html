@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variety of conditions or variety of activities?</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+@page{size:Letter;margin:2.2cm 2.3cm 2.3cm}
+:root{--ink:#111;--pale:#555;--line:#bbb}
+body{margin:0;background:#fff;color:var(--ink);font-family:'STIX Two Text','Times New Roman',serif;font-size:11pt;line-height:1.45}
+.page{max-width:17.5cm;margin:0 auto;padding:24px 16px}
+h1{font-size:17pt;line-height:1.25;text-align:center;margin:0 0 10px;font-weight:600}
+.auteurs{text-align:center;margin:0 0 2px}.affil{text-align:center;color:var(--pale);font-size:10pt;margin:0}
+.date{text-align:center;color:var(--pale);font-size:10pt;margin:4px 0 18px}
+.resume{margin:0 1.2cm 14px;font-size:10pt}.resume h2{font-size:10.5pt;text-align:center;margin:0 0 4px}
+h2{font-size:12pt;margin:18px 0 6px;font-weight:600}
+h3{font-size:11pt;margin:12px 0 4px;font-weight:600;font-style:italic}
+p{margin:6px 0;text-align:justify;hyphens:auto}
+table{border-collapse:collapse;margin:8px auto;font-size:9.5pt;line-height:1.3}
+th,td{padding:3px 7px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+thead th{border-top:1.5px solid #000;border-bottom:1px solid #000}
+tbody tr:last-child td{border-bottom:1.5px solid #000}
+caption{caption-side:top;font-size:9.5pt;text-align:left;margin-bottom:4px}
+figure{margin:10px 0;text-align:center;break-inside:avoid}figure img{max-width:100%;height:auto}
+figure.demi img{max-width:62%}
+figcaption{font-size:9.5pt;text-align:left;margin-top:4px}
+.mono{font-family:'JetBrains Mono',monospace;font-size:9pt}
+ol.refs{font-size:9.5pt;padding-left:22px}ol.refs li{margin:3px 0}
+.note{font-size:9.5pt;color:var(--pale)}
+.tableau{overflow-x:auto}
+.afaire{background:#fff3c4;padding:2px 4px}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Variety of conditions or variety of activities? What helps a simulated humanoid balance in situations it has never practised</h1>
+<p class="auteurs">Yoan Maisonneuve</p>
+<p class="affil">Navitek Robolabs, Montréal, Québec</p>
+<p class="date">Preprint, 13 November 2026. All results are from simulation (MuJoCo). Code, data and laboratory notebooks are openly available.</p>
+
+<div class="resume">
+<h2>Abstract</h2>
+<p>"Variance of experience" can mean two different things for a learning robot: varying the <i>conditions</i> under which it practises one skill (domain randomisation), or varying the <i>activities</i> it practises before specialising, as in the Norwegian model of physical education, where children sample many sports before specialising. We tested both on a simulated 1.5&nbsp;m humanoid with small controllers tuned by CMA-ES, with pre-registered hypotheses. Varying conditions did not help a 19-parameter gait to walk when all difficulties occur together (0 to 2% success across four regimes, 48 trainings, 360 unseen conditions); stacking all difficulties at once even taught the learner to stop walking, and an automatic curriculum never widened. Variety that stays learnable helped: a generalist trained on five difficulties one at a time beat five specialists with the same experience (78% vs 67%). Varying activities transferred: across 13 one-leg exercises from seven disciplines, hard exercises taught the easy ones but not the reverse, some exercises impossible to learn alone became possible with a balance learned elsewhere, and a multisport "childhood" left the robot the most ready for unseen activities (7.7&nbsp;s held before any practice, versus 4.7&nbsp;s for a single-sport childhood and 0 without). In 1,000 randomised curricula of 1 to 15 activities with equal practice time, success on five never-practised activities rose with the number of activities practised (25% with one, 37% with eleven; Spearman ρ&nbsp;=&nbsp;0.10, p&nbsp;=&nbsp;0.001), with quickly diminishing returns; which activities were practised mattered as much as how many: a gymnastics front scale taught the most (+7.2 points), while a karate front kick, a ballet attitude and a soccer kick cost 3.2 to 4.2 points each. Variety made the robot slightly worse at each practised activity (39% → 33%) and better at the unknown.</p>
+<h2>Résumé</h2>
+<p>« La variance des expériences » peut vouloir dire varier les conditions d'un même geste, ou varier les activités avant de se spécialiser (le modèle norvégien de l'éducation physique). Sur un humanoïde simulé de 1,5&nbsp;m, la première n'a pas aidé une petite marche à tenir quand toutes les difficultés arrivent ensemble, et l'a même fait renoncer à marcher ; une variété apprenable, une difficulté à la fois, a aidé. La seconde se transfère : les exercices difficiles apprennent les faciles, un exercice impossible seul devient possible grâce à un autre, et une enfance multisport rend le plus prêt devant l'inconnu. Sur mille essais à temps de pratique égal, la réussite sur l'inconnu monte avec le nombre d'activités pratiquées (de 25&nbsp;% à 37&nbsp;%), avec des rendements qui baissent vite ; le choix compte autant que le nombre : la balance avant de gymnastique apprend le plus, d'autres activités coûtent.</p>
+</div>
+
+<h2>1. Introduction</h2>
+<p>The question came from a conversation about where intelligence comes from: "the variance of experience gives da Vinci's intelligence; let us test the hypothesis on the robot." We first understood <i>variance</i> as the variability of conditions in which a skill is practised, the idea behind domain randomisation [1, 2] and automatic domain randomisation [3], and built a bench around it. The author then corrected us: what he meant was the variety of <i>activities</i>, yoga, soccer, athletics, skating, gymnastics, all kinds of dance and their warm-ups, as in the Norwegian approach to children's sport, where early specialisation is avoided; the sport-science literature describes the same idea as the "sampling years" that precede specialisation [4, 5]. We report both, because the contrast is the finding.</p>
+<p>All experiments were run as a laboratory notebook: hypotheses, thresholds and credences were committed before each run and verdicts after; refutations and mistakes are reported. The robot is simulated in MuJoCo [6] and its controllers are tuned with CMA-ES [7].</p>
+
+<h2>2. Setup</h2>
+<p><b>Robot.</b> N3: 1.5&nbsp;m, 26.5&nbsp;kg, 17 position-controlled joints (hip roll and pitch, knee, ankle pitch and roll, shoulders, elbows, neck), hip flexion up to 135°, no hip yaw, no waist, no hands; only the feet touch the floor.</p>
+<p><b>Two controllers.</b> (i) A <i>walking gait</i> with 19 parameters (a rhythmic pattern with attitude feedback, foot placement and cadence adaptation), pre-trained at nominal conditions until it passed the judge in 100% of nominal trials. (ii) A <i>balance base</i> for one-leg activities, with 7 parameters shared by every activity (weight transfer to the stance leg, stance knee, ankle feedback gains on pitch and roll and their rates, torso target); each activity only prescribes its gesture (free leg, torso, arms).</p>
+<p><b>Judges.</b> Walking: 10&nbsp;s without the torso tilting beyond 40° or the centre of mass dropping below 60%, at least 0.6&nbsp;m of progress, at most 0.5&nbsp;m of drift, at most 0.1&nbsp;s airborne. One-leg activities: hold the gesture 10&nbsp;s after lifting, without the free foot touching the floor, the torso leaving its target by more than 35°, or the centre of mass dropping below 65%.</p>
+
+<h2>3. Variety of conditions</h2>
+<h3>3.1 Four regimes, 48 trainings, 360 unseen conditions (R-111)</h3>
+<p>A catalogue of 26 physical axes (masses, centre-of-mass offsets, segment lengths, load, asymmetry, torque, gains, damping, joint friction, battery sag, servo resolution, command delay, floor friction, slope, uneven and soft ground, pushes, wind, sensor noise, bias, delay and drop-outs, initial posture, velocity and imbalance, target speed), each with a narrow, wide and extreme range. Four regimes with the same algorithm and budget (6,400 ten-second episodes each, 3 seeds): R0 no variation, R1 narrow, R2 wide, R3 an automatic curriculum that widens an axis when probes at its edge succeed more than 80% of the time. A fixed evaluation set of 360 conditions was drawn and committed before any training.</p>
+<div class="tableau"><table>
+<caption><b>Table 1.</b> Success rate on unseen conditions (3 seeds pooled; Wilson 95% intervals [8] in the notebook).</caption>
+<thead><tr><th>regime</th><th>nominal</th><th>all axes in wide ranges</th><th>two axes beyond</th><th>three axes at a corner</th><th>other solver</th></tr></thead>
+<tbody><tr><td>R0 no variation</td><td>100%</td><td>1.0%</td><td>0%</td><td>2.3%</td><td>1.3%</td></tr>
+<tr><td>R1 narrow</td><td>100%</td><td>1.0%</td><td>0%</td><td>6.3%</td><td>0.7%</td></tr>
+<tr><td>R2 wide</td><td><b>0%</b></td><td>0%</td><td>0%</td><td>0.3%</td><td>0%</td></tr>
+<tr><td>R3 curriculum</td><td>100%</td><td>1.0%</td><td>2.0%</td><td>6.0%</td><td>0.7%</td></tr></tbody></table></div>
+<p>No regime learned to walk when all difficulties occur together. Under wide variation (R2) the learner abandoned the task: it stood still (0.04&nbsp;m of progress in 10&nbsp;s), falling half as often. A width sweep (0 to 2 times the wide range, Fig.&nbsp;1) shows the gait survives at 0.25, wavers at 0.5 (one seed of three loses it) and disappears from 1. The curriculum never widened: its mean width drifted down from 0.25 to 0.21. Removing one group of axes at a time from R2 restored walking only when the terrain group (slope, uneven and soft ground) was removed (93% nominal success). Changing the training score so that standing still earns nothing (R-119) did not restore walking either: under stacked variation almost no candidate ever succeeded (0.2 to 0.6% of episodes), so there was nothing to learn from. The only gain of condition variety was modest: three difficulties at a corner, 2.3% → 6%.</p>
+<figure class="demi"><img src="fig1-width-en.png" alt="Success versus the width of the training variation."><figcaption><b>Figure 1.</b> Success on unseen conditions versus the width of training variation (× the wide range; 3 seeds per width; bands: 95% intervals).</figcaption></figure>
+
+<h3>3.2 Learnable variety: one difficulty at a time (R-116, R-118, R-120, R-121)</h3>
+<p>Five single conditions that break the pre-trained gait (slope, sensor delay, command delay, soft floor, wind). With the same 4,800 episodes, five specialists (one per condition) were beaten by one generalist trained on the five conditions mixed, one at a time: 67% vs 78% on unseen draws of the same conditions (R-116), and 67% vs 79% when a learned router chose the specialist from two seconds of walking (R-118; the router itself was right 94% of the time). Specialists also forgot: they did worse than the starting gait on conditions they had not practised. Yet learning difficulties one at a time did not compose into robustness when all 25 occur together (0.7%, R-120), and a curriculum adding difficulties one by one climbed to three to five simultaneous difficulties before plateauing (R-121, 0.3% on all at once).</p>
+
+<h2>4. Variety of activities</h2>
+<h3>4.1 What each exercise teaches: a transfer matrix (R-124)</h3>
+<p>We listed about 120 exercises from 13 disciplines and kept the 13 one-leg exercises N3 can do: yoga (stork, tree, airplane, dancer, warrior&nbsp;III), dance (développé, arabesque), karate (side kick), athletics and warm-ups (knee raises, leg swing, hip circles), soccer (the kick) and skating (the skater's stance). Each was learned alone (8 of 13 reached 10&nbsp;s in 100% of trials), and each learned balance base was then played on all 13 (Fig.&nbsp;2).</p>
+<figure class="demi"><img src="fig2-transfer-en.png" alt="Transfer matrix between 13 exercises."><figcaption><b>Figure 2.</b> Transfer matrix (success over 10 trials, %): row, the exercise the balance base was learned on; column, the exercise played.</figcaption></figure>
+<p>Three regularities. <b>Hard exercises teach easy ones, not the reverse</b>: the stork, knee raises and développé were held by almost every base (columns 83 to 92%); the skater only by its own. <b>An exercise impossible alone becomes possible through another</b>: the dancer (2&nbsp;s when learned alone) was held in 100% of trials with the airplane's base; the side kick (0.7&nbsp;s alone) with the arabesque's, the hip circles' or the skater's. <b>The best teachers come from three disciplines</b>: airplane (yoga), hip circles (warm-up) and skater (skating) each made 58% of the other exercises succeed. Standing strong under pushes (a Eurofit-style battery [9]) did not predict transfer (r&nbsp;=&nbsp;−0.11), and two specialised bases could no longer stand on two feet.</p>
+
+<h3>4.2 A multisport childhood versus a single sport (R-123)</h3>
+<p>Three regimes with the same budget: MULTI learned the base on five activities from three disciplines (stork, tree, airplane, développé, hip circles), SPÉ on a single one (one per seed), RIEN not at all. Then each specialised for 15 generations on three never-practised activities (skater, knee raises, arabesque). <b>Before any practice, MULTI held 7.7&nbsp;s on average, SPÉ 4.7&nbsp;s, RIEN 0.03&nbsp;s.</b> After specialisation, MULTI and SPÉ both reached 100% (a ceiling), while RIEN reached 79%: without a childhood, the skater was learned by only one seed in three.</p>
+
+<h3>4.3 One night, 1,000 random curricula (R-125)</h3>
+<p>The pool held 15 one-leg activities (the exercises above plus seven from athletics, karate, ballet, warm-ups, skating and gymnastics: butt kicks, front kick, hurdle trail leg, attitude, lateral leg swing, skating push, front scale); five others were held out and never practised (skater, knee raises, arabesque, side kick, dancer). Each of 1,000 trials drew a curriculum of k activities at random (k&nbsp;=&nbsp;1, 2, 3, 4, 6, 8, 11, 15), learned a balance base on it with the same budget (480 episodes), and was judged on the five held-out activities. The night took 5&nbsp;h&nbsp;40 on 14 processes.</p>
+<div class="tableau"><table>
+<caption><b>Table 2.</b> Success on the five never-practised activities, and on one's own activities, versus the number of activities practised (bootstrap 95% intervals).</caption>
+<thead><tr><th>k</th><th>trials</th><th>never practised</th><th>own activities</th><th>knee raises</th><th>arabesque</th><th>dancer</th></tr></thead>
+<tbody><tr><td>1</td><td>45</td><td>25.4% (19.2–31.7)</td><td>38.9%</td><td>72%</td><td>33%</td><td>7%</td></tr>
+<tr><td>2</td><td>155</td><td>30.8% (27.6–34.0)</td><td>42.3%</td><td>88%</td><td>38%</td><td>12%</td></tr>
+<tr><td>3</td><td>155</td><td>31.5% (28.6–34.7)</td><td>34.9%</td><td>90%</td><td>39%</td><td>12%</td></tr>
+<tr><td>4</td><td>155</td><td>33.1% (30.1–36.2)</td><td>38.1%</td><td>93%</td><td>42%</td><td>16%</td></tr>
+<tr><td>6</td><td>155</td><td>33.5% (30.2–36.9)</td><td>34.4%</td><td>92%</td><td>42%</td><td>13%</td></tr>
+<tr><td>8</td><td>155</td><td>33.0% (30.4–35.7)</td><td>33.3%</td><td>94%</td><td>47%</td><td>12%</td></tr>
+<tr><td>11</td><td>120</td><td><b>37.1%</b> (33.9–40.5)</td><td>37.0%</td><td>95%</td><td>56%</td><td>19%</td></tr>
+<tr><td>15</td><td>60</td><td>32.8% (27.9–37.4)</td><td>34.4%</td><td>92%</td><td>45%</td><td>18%</td></tr></tbody></table></div>
+<figure class="demi"><img src="fig3-curve-en.png" alt="Success on never-practised activities versus the number of activities practised."><figcaption><b>Figure 3.</b> 1,000 trials: success on five never-practised activities (solid, 95% band) and on one's own activities (dashed), versus the number of activities practised with equal time.</figcaption></figure>
+<p>Success on the unknown rose with variety (Spearman ρ&nbsp;=&nbsp;0.10 over 1,000 trials, p&nbsp;=&nbsp;0.001): most of the gain came from the first two or three added activities (25% → 31%), then slowly up to 37% at k&nbsp;=&nbsp;11, and down again at k&nbsp;=&nbsp;15. The contribution of each activity (success of curricula containing it minus those without it, at equal k) explains the drop: the <b>front scale</b> from gymnastics taught the most (+7.2 points, 95% interval 4.1 to 10.4) and the hurdle trail leg helped (+3.2), whereas the <b>karate front kick</b> (−4.2), the <b>ballet attitude</b> (−3.6) and the <b>soccer kick</b> (−3.2) cost: hard to learn with this budget, they consumed practice without transferring. Practising the whole pool includes all of them. Variety also made each practised activity slightly worse (39% → 33% at k&nbsp;=&nbsp;8), the trade-off of the multisport model. Transfer was uneven across held-out activities: knee raises (72% → 95%), the arabesque (33% → 56%) and the dancer (7% → 19%) benefited; the skater stayed almost impossible without its own practice (0 to 6%).</p>
+<figure class="demi"><img src="fig4-contribution-en.png" alt="Contribution of each activity to success on never-practised activities."><figcaption><b>Figure 4.</b> Contribution of each practised activity to success on the never-practised ones (points; 95% intervals).</figcaption></figure>
+
+<h2>5. Discussion</h2>
+<p>Variety helped when each experience remained learnable: one difficulty at a time, or one activity at a time, each within reach. Variety stacked all at once was not learning but noise: the learner quit. For a small controller, activities transferred more than conditions did. This matches the intuition behind sampling many sports before specialising, with the caveat that our "childhood" is a balance base of seven numbers and minutes of computation. Two practical lessons for a physical humanoid follow: practise a handful of varied activities rather than one (the first few bring most of the gain), and choose them: some activities teach balance to the others, some only consume time.</p>
+
+<h2>6. What we got wrong along the way</h2>
+<p>We first tested the wrong meaning of variance; the condition bench is reported because its failure is informative. Two passes of that bench were stopped and archived before any result was interpreted: the starting gait did not pass the judge (fixed by pre-training at nominal), and the initial search step was so large that no candidate passed the nominal (calibrated by a rule written before measuring). A pre-registered tie-breaking rule produced a meaningless verdict on a floor effect; we report it as "to revisit".</p>
+
+<h2>7. Limitations</h2>
+<p>Simulation only; one robot; small controllers (19 and 7 parameters); short trainings; one-leg activities only for the activity study; hand-written gestures; ranges chosen by us.</p>
+
+<h2>8. Data, code and notebooks</h2>
+<p>Notebooks R-111, R-116, R-118 to R-121 and R-123 to R-125 (in French), the N3 model, scripts, raw results, the frozen evaluation set and the dated commit history are open at <span class="mono">ymiaconseil.com/navitek/recherche/articles/</span>. Code under the MIT licence; texts, figures and data under CC BY 4.0.</p>
+<p class="note"><b>Use of AI.</b> The experiments, analysis code and this text were produced with the assistance of Claude (Anthropic), an AI system, working under the author's direction; the author takes responsibility for the content. AI systems are not listed as authors.</p>
+
+<h2>References</h2>
+<ol class="refs">
+<li>J. Tobin, R. Fong, A. Ray, J. Schneider, W. Zaremba, P. Abbeel. Domain randomization for transferring deep neural networks from simulation to the real world. IROS, 2017.</li>
+<li>X. B. Peng, M. Andrychowicz, W. Zaremba, P. Abbeel. Sim-to-real transfer of robotic control with dynamics randomization. ICRA, 2018.</li>
+<li>OpenAI: I. Akkaya et al. Solving Rubik's Cube with a robot hand. arXiv:1910.07113, 2019.</li>
+<li>J. Côté. The influence of the family in the development of talent in sport. <i>The Sport Psychologist</i> 13(4), 1999.</li>
+<li>J. Côté, J. Baker, B. Abernethy. Practice and play in the development of sport expertise. In <i>Handbook of Sport Psychology</i>, 3rd ed., Wiley, 2007.</li>
+<li>E. Todorov, T. Erez, Y. Tassa. MuJoCo: a physics engine for model-based control. IROS, 2012.</li>
+<li>N. Hansen, A. Ostermeier. Completely derandomized self-adaptation in evolution strategies. <i>Evolutionary Computation</i> 9(2), 2001.</li>
+<li>E. B. Wilson. Probable inference, the law of succession, and statistical inference. <i>Journal of the American Statistical Association</i> 22, 1927.</li>
+<li>Council of Europe. <i>Eurofit: Handbook for the Eurofit Tests of Physical Fitness</i>. Rome, 1988.</li>
+<li>Y. Bengio, J. Louradour, R. Collobert, J. Weston. Curriculum learning. ICML, 2009.</li>
+<li>R. A. Jacobs, M. I. Jordan, S. J. Nowlan, G. E. Hinton. Adaptive mixtures of local experts. <i>Neural Computation</i> 3(1), 1991.</li>
+<li>R. Caruana. Multitask learning. <i>Machine Learning</i> 28, 1997.</li>
+</ol>
+</div>
+</body>
+</html>
