@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Les films de N3</title>
-<meta name="description" content="Les films de N3, l'humanoïde de Navitek, en simulation : il apprend à marcher, courir, tourner, passer des obstacles. Les réussites et le bêtisier.">
+<title>Les films de Navitek</title>
+<meta name="description" content="Les films de Navitek en simulation : N3, l'humanoïde de 1,5 m, et N0, le petit de 33 cm qu'on imprime à la maison, apprennent à marcher, courir, tourner, sauter. Les réussites et le bêtisier.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0b1f3a">
-<meta property="og:title" content="Les films de N3">
+<meta property="og:title" content="Les films de Navitek">
 <meta property="og:description" content="Hier matin : 142 secondes au T-test. Ce matin : 10,6. Tout est simulé, tout est publié.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ymiaconseil.com/navitek/reseaux/">
@@ -61,9 +61,9 @@ footer p{margin:0;max-width:none}
 <header class="bar"><div class="in"><a class="logo" href="/">YM <span>IA</span> Conseil</a><a class="autre" href="../recherche/">La recherche</a></div></header>
 <main>
 <div class="large">
-  <p class="code">Navitek · N3 en simulation</p>
-  <h1>Les films de N3</h1>
-  <p class="chapeau">Un humanoïde de 1,5 m, en simulation, qui apprend à bouger : marcher, tourner, courir, passer des obstacles. Hier matin, il mettait 142 secondes au T-test. Ce matin, 10,6. Chaque film vient d'un essai écrit avant, avec son verdict, dans le cahier de recherche.</p>
+  <p class="code">Navitek · N3 et N0 en simulation</p>
+  <h1>Les films de Navitek</h1>
+  <p class="chapeau">Deux robots en simulation. N3, un humanoïde de 1,5 m, apprend à bouger : marcher, tourner, courir, passer des obstacles ; hier matin, il mettait 142 secondes au T-test, ce matin 10,6. N0, le petit de 33 cm qu'on imprime à la maison, apprend avec ses vrais servos. Chaque film vient d'un essai écrit avant, avec son verdict, dans le cahier de recherche.</p>
 
   <section class="montage" aria-label="Le montage">
     <video src="../recherche/film/montage-v2.mp4" controls playsinline preload="metadata"></video>
@@ -76,6 +76,8 @@ footer p{margin:0;max-width:none}
 
   <h2>Les meilleurs films</h2>
   <div class="grille">
+<figure class="film"><video src="../recherche/film/n3-r150-N0c-final-5cms.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le petit marche : N0, 33 cm, ses vrais servos</b><span>N0, le robot qu&#x27;on imprime à la maison, avec ses servos à 2 $ (SG90) : il a appris à marcher en simulation, 30 départs sur 30, et il tient même quand ses ordres arrivent avec 80 ms de retard, comme par Wi-Fi.</span><em>Simulé · R-150</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-r152-verif-t2.00-w80.mp4" controls playsinline preload="metadata"></video><figcaption><b>Pour sauter, il faut ça</b><span>Le même petit robot, avec des moteurs 11 fois plus forts et 9 fois plus rapides que ses servos : il s&#x27;accroupit, pousse et vole 7,6 cm. C&#x27;est le moteur qu&#x27;il lui faut pour sauter.</span><em>Simulé · R-152</em></figcaption></figure>
 <figure class="film"><video src="../recherche/film/n3-ttest-F200-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il court : le T-test en 10,6 secondes</b><span>Les pieds alternent, avec une phase de vol ; il accélère son rythme en allant vite, comme un coureur. 30 fois sur 30.</span><em>Simulé · R-141</em></figcaption></figure>
 <figure class="film"><video src="../recherche/film/n3-r147-saut-reference-strict-reel-petit.mp4" controls playsinline preload="metadata"></video><figcaption><b>Aux vrais moteurs : 31 cm</b><span>Les mêmes lois, mais des moteurs du commerce (40 N·m au genou, leur vraie vitesse) au lieu de moteurs imaginaires : il ne saute plus 1,6 m, mais 31 cm, et il garde le geste d&#x27;un humain : les bras lancés, les genoux ramenés.</span><em>Simulé · R-149</em></figcaption></figure>
 <figure class="film"><video src="../recherche/film/n3-r147-L4-20M-sans-elan.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le saut en longueur sans élan : 94 cm, reçu debout</b><span>Pour un robot, pas de bac à sable : un saut qui ne tient pas debout vaut zéro. Il se penche, pousse, vole et se reçoit immobile, 24 fois sur 30. (Moteurs imaginaires : voir le film suivant.)</span><em>Simulé · R-147</em></figcaption></figure>
@@ -94,6 +96,7 @@ footer p{margin:0;max-width:none}
   <h2>Le bêtisier</h2>
   <p>Les essais ratés restent. On apprend des deux.</p>
   <div class="grille">
+<figure class="film"><video src="../recherche/film/n3-r152-verif-t2.00-w40.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le faux record</b><span>L&#x27;ordinateur a trouvé un « saut » de 25 cm. En vrai, le robot tombe, passe à travers le sol, et le simulateur le recrache vers le haut. On l&#x27;a attrapé avant de le publier comme un résultat.</span><em>Simulé · R-152</em></figcaption></figure>
 <figure class="film"><video src="../recherche/film/n3-temoin-sprinteuse-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il imite une sprinteuse filmée…</b><span>…et tombe en 2,7 secondes. C&#x27;est de là que le réseau de neurones est parti.</span><em>Simulé · R-137</em></figcaption></figure>
 <figure class="film"><video src="../recherche/film/n3-ttest-D200-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il triche</b><span>La récompense payait les pieds en l&#x27;air : il a appris à sautiller sur un pied au lieu de courir. Vite, et faux.</span><em>Simulé · R-141</em></figcaption></figure>
 <figure class="film"><video src="../recherche/film/n3-r146-S80-20M-course-a-trois.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le kangourou</b><span>Le départ du sprint, à 2, 3 et 4 appuis : 1,5 m en 0,88 s… en bondissant à deux pieds, puis en plongeant après la ligne. La récompense payait la vitesse, pas la course.</span><em>Simulé · R-146</em></figcaption></figure>
