@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les films de N3</title>
+<meta name="description" content="Les films de N3, l'humanoïde de Navitek, en simulation : il apprend à marcher, courir, tourner, passer des obstacles. Les réussites et le bêtisier.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1f3a">
+<meta property="og:title" content="Les films de N3">
+<meta property="og:description" content="Hier matin : 142 secondes au T-test. Ce matin : 10,6. Tout est simulé, tout est publié.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ymiaconseil.com/navitek/reseaux/">
+<meta property="og:image" content="https://ymiaconseil.com/navitek/n0-carte.png">
+<link rel="canonical" href="https://ymiaconseil.com/navitek/reseaux/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Lora:ital,wght@0,400..600;1,400..500&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --gold:#d4a843; --gold-small:#8a6b18; --ink-body:#2a2620; --dim:#5c5c5c; --line:#e4e2dd; --paper:#fff; --tint:#f6f4f0;
+  --orange-texte:#b5490c;
+  --display:'Newsreader',Georgia,serif; --body:'Lora',Georgia,serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink-body);font-family:var(--body);font-size:17px;line-height:1.66;display:flex;flex-direction:column}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar .in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.bar a.logo{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar a.logo span{color:var(--gold)}
+.bar a.autre{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#a8bad0;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.45);white-space:nowrap}
+main{flex:1;padding:44px 20px 8px}
+.large{max-width:900px;margin:0 auto;width:100%}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(30px,7vw,46px);line-height:1.1;margin:0 0 16px;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(22px,4.4vw,28px);line-height:1.2;margin:48px 0 14px;text-wrap:balance}
+p{margin:0 0 15px;max-width:34em}
+.chapeau{font-size:18.5px;color:#3c3830}
+.lien{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
+.montage{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px;align-items:start;margin-top:26px}
+.montage video{display:block;width:100%;aspect-ratio:9/16;background:#000;border:1px solid var(--line)}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:22px}
+figure{margin:0}
+.film video{display:block;width:100%;aspect-ratio:4/3;background:#000;border:1px solid var(--line)}
+figcaption{display:grid;gap:3px;margin-top:8px;font-size:15px;line-height:1.45}
+figcaption b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px}
+figcaption em{font-family:var(--mono);font-style:normal;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-small)}
+.portes{display:flex;flex-wrap:wrap;gap:12px 28px;margin:44px 0 0;padding:18px 0;border-top:1px solid var(--line)}
+footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
+footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
+footer .plan{margin:0 0 10px;line-height:2}
+footer .plan b{color:var(--gold);font-weight:400}
+footer p{margin:0;max-width:none}
+@media (max-width:640px){.montage{grid-template-columns:1fr}.montage video{max-width:340px;margin:0 auto}}
+</style>
+</head>
+<body>
+<header class="bar"><div class="in"><a class="logo" href="/">YM <span>IA</span> Conseil</a><a class="autre" href="../recherche/">La recherche</a></div></header>
+<main>
+<div class="large">
+  <p class="code">Navitek · N3 en simulation</p>
+  <h1>Les films de N3</h1>
+  <p class="chapeau">Un humanoïde de 1,5 m, en simulation, qui apprend à bouger : marcher, tourner, courir, passer des obstacles. Hier matin, il mettait 142 secondes au T-test. Ce matin, 10,6. Chaque film vient d'un essai écrit avant, avec son verdict, dans le cahier de recherche.</p>
+
+  <section class="montage" aria-label="Le montage">
+    <video src="../recherche/film/montage-v2.mp4" controls playsinline preload="metadata"></video>
+    <div>
+      <h2 style="margin-top:0">Une journée en 45 secondes</h2>
+      <p>Le matin, il patine. Il imite une sprinteuse filmée et tombe. À midi, il se penche pour tourner. Le soir, un réseau de neurones apprend seul sur une carte graphique. La nuit, le T-test en 15 secondes.</p>
+      <p>Tout est simulé (MuJoCo). Le code et les données sont libres.</p>
+    </div>
+  </section>
+
+  <h2>Les meilleurs films</h2>
+  <div class="grille">
+<figure class="film"><video src="../recherche/film/n3-ttest-F200-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il court : le T-test en 10,6 secondes</b><span>Les pieds alternent, avec une phase de vol ; il accélère son rythme en allant vite, comme un coureur. 30 fois sur 30.</span><em>Simulé · R-141</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-ttest-C150-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le T-test en 15,5 secondes</b><span>On lui dit « vers la ligne », puis « demi-tour » : il se retourne en marchant, sans s&#x27;arrêter. Hier matin : 142,6 s.</span><em>Simulé · R-140</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-barres-E150-6cm.mp4" controls playsinline preload="metadata"></video><figcaption><b>Les cônes du football</b><span>Des barres de 6 cm en travers du chemin : il les passe 28 fois sur 30. Sans cet apprentissage, il tombait sur la première.</span><em>Simulé · R-142</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-rl-gpu-B-final.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il lève les pieds et ne patine plus</b><span>Appris en 36 minutes sur une carte graphique, 4 096 robots à la fois : le pied levé de 9,5 cm, presque aucun glissement.</span><em>Simulé · R-139</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-rl-marche-10M.mp4" controls playsinline preload="metadata"></video><figcaption><b>Un réseau de neurones apprend à marcher</b><span>Personne ne lui a montré les bras : il les balance à l&#x27;opposé des jambes, comme un humain.</span><em>Simulé · R-137</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-ttest-bras-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Les bras qui balancent</b><span>Le T-test avec les bras du même côté que les jambes : 29 courses sur 30 (sans les bras : 22).</span><em>Simulé · R-136</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-vrille-complete.mp4" controls playsinline preload="metadata"></video><figcaption><b>La vrille</b><span>La tête d&#x27;abord, puis les bras, l&#x27;avion, le saut : l&#x27;intuition d&#x27;athlète de Yoan, apprise.</span><em>Simulé · R-128</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-rotation-arabesque-x4.mp4" controls playsinline preload="metadata"></video><figcaption><b>Se retourner sur un pied</b><span>Sans rotation de hanche : le pied d&#x27;appui pivote quand la jambe libre se lève. Quatre arabesques, un demi-tour.</span><em>Simulé · R-128</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-reflexe-tete.mp4" controls playsinline preload="metadata"></video><figcaption><b>La tête sent la chute</b><span>À gauche sans réflexe, il tombe. À droite, les bras réagissent à l&#x27;orientation de la tête : il finit.</span><em>Simulé · R-134</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-plie-danseuse.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le plié de la danseuse</b><span>Il suit la courbe du genou d&#x27;une danseuse filmée : son centre de masse descend comme le sien.</span><em>Simulé · R-131</em></figcaption></figure>
+  </div>
+
+  <h2>Le bêtisier</h2>
+  <p>Les essais ratés restent. On apprend des deux.</p>
+  <div class="grille">
+<figure class="film"><video src="../recherche/film/n3-temoin-sprinteuse-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il imite une sprinteuse filmée…</b><span>…et tombe en 2,7 secondes. C&#x27;est de là que le réseau de neurones est parti.</span><em>Simulé · R-137</em></figcaption></figure>
+<figure class="film"><video src="../recherche/film/n3-ttest-D200-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il triche</b><span>La récompense payait les pieds en l&#x27;air : il a appris à sautiller sur un pied au lieu de courir. Vite, et faux.</span><em>Simulé · R-141</em></figcaption></figure>
+  </div>
+
+  <nav class="portes" aria-label="Aller plus loin">
+    <a class="lien" href="../recherche/">Toutes les hypothèses, écrites avant chaque essai</a>
+    <a class="lien" href="../">Imprimer N0, le petit frère de 33 cm</a>
+  </nav>
+</div>
+</main>
+<footer>
+  <nav class="plan" aria-label="Plan du site"><a href="/">Accueil</a> &middot; <a href="/pourquoi/">Pourquoi</a> &middot; <a href="/methode/">La méthode</a> &middot; <a href="/formation/">Formation</a> &middot; <a href="/plan/">PlanJump</a> &middot; <a href="/easyread/">Syllabes Faciles</a> &middot; <a href="/navitek/">Navitek</a> &middot; <a href="/navitek/recherche/">Recherche</a> &middot; <b>Les films</b></nav>
+  <p>YM IA Conseil &middot; Grand Montréal &middot; <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a> &middot; <a href="tel:+15149268633">514 926-8633</a></p>
+</footer>
+</body>
+</html>
