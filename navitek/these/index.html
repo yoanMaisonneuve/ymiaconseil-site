@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Navitek, la thèse : apprendre à marcher à un humanoïde imprimé</title>
+<meta name="description" content="Une recherche ouverte : apprendre à N0.1, un humanoïde imprimé de 37 cm à dix-sept servos SG90, à marcher comme un humain, en simulation, sur une seule carte graphique. Les cahiers, les données, les films et les erreurs.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://ymiaconseil.com/navitek/these/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,600;1,6..72,600&family=Lora:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--navy:#0b1f3a;--navy-3:#16355e;--gold:#d4a843;--gold-small:#8a6b18;--ink-body:#2a2620;--dim:#5c5c5c;--line:#e4e2dd;--paper:#fff;
+--tint:#f6f4f0;--orange:#f26b1d;--orange-texte:#b5490c;--display:'Newsreader',Georgia,serif;--body:'Lora',Georgia,serif;
+--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink-body);font-family:var(--body);font-size:17px;line-height:1.66}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar .in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.bar a.logo{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar a.logo span{color:var(--gold)}
+.bar a.autre{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#a8bad0;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.45);white-space:nowrap}
+main{padding:40px 20px 96px}
+.wrap{max-width:700px;margin:0 auto;width:100%}
+.titre{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:30px}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(31px,7vw,48px);line-height:1.08;margin:0 0 14px;text-wrap:balance}
+h1 em{font-style:italic;color:var(--orange-texte)}
+.sous-titre{font-size:19px;color:#3c3830;margin:0 0 18px;text-wrap:pretty}
+.auteurs{font-family:var(--mono);font-size:13px;color:var(--dim);margin:0 0 22px;letter-spacing:.02em}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(25px,5vw,32px);line-height:1.15;margin:52px 0 12px;text-wrap:balance;scroll-margin-top:16px}
+h2 .n{font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--gold-small);display:block;margin-bottom:6px;text-transform:uppercase}
+h3{font-family:var(--display);font-weight:600;color:var(--navy-3);font-size:21px;margin:30px 0 8px}
+p{margin:0 0 14px}
+a{color:var(--orange-texte)}
+figure{margin:22px 0;display:grid;gap:8px}
+figure img,figure video{width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line);background:#000}
+figcaption{font-size:14.5px;color:var(--dim)}
+figcaption b{color:var(--navy)}
+.chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:20px 0 8px}
+.chiffres div{border-top:3px solid var(--gold);padding-top:8px;min-width:0}
+.chiffres b{display:block;font-family:var(--display);font-size:27px;color:var(--navy);line-height:1.1;font-variant-numeric:tabular-nums}
+.chiffres span{font-size:13.5px;color:var(--dim)}
+.resume{background:var(--tint);border-left:4px solid var(--gold);padding:18px 20px;border-radius:0 6px 6px 0;margin:8px 0 20px}
+.resume p:last-child{margin-bottom:0}
+.motscles{font-family:var(--mono);font-size:12.5px;color:var(--dim);margin:6px 0 0}
+.toc{counter-reset:c;list-style:none;padding:0;margin:0;display:grid;gap:4px}
+.toc a{text-decoration:none;color:var(--navy);display:flex;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.toc a span{font-family:var(--mono);font-size:12.5px;color:var(--gold-small);min-width:2.6em;padding-top:3px}
+.note{font-size:14.5px;color:var(--dim)}
+.encadre{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin:18px 0;background:#fffdf8}
+.encadre h3{margin-top:0}
+ol.lecons,ul.liste{padding-left:1.2em;margin:0 0 14px;display:grid;gap:6px}
+.tab{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+td{font-variant-numeric:tabular-nums}
+.ref{font-size:14.5px;padding-left:1.2em}
+.ref li{margin-bottom:6px}
+.citer{font-family:var(--mono);font-size:12.5px;background:var(--tint);padding:12px 14px;border-radius:6px;overflow-x:auto;white-space:pre-wrap}
+footer{border-top:1px solid var(--line);padding:22px 20px 90px;font-size:14px;color:var(--dim)}
+footer .in{max-width:700px;margin:0 auto}
+nav.plan{font-size:13.5px;margin-bottom:8px}
+nav.plan a{color:var(--navy)}
+</style>
+</head>
+<body>
+<div class="bar"><div class="in">
+  <a class="logo" href="/">YM <span>IA</span> Conseil</a>
+  <a class="autre" href="/navitek/recherche/">Le cahier de recherche</a>
+</div></div>
+<main><article class="wrap">
+<header class="titre">
+  <p class="code">Navitek Robolabs &middot; une thèse ouverte &middot; version du 18 novembre 2026</p>
+  <h1>Apprendre à marcher à un humanoïde <em>imprimé</em></h1>
+  <p class="sous-titre">N0.1, 37&nbsp;cm, dix-sept servos SG90 et une seule carte graphique&nbsp;: la recherche, ses données, ses films et ses
+  erreurs, publiés au fur et à mesure.</p>
+  <p class="auteurs">Yoan Maisonneuve et Claude &middot; Navitek Robolabs, YM IA Conseil, Grand Montréal &middot; travail en cours, en simulation</p>
+  <figure>
+    <img src="fig/n01-pose-du-talon.jpg" alt="Le robot N0.1 simulé, au moment où le talon de devant touche le sol : la jambe de devant presque droite, 33 degrés entre les jambes, le talon arrière levé." width="547" height="508">
+    <figcaption><b>Figure 1.</b> N0.1 dans la pose visée, au moment où le talon touche&nbsp;: le genou de devant à 3°, 33° entre les jambes,
+    la pointe relevée, le talon arrière levé (la référence refaite le 18 novembre, R-198). Simulé dans MuJoCo, aux couples réels des SG90.</figcaption>
+  </figure>
+  <div class="chiffres">
+    <div><b>161</b><span>cahiers de recherche, du 06.10 au 18 novembre 2026</span></div>
+    <div><b>844</b><span>prédictions écrites avant l'essai</span></div>
+    <div><b>386</b><span>réfutées : on les publie aussi</span></div>
+    <div><b>6,0&nbsp;G</b><span>pas de simulation (84 apprentissages)</span></div>
+    <div><b>102</b><span>erreurs notées, chacune avec sa règle</span></div>
+  </div>
+</header>
+<nav aria-label='Table des matières'><p class='code' style='margin-top:4px'>Table des matières</p><ol class='toc'><li><a href='#resume'><span>·</span>Résumé</a></li><li><a href='#ch1'><span>1</span>Introduction</a></li><li><a href='#ch2'><span>2</span>Ce qui existe</a></li><li><a href='#ch3'><span>3</span>Le robot</a></li><li><a href='#ch4'><span>4</span>La méthode</a></li><li><a href='#ch5'><span>5</span>Les résultats</a></li><li><a href='#ch6'><span>6</span>Discussion</a></li><li><a href='#ch7'><span>7</span>Conclusion et suite</a></li><li><a href='#annexes'><span>·</span>Annexes</a></li><li><a href='#references'><span>·</span>Références</a></li></ol></nav><h2 id='resume' data-chapitre="Résumé"><span class='n'>Résumé</span>Résumé</h2><div class="resume">
+<p>Peut-on apprendre à un humanoïde de 37&nbsp;cm, imprimé en plastique et mû par dix-sept servomoteurs de modélisme de 9&nbsp;g (des SG90,
+0,18&nbsp;N·m chacun), à marcher comme un humain&nbsp;: de grands pas, la jambe tendue quand le talon touche, le corps qui bascule par-dessus
+le pied&nbsp;? Nous l'apprenons en simulation (MuJoCo), sur une seule carte graphique de bureau, par apprentissage par renforcement (PPO), en
+imitant une marche de référence tirée d'une photo d'un pas humain.</p>
+<p>La méthode est celle d'un cahier de laboratoire tenu en public&nbsp;: chaque essai écrit sa prédiction avant de tourner et son verdict
+après (844 prédictions dans 161 cahiers&nbsp;: 288 confirmées, 73 en partie, 386 réfutées)&nbsp;; toute mesure
+nouvelle passe d'abord sur un cas dont on connaît la réponse&nbsp;; aucun résultat n'est annoncé avant d'avoir été vu en film. Un score de
+la marche, de 0 à 1, pèse quatre niveaux débloqués dans l'ordre&nbsp;: les grands pas, la vitesse, la fluidité, la sûreté.</p>
+<p>Résultats, à ce jour et en simulation&nbsp;: une marche droite qui obéit à 2, 5 et 10&nbsp;cm/s, un saut amorti depuis 6&nbsp;cm, un
+escalier de cinq marches de 1&nbsp;cm, et une marche à 31,5° entre les jambes, le genou à 11° quand le talon touche (score 0,80). Nous
+montrons aussi pourquoi notre première référence ne posait pas le talon jambe tendue (la cheville de N0.1 est près de l'avant de son
+pied), comment la corriger, et que les SG90 plafonnent alors autour de 29&nbsp;cm/s. Rien n'est encore imprimé&nbsp;: c'est la suite.</p>
+<p class="motscles">Mots-clés&nbsp;: humanoïde imprimé, marche bipède, apprentissage par renforcement, imitation, MuJoCo, servomoteurs SG90,
+science ouverte.</p>
+</div><h2 id='ch1' data-chapitre="1. Introduction"><span class='n'>Chapitre 1</span>Introduction</h2><p><strong>La question.</strong> Un humanoïde qu'on imprime chez soi, avec les servos les moins chers du commerce, peut-il
+apprendre une vraie marche, et pas seulement un pas traîné&nbsp;? Les grands humanoïdes apprennent à marcher avec des moteurs puissants et
+des capteurs coûteux&nbsp;; nous partons de l'autre bout&nbsp;: le robot le plus simple qu'on puisse imprimer, et toute la difficulté reportée
+dans l'apprentissage.</p>
+<p><strong>Pourquoi ouvert.</strong> Tout est publié au moment où c'est fait&nbsp;: les fichiers à imprimer, le code, les cahiers, les
+films, les erreurs. Un robot que tout le monde peut imprimer, refaire et vérifier ne reste dans l'ombre de personne.</p>
+<p><strong>Ce que cette thèse apporte.</strong></p>
+<ol class="lecons">
+<li>Un humanoïde de 37&nbsp;cm dessiné par code (chaque pièce générée, vérifiée, tranchée), et son jumeau simulé aux masses et aux couples
+réels de ses servos.</li>
+<li>Une méthode pour apprendre la marche sur une seule carte graphique&nbsp;: l'imitation légère d'une référence tirée d'une photo, des
+récompenses données au moment précis du pas, un départ déjà lancé.</li>
+<li>Un protocole de chercheur tenu en public&nbsp;: la prédiction avant, le verdict après, le cas connu, le film avant l'annonce, et un
+score unique de la marche.</li>
+<li>Des résultats négatifs autant que positifs, et un registre des erreurs&nbsp;: ce qui ne marche pas est une donnée.</li>
+</ol>
+<p class="note">Statut&nbsp;: tout ce qui suit est simulé. Le premier gabarit imprimé et le premier vrai servo sont la prochaine étape.</p><h2 id='ch2' data-chapitre="2. Ce qui existe"><span class='n'>Chapitre 2</span>Ce qui existe</h2><p><strong>Les humanoïdes ouverts.</strong> Une part de la robotique humanoïde se publie ouverte&nbsp;: les bibliothèques
+d'apprentissage d'Unitree, MuJoCo Playground de Google DeepMind (sur MuJoCo Warp, comme notre tour), Open Duck Mini (un robot de 40&nbsp;cm à
+servos du commerce, qui apprend à marcher en imitant une marche de référence), ToddlerBot (Stanford). Les plus avancés (Tesla, Boston
+Dynamics, Figure) restent fermés. Notre revue&nbsp;: <a href="/navitek/recherche/#R-179">R-179</a>.</p>
+<p><strong>Apprendre un geste en l'imitant.</strong> DeepMimic a montré qu'un personnage simulé apprend un geste en suivant une référence,
+et qu'il apprend plus vite s'il commence au milieu du geste plutôt qu'au début (l'initialisation dans l'état de la référence). Nous
+reprenons les deux idées, et nous les poussons&nbsp;: un départ lancé, déjà à la vitesse de la marche (R-201).</p>
+<p><strong>La marche humaine.</strong> Les planches de Muybridge (1887) découpent un pas en images&nbsp;; la mécanique de la marche le
+décrit comme un pendule inversé, où le corps bascule par-dessus la jambe d'appui, et le nombre de Froude dit quand deux marches de tailles
+différentes se ressemblent. À 5&nbsp;cm/s, N0.1 marche environ 150 fois plus lentement qu'un humain au même nombre de Froude&nbsp;: un
+ralenti, où rien ne porte le corps sauf ses servos (R-194).</p><h2 id='ch3' data-chapitre="3. Le robot"><span class='n'>Chapitre 3</span>Le robot</h2><figure>
+  <img src="../n0-vues.png" alt="Le robot Navitek N0 de face, de côté et de dos." loading="lazy">
+  <figcaption><b>Figure 2.</b> N0, la version 0 (33,1&nbsp;cm, 13 servos), dessinée par code, vérifiée sans collision et tranchée
+  pour une imprimante de bureau. <a href="/navitek/">Les pièces, le montage et le programme</a>.</figcaption>
+</figure>
+<p><strong>De N0 à N0.1.</strong> N0.1, décidé le 15 novembre, croise ses hanches et ses épaules en deux servos, pose ses pieds sur
+une semelle arrondie à 15° et ne porte que des SG90&nbsp;: dix-sept servos de 9&nbsp;g, 0,18&nbsp;N·m chacun. Son jumeau simulé pèse chaque
+pièce, semelle comprise&nbsp;; un résultat sur un robot qui n'est pas celui qu'on imprime ne compte pas.</p>
+<p><strong>Ce que la géométrie impose.</strong> La cheville de N0.1 est à 11&nbsp;mm devant le centre de son pied. Posé sur le talon la
+pointe relevée, le pied de devant soulève sa cheville de 10&nbsp;mm&nbsp;; roulé sur sa pointe, le pied arrière ne soulève presque pas la
+sienne. C'est ce qui faisait plier le genou à la pose du talon, et c'est par le placement du pied qu'on l'a corrigé (chapitre 5).</p><h2 id='ch4' data-chapitre="4. La méthode"><span class='n'>Chapitre 4</span>La méthode</h2><h3>4.1 La simulation</h3>
+<p>MuJoCo Warp sur une carte RTX 3060 Ti&nbsp;: 4&nbsp;096 robots simulés en même temps, de 85 à 90 millions de pas par heure. Les servos y
+ont leur couple réel (0,1766&nbsp;N·m), un retard de commande tiré au hasard et un filtre de 80&nbsp;ms&nbsp;; le sol, son adhérence. La file
+de la tour tourne jour et nuit, surveillée toutes les cinq minutes, toujours remplie pour plusieurs jours.</p>
+<h3>4.2 L'apprentissage</h3>
+<p>Un réseau de neurones de deux couches de 256 reçoit l'état du robot (ses angles, ses vitesses, la commande) et rend la consigne de ses
+servos, cinquante fois par seconde&nbsp;; il apprend par PPO. Il imite une marche de référence tirée d'une photo d'un pas humain (R-190),
+refaite pour que N0.1 pose le talon jambe tendue (R-198), et il est payé au moment précis du pas&nbsp;: la pose de la photo à chaque pose du
+talon, la bascule par-dessus le pied (le pivot, R-197), la douceur des commandes, le tronc droit, la vitesse demandée.</p>
+<h3>4.3 Le protocole du chercheur</h3>
+<ol class="lecons">
+<li>La question et la prédiction écrites avant, dans un cahier numéroté (le numéro réservé par un script).</li>
+<li>Le cas connu&nbsp;: toute mesure ou récompense nouvelle passe d'abord sur un cas dont on connaît la réponse.</li>
+<li>L'essai court sur la tour&nbsp;: rien ne plante, et le monde simulé est bien celui qu'on croit.</li>
+<li>Le banc final&nbsp;: 30 départs à 2, 5 et 10&nbsp;cm/s, le même juge pour tous, le verdict contre la prédiction.</li>
+<li>Le film regardé avant toute annonce.</li>
+<li>Tout publié&nbsp;: le cahier, le film, la recette de la marche mise à jour.</li>
+</ol>
+<h3>4.4 Le score de la marche</h3>
+<p>Un seul nombre de 0 à 1 par marche apprise, la somme de quatre niveaux pondérés, débloqués dans l'ordre&nbsp;: <strong>les grands
+pas</strong> (λ&nbsp;0,40&nbsp;: 33° entre les jambes et le genou sous 10° quand le talon touche), <strong>la vitesse</strong> (0,25&nbsp;:
+de 0,9 à 1,1 fois la vitesse demandée), <strong>la fluidité</strong> (0,20&nbsp;: les à-coups des articulations et la régularité du bassin,
+mesurée par le SPARC), <strong>la sûreté</strong> (0,15&nbsp;: 28 départs sur 30 debout). À côté du score, son coût&nbsp;: les millions de
+pas de simulation qu'il a fallu depuis zéro.</p><h2 id='ch5' data-chapitre="5. Les résultats"><span class='n'>Chapitre 5</span>Les résultats</h2><h3>5.1 Le score de chaque marche</h3><div class='tab'><table><thead><tr><th>La marche</th><th>N1 grands pas</th><th>N2 vitesse</th><th>N3 fluidité</th><th>N4 sûreté</th><th>Score</th><th>Millions de pas</th></tr></thead><tbody><tr><td>L18-suite-400</td><td>0,87</td><td>0,74</td><td>0,70</td><td>0,86</td><td><b>0,80</b></td><td>540</td></tr><tr><td>PZ-zero-400</td><td>0,44</td><td>0,98</td><td>0,58</td><td>1,00</td><td><b>0,69</b></td><td>400</td></tr><tr><td>PZ-tendu</td><td>0,44</td><td>0,78</td><td>0,70</td><td>1,00</td><td><b>0,66</b></td><td>100</td></tr><tr><td>tendu-zero-400</td><td>0,41</td><td>1,00</td><td>0,46</td><td>1,00</td><td><b>0,66</b></td><td>400</td></tr><tr><td>L19-pivot</td><td>0,75</td><td>0,41</td><td>0,46</td><td>1,00</td><td><b>0,65</b></td><td>220</td></tr><tr><td>pivot-zero</td><td>0,38</td><td>0,96</td><td>0,34</td><td>1,00</td><td><b>0,61</b></td><td>120</td></tr><tr><td>L18b-tendue6</td><td>0,58</td><td>0,33</td><td>0,71</td><td>1,00</td><td><b>0,61</b></td><td>140</td></tr><tr><td>tendue-zero</td><td>0,28</td><td>0,88</td><td>0,31</td><td>1,00</td><td><b>0,54</b></td><td>120</td></tr></tbody></table></div><p class='note'>Aucune marche n'a encore franchi le premier niveau (un niveau est franchi quand il vaut 1). Les millions de pas comptent toute la lignée d'apprentissages.</p><h3>5.2 La marche droite, apprise de zéro</h3>
+<figure><video src="../recherche/film/n3-r150-N0.1-photo-zero-genou-final-5cms.mp4" controls playsinline preload="metadata"></video>
+<figcaption><b>Figure 3.</b> La première marche droite de N0.1 (R-190), apprise de zéro en imitant la photo&nbsp;: le tronc à +2°, la vitesse
+obéie à 2, 5 et 10&nbsp;cm/s, 30 départs sur 30 debout. Simulé.</figcaption></figure>
+<h3>5.3 Encaisser une chute, monter un escalier</h3>
+<figure><video src="../recherche/film/n01-r193-drop-box.mp4" controls playsinline preload="metadata"></video>
+<figcaption><b>Figure 4.</b> Le saut d'une boîte de 6&nbsp;cm (R-193)&nbsp;: il encaisse, amortit en squat et se relève. Simulé.</figcaption></figure>
+<figure><img src="../recherche/fig/n01-r186-gp-esc-escalier.png" alt="N0.1 simulé sur un escalier de marches de 1 centimètre." loading="lazy">
+<figcaption><b>Figure 5.</b> Le premier vrai escalier (R-186)&nbsp;: quatre marches de 1&nbsp;cm, puis cinq (en haut 23 départs sur 30).
+Rien encore à 2&nbsp;cm. Simulé.</figcaption></figure>
+<h3>5.4 Du glisseur au marcheur&nbsp;: le pivot</h3>
+<figure><video src="film/n3-r150-N0.1-pivot-zero-final-5cms.mp4" controls playsinline preload="metadata"></video>
+<figcaption><b>Figure 6.</b> Payer la bascule par-dessus le pied d'appui (R-197) a fait marcher un robot qui glissait sur ses deux pieds
+92&nbsp;% du temps&nbsp;: sur un seul pied 58&nbsp;% du temps, deux pas par seconde, 0,94 fois la vitesse demandée. Mais il pose le genou
+plié&nbsp;: il imitait une référence fausse. Simulé.</figcaption></figure>
+<h3>5.5 La référence refaite&nbsp;: la jambe tendue à la pose</h3>
+<figure><img src="fig/n01-quatre-moments.jpg" alt="Les quatre moments du pas de la référence refaite : le talon touche, le pivot, le vol, la poussée." loading="lazy">
+<figcaption><b>Figure 7.</b> Les quatre moments du pas visé (R-198)&nbsp;: le talon touche (le genou à 3°, 33° entre les jambes), le pivot,
+le vol, la poussée. Notre première référence posait le talon le genou plié à 45°&nbsp;; poser le pied plus loin devant le bassin et
+relever moins la pointe l'a corrigée. Sans le genou qui se dépliait d'un coup après la pose, le plafond des SG90 passe de 13 à
+29&nbsp;cm/s.</figcaption></figure>
+<h3>5.6 La plus proche de la cible</h3>
+<figure><video src="film/n3-r150-N0.1-L18-suite-400-final-5cms.mp4" controls playsinline preload="metadata"></video>
+<figcaption><b>Figure 8.</b> L18-suite-400, après 540 millions de pas&nbsp;: à 10&nbsp;cm/s, 31,5° entre les jambes et le genou à 11°
+quand le talon touche, sur un seul pied 85&nbsp;% du temps. Il lui manque la vitesse (0,67 fois) et la sûreté (24 départs sur 30).
+Simulé.</figcaption></figure><h2 id='ch6' data-chapitre="6. Discussion"><span class='n'>Chapitre 6</span>Discussion</h2><h3>6.1 Ce que nous avons appris</h3>
+<ol class="lecons">
+<li><strong>Une mesure se prend au moment que la question nomme.</strong> Notre «&nbsp;genou tendu à 3°&nbsp;» était la médiane sur tout
+l'appui&nbsp;; à l'instant où le talon touche, il était plié à 17°.</li>
+<li><strong>La référence doit être juste avant d'entraîner.</strong> Un départ de zéro garde la forme de sa référence, défauts compris.</li>
+<li><strong>Calculer avant de chercher au hasard.</strong> La hauteur de chaque jambe, calculée, a trouvé en une minute pourquoi le genou
+pliait&nbsp;; trente-deux variantes à l'aveugle ne l'avaient pas trouvé.</li>
+<li><strong>Une récompense par pied s'additionne sur deux pieds</strong> et paie le piétinement&nbsp;: une récompense de marche se donne en
+appui simple, et se vérifie sur un cas connu avant de partir.</li>
+<li><strong>Le temps d'apprentissage compte.</strong> La même lignée passe de 21° à 31,5° entre les jambes entre 140 et 540 millions de
+pas.</li>
+<li><strong>Une règle écrite en phrases ne protège pas&nbsp;; un contrôle en code, oui.</strong> Notre propre méditation de nuit l'a
+montré sur nos erreurs de numérotation.</li>
+</ol>
+<h3>6.2 Les limites</h3>
+<p>Tout est simulé&nbsp;: le passage au vrai robot reste à faire, et le vrai SG90 a du jeu, des à-coups et une vitesse sous charge que
+la simulation ne connaît qu'à moitié. La marche visée demande à la cheville jusqu'à 133&nbsp;% du couple d'un SG90 un dixième du
+cycle&nbsp;; l'inertie de ses rotors n'est pas mesurée. Et à 5&nbsp;cm/s, la marche n'est pas encore dynamique&nbsp;: l'élan seul ne
+porterait le corps par-dessus le pied qu'à 39&nbsp;cm/s.</p>
+<h3>6.3 Les erreurs, comme des données</h3>
+<p>Nous en avons noté 102, chacune avec la règle qu'elle a laissée. Quelques-unes&nbsp;: un saut de 25&nbsp;cm qui était un robot
+tombant à travers le sol (E85)&nbsp;; un escalier annoncé sans escalier dans la physique (E101)&nbsp;; un genou «&nbsp;tendu&nbsp;» mesuré
+au mauvais instant (E102)&nbsp;; des numéros de cahier pris deux fois (E103). Une erreur publiée coûte moins qu'une erreur cachée.</p><h2 id='ch7' data-chapitre="7. Conclusion et suite"><span class='n'>Chapitre 7</span>Conclusion et suite</h2><p>Un humanoïde de 37&nbsp;cm aux servos de 9&nbsp;g apprend, en simulation, une marche droite, encaisse une chute, monte de
+petites marches et approche la pose d'un vrai pas humain&nbsp;: 31,5° entre les jambes, le genou à 11° quand le talon touche. La cible
+(33° et le genou sous 10°, ensemble) n'est pas encore atteinte.</p>
+<p><strong>En cours sur la tour</strong>&nbsp;: cinq références de formes différentes apprises de la même façon, pour voir ce que la
+référence apprend au robot (R-200)&nbsp;; et le départ déjà lancé dans le grand pas (R-201). <strong>Ensuite</strong>&nbsp;: imprimer le
+premier gabarit, mesurer un vrai SG90, et passer du jumeau simulé au robot sur la table.</p><h2 id='annexes' data-chapitre="Annexes"><span class='n'>Annexes</span>Annexes</h2><div class="encadre"><h3>A. Le cahier de recherche</h3>
+<p>161 cahiers et 844 prédictions&nbsp;: 288 confirmées, 73 en partie, 386 réfutées, 48 à revoir, 49 en
+attente. Chacun&nbsp;: la question, la prédiction avec sa crédence, le dispositif, le verdict, les films. <a href="/navitek/recherche/">Le
+cahier de recherche</a>.</p></div>
+<div class="encadre"><h3>B. Les films</h3>
+<p>Les meilleurs, le bêtisier et une journée en 45 secondes&nbsp;: <a href="/navitek/reseaux/">les films de Navitek</a>.</p></div>
+<div class="encadre"><h3>C. Les fichiers et le code</h3>
+<p>Les pièces à imprimer (STL, plateaux 3MF), le schéma électrique, le programme du robot et celui du banc&nbsp;: <a href="/navitek/#fichiers">sur la
+page du robot</a>. Le code de la simulation et de l'apprentissage est publié avec les cahiers.</p></div>
+<div class="encadre"><h3>D. Les autres robots</h3>
+<p><a href="/navitek/n1/">N1</a> (62&nbsp;cm), <a href="/navitek/n2/">N2</a> (un mètre, des actionneurs imprimés) et
+<a href="/navitek/n3/">N3</a> (1,5&nbsp;m)&nbsp;: les suites dessinées.</p></div>
+<div class="encadre"><h3>E. Comment citer ce travail</h3>
+<p class="citer">Maisonneuve, Y. et Claude (2026). Apprendre à marcher à un humanoïde imprimé : N0.1, 37 cm, dix-sept servos SG90.
+Navitek Robolabs, thèse ouverte, version du 2026-11-18. https://ymiaconseil.com/navitek/these/</p></div><h2 id='references' data-chapitre="Références"><span class='n'>Références</span>Références</h2><ol class="ref">
+<li>Alexander, R. McN. (1984). The gaits of bipedal and quadrupedal animals. <i>The International Journal of Robotics Research</i>, 3(2).</li>
+<li>Balasubramanian, S., Melendez-Calderon, A., Roby-Brami, A. et Burdet, E. (2015). On the analysis of movement smoothness.
+<i>Journal of NeuroEngineering and Rehabilitation</i>, 12.</li>
+<li>Kuo, A. D., Donelan, J. M. et Ruina, A. (2005). Energetic consequences of walking like an inverted pendulum: step-to-step transitions.
+<i>Exercise and Sport Sciences Reviews</i>, 33(2).</li>
+<li>Muybridge, E. (1887). <i>Animal Locomotion</i>. Philadelphie&nbsp;: University of Pennsylvania.</li>
+<li>Peng, X. B., Abbeel, P., Levine, S. et van de Panne, M. (2018). DeepMimic: Example-guided deep reinforcement learning of physics-based
+character skills. <i>ACM Transactions on Graphics</i>, 37(4).</li>
+<li>Schulman, J., Wolski, F., Dhariwal, P., Radford, A. et Klimov, O. (2017). Proximal Policy Optimization Algorithms. arXiv:1707.06347.</li>
+<li>Todorov, E., Erez, T. et Tassa, Y. (2012). MuJoCo: A physics engine for model-based control. <i>IEEE/RSJ IROS</i>.</li>
+<li>Zakka, K. et al. (2025). MuJoCo Playground. arXiv:2502.08844.</li>
+<li>Open Duck Mini, un petit robot bipède ouvert à servos du commerce&nbsp;: github.com/apirrone/Open_Duck_Mini.</li>
+</ol>
+</article></main>
+<footer><div class="in">
+<nav class="plan" aria-label="Plan du site"><a href="/">Accueil</a> &middot; <a href="/pourquoi/">Pourquoi</a> &middot; <a href="/methode/">La méthode</a> &middot; <a href="/formation/">Formation</a> &middot; <a href="/plan/">PlanJump</a> &middot; <a href="/easyread/">Syllabes Faciles</a> &middot; <a href="/navitek/">Navitek</a></nav>
+<p>Une recherche ouverte de Yoan Maisonneuve et Claude. Une question, une idée, une erreur repérée&nbsp;: <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a>.</p>
+</div></footer>
+<script src="/navitek/menu.js" defer></script>
+</body>
+</html>
