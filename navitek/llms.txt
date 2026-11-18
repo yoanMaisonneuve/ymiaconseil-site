@@ -1,0 +1,24 @@
+# Navitek Robolabs
+
+> Open research by Yoan Maisonneuve and Claude: teaching N0.1, a 3D-printed 37 cm humanoid with 17 SG90 hobby servos (0.18 N·m each),
+> to walk like a human, in MuJoCo simulation, with PPO on one consumer GPU. Everything is published: the research log (each prediction
+> written before its run, each verdict after, failures included), the trained walking policies, the benchmark data and the code.
+> Simulated only; nothing is printed yet. Pages are in French.
+
+## Pages
+
+- [The thesis](https://ymiaconseil.com/navitek/these/): question, method, results, discussion, errors, references
+- [Research log](https://ymiaconseil.com/navitek/recherche/): 161 notebooks, 844 hypotheses with credence and verdict
+- [Downloads](https://ymiaconseil.com/navitek/telechargements/): walking policies and benchmark data, by version and date
+- [The robot N0](https://ymiaconseil.com/navitek/): printable parts (STL, 3MF), wiring, firmware
+
+## Machine-readable
+
+- [versions.json](https://ymiaconseil.com/navitek/telechargements/versions.json): every release, its walking score, file URLs, sha256
+- [Hypotheses CSV](https://ymiaconseil.com/navitek/telechargements/cahiers/navitek-hypotheses-2026-11-18.csv): every prediction and verdict
+
+## Latest walking policies (PyTorch + ONNX, MuJoCo model, code; CC BY 4.0 / MIT)
+
+- [2026.11.18, N0.1-L18-suite-400](https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip): walking score 0.803; data: https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip
+- [2026.11.17, N0.1-PZ-zero-400](https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-modele.zip): walking score 0.686; data: https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-donnees.zip
+- [2026.11.16, N0.1-photo-zero-genou](https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-modele.zip): walking score 0.637; data: https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-donnees.zip

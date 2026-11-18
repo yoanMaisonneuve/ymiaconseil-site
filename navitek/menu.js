@@ -11,6 +11,7 @@
     ["/navitek/these/", "La thèse", "Apprendre à marcher à un humanoïde imprimé"],
     ["/navitek/", "Le robot N0", "À imprimer : les pièces, le montage, le programme"],
     ["/navitek/recherche/", "Le cahier de recherche", "Chaque essai : la prédiction avant, le verdict après"],
+    ["/navitek/telechargements/", "Téléchargements", "Le modèle de marche et ses données, par version et par date"],
     ["/navitek/reseaux/", "Les films", "Les meilleurs, le bêtisier, une journée en 45 s"],
     ["/navitek/n1/", "N1", "62 cm, des servos qui parlent"],
     ["/navitek/n2/", "N2", "Un mètre, des actionneurs imprimés (concept)"],

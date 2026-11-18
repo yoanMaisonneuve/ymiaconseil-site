@@ -1,0 +1,238 @@
+{
+ "projet": "Navitek Robolabs : apprendre à marcher à un humanoïde imprimé (N0.1, 37 cm, 17 servos SG90), en simulation",
+ "auteurs": [
+  "Yoan Maisonneuve",
+  "Claude"
+ ],
+ "these": "https://ymiaconseil.com/navitek/these/",
+ "licence": "CC BY 4.0 (modèles, données, textes) ; MIT (code)",
+ "versions": [
+  {
+   "version": "2026.11.18",
+   "date": "2026-11-18",
+   "run": "N0.1-L18-suite-400",
+   "titre": "La plus proche de la cible",
+   "description": "31,5° entre les jambes et le genou à 11° quand le talon touche (10 cm/s), sur un seul pied 85 % du temps ; 0,67 fois la vitesse demandée.",
+   "score": {
+    "N1": 0.869,
+    "N2": 0.744,
+    "N3": 0.703,
+    "N4": 0.857,
+    "score": 0.803,
+    "millions_depuis_zero": 540,
+    "lignee": [
+     "N0.1-L18-suite-400",
+     "N0.1-L18-jambe-tendue",
+     "N0.1-photo-zero-genou"
+    ]
+   },
+   "juge_10cms": {
+    "debout_10s": 24,
+    "vitesse_cm_s": 6.67,
+    "rapport_commande": 0.67,
+    "tronc_deg": 6.4,
+    "entre_les_jambes_p95": 31.5,
+    "entre_les_jambes_mediane": 15.9,
+    "pied_devant_deg": 6.7,
+    "pied_derriere_deg": -3.0,
+    "bassin_devant_cheville_arriere": 0.267,
+    "vrais_pas_s": 0.81,
+    "bout_releve_mm": 7.4,
+    "pied_haut_mm": 23.4,
+    "genou_a_la_pose_deg": 11.2,
+    "pointe_a_la_pose_deg": 8.5,
+    "talon_arriere_a_la_pose_deg": 0.7,
+    "poses_n": 193,
+    "appui_simple_pc": 85
+   },
+   "juge_5cms": {
+    "debout_10s": 26,
+    "vitesse_cm_s": 3.35,
+    "rapport_commande": 0.67,
+    "tronc_deg": 5.1,
+    "entre_les_jambes_p95": 26.9,
+    "entre_les_jambes_mediane": 15.3,
+    "pied_devant_deg": 7.2,
+    "pied_derriere_deg": -3.5,
+    "bassin_devant_cheville_arriere": 0.225,
+    "vrais_pas_s": 0.35,
+    "bout_releve_mm": 9.2,
+    "pied_haut_mm": 27.7,
+    "genou_a_la_pose_deg": 12.3,
+    "pointe_a_la_pose_deg": 10.7,
+    "talon_arriere_a_la_pose_deg": 0.4,
+    "poses_n": 105,
+    "appui_simple_pc": 84
+   },
+   "lignee": [
+    "N0.1-L18-suite-400",
+    "N0.1-L18-jambe-tendue",
+    "N0.1-photo-zero-genou"
+   ],
+   "onnx": 6.556510925292969e-07,
+   "modele": {
+    "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip",
+    "mo": 0.93,
+    "sha256": "a1f48f284ca976ebbbdb1bbe51296605ef2db7ac41839edd234a7409864a5cd7"
+   },
+   "donnees": {
+    "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip",
+    "mo": 4.17,
+    "sha256": "7e2b54c1f3ddcd1860c976f332a0c7cd8264aba0154cce51f465f961d860fdc2"
+   }
+  },
+  {
+   "version": "2026.11.17",
+   "date": "2026-11-17",
+   "run": "N0.1-PZ-zero-400",
+   "titre": "La marche droite qui obéit",
+   "description": "Le tronc droit, 1,12 fois la vitesse demandée à 5 cm/s, 30 départs sur 30 debout ; de petits pas (11° entre les jambes).",
+   "score": {
+    "N1": 0.438,
+    "N2": 0.98,
+    "N3": 0.582,
+    "N4": 1.0,
+    "score": 0.686,
+    "millions_depuis_zero": 400,
+    "lignee": [
+     "N0.1-PZ-zero-400"
+    ]
+   },
+   "juge_10cms": {
+    "debout_10s": 29,
+    "vitesse_cm_s": 9.59,
+    "rapport_commande": 0.96,
+    "tronc_deg": 4.8,
+    "entre_les_jambes_p95": 15.3,
+    "entre_les_jambes_mediane": 9.8,
+    "pied_devant_deg": 5.2,
+    "pied_derriere_deg": -1.5,
+    "bassin_devant_cheville_arriere": 0.119,
+    "vrais_pas_s": 2.32,
+    "bout_releve_mm": 3.6,
+    "pied_haut_mm": 9.9,
+    "genou_a_la_pose_deg": 25.7,
+    "pointe_a_la_pose_deg": 4.1,
+    "talon_arriere_a_la_pose_deg": 2.1,
+    "poses_n": 620,
+    "appui_simple_pc": 77
+   },
+   "juge_5cms": {
+    "debout_10s": 30,
+    "vitesse_cm_s": 5.6,
+    "rapport_commande": 1.12,
+    "tronc_deg": 4.6,
+    "entre_les_jambes_p95": 11.0,
+    "entre_les_jambes_mediane": 5.9,
+    "pied_devant_deg": 2.7,
+    "pied_derriere_deg": -0.9,
+    "bassin_devant_cheville_arriere": 0.08,
+    "vrais_pas_s": 1.71,
+    "bout_releve_mm": 3.7,
+    "pied_haut_mm": 11.0,
+    "genou_a_la_pose_deg": 17.7,
+    "pointe_a_la_pose_deg": 4.2,
+    "talon_arriere_a_la_pose_deg": 1.1,
+    "poses_n": 486,
+    "appui_simple_pc": 81
+   },
+   "lignee": [
+    "N0.1-PZ-zero-400"
+   ],
+   "onnx": 7.152557373046875e-07,
+   "modele": {
+    "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-modele.zip",
+    "mo": 0.93,
+    "sha256": "bfd647b9c584de52b45eda10490660a7e39a252141e495f6e0c20080b87a5461"
+   },
+   "donnees": {
+    "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-donnees.zip",
+    "mo": 4.16,
+    "sha256": "baad364b5260b469085e1d403579fa61a73563c1eceb29eb59d71095340e9e61"
+   }
+  },
+  {
+   "version": "2026.11.16",
+   "date": "2026-11-16",
+   "run": "N0.1-photo-zero-genou",
+   "titre": "La première marche droite",
+   "description": "Apprise de zéro en imitant la photo d'un pas humain : le tronc droit, la vitesse obéie à 2, 5 et 10 cm/s.",
+   "score": {
+    "N1": 0.442,
+    "N2": 0.97,
+    "N3": 0.336,
+    "N4": 1.0,
+    "score": 0.637,
+    "millions_depuis_zero": 60,
+    "lignee": [
+     "N0.1-photo-zero-genou"
+    ]
+   },
+   "juge_10cms": {
+    "debout_10s": 30,
+    "vitesse_cm_s": 9.45,
+    "rapport_commande": 0.94,
+    "tronc_deg": -0.1,
+    "entre_les_jambes_p95": 20.2,
+    "entre_les_jambes_mediane": 8.4,
+    "pied_devant_deg": 5.8,
+    "pied_derriere_deg": -3.3,
+    "bassin_devant_cheville_arriere": 0.119,
+    "vrais_pas_s": 2.32,
+    "bout_releve_mm": 5.0,
+    "pied_haut_mm": 9.9,
+    "genou_a_la_pose_deg": 25.8,
+    "pointe_a_la_pose_deg": 5.8,
+    "talon_arriere_a_la_pose_deg": 1.1,
+    "poses_n": 639,
+    "appui_simple_pc": 72
+   },
+   "juge_5cms": {
+    "debout_10s": 30,
+    "vitesse_cm_s": 5.65,
+    "rapport_commande": 1.13,
+    "tronc_deg": 2.3,
+    "entre_les_jambes_p95": 12.1,
+    "entre_les_jambes_mediane": 7.3,
+    "pied_devant_deg": 2.6,
+    "pied_derriere_deg": -2.0,
+    "bassin_devant_cheville_arriere": 0.06,
+    "vrais_pas_s": 1.72,
+    "bout_releve_mm": 3.8,
+    "pied_haut_mm": 10.8,
+    "genou_a_la_pose_deg": 24.9,
+    "pointe_a_la_pose_deg": 4.4,
+    "talon_arriere_a_la_pose_deg": 0.4,
+    "poses_n": 484,
+    "appui_simple_pc": 71
+   },
+   "lignee": [
+    "N0.1-photo-zero-genou"
+   ],
+   "onnx": 8.344650268554688e-07,
+   "modele": {
+    "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-modele.zip",
+    "mo": 0.93,
+    "sha256": "fb40cd5595eaa84e49f291a2abca5900508eb803106539cad784c3c7459bbaf3"
+   },
+   "donnees": {
+    "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-donnees.zip",
+    "mo": 4.14,
+    "sha256": "3a6a7fcfd7e793322b20b4a4bcb0ad4fc6335eb68ee102701d250a0c51d36060"
+   }
+  }
+ ],
+ "cahiers": {
+  "date": "2026-11-18",
+  "json": {
+   "url": "https://ymiaconseil.com/navitek/telechargements/cahiers/navitek-cahiers-2026-11-18.json",
+   "mo": 0.5
+  },
+  "csv": {
+   "url": "https://ymiaconseil.com/navitek/telechargements/cahiers/navitek-hypotheses-2026-11-18.csv",
+   "mo": 0.28
+  },
+  "journaux": 161,
+  "hypotheses": 844
+ }
+}

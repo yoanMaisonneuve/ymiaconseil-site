@@ -62,6 +62,8 @@ td{font-variant-numeric:tabular-nums}
 .ref{font-size:14.5px;padding-left:1.2em}
 .ref li{margin-bottom:6px}
 .citer{font-family:var(--mono);font-size:12.5px;background:var(--tint);padding:12px 14px;border-radius:6px;overflow-x:auto;white-space:pre-wrap}
+.bouton{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;border-radius:6px;padding:9px 14px;font-family:var(--mono);font-size:13px;margin:0 6px 6px 0}
+.bouton.b2{background:var(--tint);color:var(--navy);border:1px solid var(--line)}
 footer{border-top:1px solid var(--line);padding:22px 20px 90px;font-size:14px;color:var(--dim)}
 footer .in{max-width:700px;margin:0 auto}
 nav.plan{font-size:13.5px;margin-bottom:8px}
@@ -92,6 +94,7 @@ nav.plan a{color:var(--navy)}
     <div><b>6,0&nbsp;G</b><span>pas de simulation (84 apprentissages)</span></div>
     <div><b>102</b><span>erreurs notées, chacune avec sa règle</span></div>
   </div>
+  <div class='encadre' style='margin-top:18px'><h3>Télécharger, pour s'en servir</h3><p>Le modèle de marche le plus récent (version 2026.11.18, L18-suite-400) et ses données&nbsp;: les poids, le même réseau en ONNX, le robot pour MuJoCo, le code et les 90 départs du banc. Licences ouvertes.</p><p><a class='bouton' href='../telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip'>Le modèle (0,93&nbsp;Mo)</a> <a class='bouton b2' href='../telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip'>Les données (4,17&nbsp;Mo)</a> <a href='../telechargements/'>toutes les versions</a></p></div>
 </header>
 <nav aria-label='Table des matières'><p class='code' style='margin-top:4px'>Table des matières</p><ol class='toc'><li><a href='#resume'><span>·</span>Résumé</a></li><li><a href='#ch1'><span>1</span>Introduction</a></li><li><a href='#ch2'><span>2</span>Ce qui existe</a></li><li><a href='#ch3'><span>3</span>Le robot</a></li><li><a href='#ch4'><span>4</span>La méthode</a></li><li><a href='#ch5'><span>5</span>Les résultats</a></li><li><a href='#ch6'><span>6</span>Discussion</a></li><li><a href='#ch7'><span>7</span>Conclusion et suite</a></li><li><a href='#annexes'><span>·</span>Annexes</a></li><li><a href='#references'><span>·</span>Références</a></li></ol></nav><h2 id='resume' data-chapitre="Résumé"><span class='n'>Résumé</span>Résumé</h2><div class="resume">
 <p>Peut-on apprendre à un humanoïde de 37&nbsp;cm, imprimé en plastique et mû par dix-sept servomoteurs de modélisme de 9&nbsp;g (des SG90,
@@ -167,7 +170,7 @@ talon, la bascule par-dessus le pied (le pivot, R-197), la douceur des commandes
 pas</strong> (λ&nbsp;0,40&nbsp;: 33° entre les jambes et le genou sous 10° quand le talon touche), <strong>la vitesse</strong> (0,25&nbsp;:
 de 0,9 à 1,1 fois la vitesse demandée), <strong>la fluidité</strong> (0,20&nbsp;: les à-coups des articulations et la régularité du bassin,
 mesurée par le SPARC), <strong>la sûreté</strong> (0,15&nbsp;: 28 départs sur 30 debout). À côté du score, son coût&nbsp;: les millions de
-pas de simulation qu'il a fallu depuis zéro.</p><h2 id='ch5' data-chapitre="5. Les résultats"><span class='n'>Chapitre 5</span>Les résultats</h2><h3>5.1 Le score de chaque marche</h3><div class='tab'><table><thead><tr><th>La marche</th><th>N1 grands pas</th><th>N2 vitesse</th><th>N3 fluidité</th><th>N4 sûreté</th><th>Score</th><th>Millions de pas</th></tr></thead><tbody><tr><td>L18-suite-400</td><td>0,87</td><td>0,74</td><td>0,70</td><td>0,86</td><td><b>0,80</b></td><td>540</td></tr><tr><td>PZ-zero-400</td><td>0,44</td><td>0,98</td><td>0,58</td><td>1,00</td><td><b>0,69</b></td><td>400</td></tr><tr><td>PZ-tendu</td><td>0,44</td><td>0,78</td><td>0,70</td><td>1,00</td><td><b>0,66</b></td><td>100</td></tr><tr><td>tendu-zero-400</td><td>0,41</td><td>1,00</td><td>0,46</td><td>1,00</td><td><b>0,66</b></td><td>400</td></tr><tr><td>L19-pivot</td><td>0,75</td><td>0,41</td><td>0,46</td><td>1,00</td><td><b>0,65</b></td><td>220</td></tr><tr><td>pivot-zero</td><td>0,38</td><td>0,96</td><td>0,34</td><td>1,00</td><td><b>0,61</b></td><td>120</td></tr><tr><td>L18b-tendue6</td><td>0,58</td><td>0,33</td><td>0,71</td><td>1,00</td><td><b>0,61</b></td><td>140</td></tr><tr><td>tendue-zero</td><td>0,28</td><td>0,88</td><td>0,31</td><td>1,00</td><td><b>0,54</b></td><td>120</td></tr></tbody></table></div><p class='note'>Aucune marche n'a encore franchi le premier niveau (un niveau est franchi quand il vaut 1). Les millions de pas comptent toute la lignée d'apprentissages.</p><h3>5.2 La marche droite, apprise de zéro</h3>
+pas de simulation qu'il a fallu depuis zéro.</p><h2 id='ch5' data-chapitre="5. Les résultats"><span class='n'>Chapitre 5</span>Les résultats</h2><h3>5.1 Le score de chaque marche</h3><div class='tab'><table><thead><tr><th>La marche</th><th>N1 grands pas</th><th>N2 vitesse</th><th>N3 fluidité</th><th>N4 sûreté</th><th>Score</th><th>Millions de pas</th></tr></thead><tbody><tr><td>L18-suite-400</td><td>0,87</td><td>0,74</td><td>0,70</td><td>0,86</td><td><b>0,80</b></td><td>540</td></tr><tr><td>PZ-zero-400</td><td>0,44</td><td>0,98</td><td>0,58</td><td>1,00</td><td><b>0,69</b></td><td>400</td></tr><tr><td>PZ-tendu</td><td>0,44</td><td>0,78</td><td>0,70</td><td>1,00</td><td><b>0,66</b></td><td>100</td></tr><tr><td>tendu-zero-400</td><td>0,41</td><td>1,00</td><td>0,46</td><td>1,00</td><td><b>0,66</b></td><td>400</td></tr><tr><td>L19-pivot</td><td>0,75</td><td>0,41</td><td>0,46</td><td>1,00</td><td><b>0,65</b></td><td>220</td></tr><tr><td>photo-zero-genou</td><td>0,44</td><td>0,97</td><td>0,34</td><td>1,00</td><td><b>0,64</b></td><td>60</td></tr><tr><td>pivot-zero</td><td>0,38</td><td>0,96</td><td>0,34</td><td>1,00</td><td><b>0,61</b></td><td>120</td></tr><tr><td>L18b-tendue6</td><td>0,58</td><td>0,33</td><td>0,71</td><td>1,00</td><td><b>0,61</b></td><td>140</td></tr><tr><td>tendue-zero</td><td>0,28</td><td>0,88</td><td>0,31</td><td>1,00</td><td><b>0,54</b></td><td>120</td></tr></tbody></table></div><p class='note'>Aucune marche n'a encore franchi le premier niveau (un niveau est franchi quand il vaut 1). Les millions de pas comptent toute la lignée d'apprentissages.</p><h3>5.2 La marche droite, apprise de zéro</h3>
 <figure><video src="../recherche/film/n3-r150-N0.1-photo-zero-genou-final-5cms.mp4" controls playsinline preload="metadata"></video>
 <figcaption><b>Figure 3.</b> La première marche droite de N0.1 (R-190), apprise de zéro en imitant la photo&nbsp;: le tronc à +2°, la vitesse
 obéie à 2, 5 et 10&nbsp;cm/s, 30 départs sur 30 debout. Simulé.</figcaption></figure>
@@ -188,9 +191,18 @@ plié&nbsp;: il imitait une référence fausse. Simulé.</figcaption></figure>
 le vol, la poussée. Notre première référence posait le talon le genou plié à 45°&nbsp;; poser le pied plus loin devant le bassin et
 relever moins la pointe l'a corrigée. Sans le genou qui se dépliait d'un coup après la pose, le plafond des SG90 passe de 13 à
 29&nbsp;cm/s.</figcaption></figure>
-<h3>5.6 La plus proche de la cible</h3>
+<h3>5.6 Tourner&nbsp;: la vrille sur un pied et le T-test</h3>
+<figure><video src="../recherche/film/n3-vrille-complete.mp4" controls playsinline preload="metadata"></video>
+<figcaption><b>Figure 8.</b> La vrille (R-128), sur N3, le grand robot simulé&nbsp;: la tête mène, les bras s'ouvrent, la jambe libre part
+en avion et le pied d'appui pivote, la tête se fixe sur la nouvelle direction, le corps se réaligne, les genoux fléchissent, un petit
+saut&nbsp;: 154° dans cet épisode. Simulé.</figcaption></figure>
+<figure><video src="../recherche/film/n3-r163-N0.1-sg90-cap-final-ttest.mp4" controls playsinline preload="metadata"></video>
+<figcaption><b>Figure 9.</b> N0.1 réussit le T-test (R-163), vu d'en haut, accéléré deux fois&nbsp;: la ligne de droite, un vrai
+demi-tour, la ligne de gauche, un demi-tour, le retour au centre. 30 départs sur 30, en 27&nbsp;s à 10&nbsp;cm/s demandés, aux SG90.
+Simulé.</figcaption></figure>
+<h3>5.7 La plus proche de la cible</h3>
 <figure><video src="film/n3-r150-N0.1-L18-suite-400-final-5cms.mp4" controls playsinline preload="metadata"></video>
-<figcaption><b>Figure 8.</b> L18-suite-400, après 540 millions de pas&nbsp;: à 10&nbsp;cm/s, 31,5° entre les jambes et le genou à 11°
+<figcaption><b>Figure 10.</b> L18-suite-400, après 540 millions de pas&nbsp;: à 10&nbsp;cm/s, 31,5° entre les jambes et le genou à 11°
 quand le talon touche, sur un seul pied 85&nbsp;% du temps. Il lui manque la vitesse (0,67 fois) et la sûreté (24 départs sur 30).
 Simulé.</figcaption></figure><h2 id='ch6' data-chapitre="6. Discussion"><span class='n'>Chapitre 6</span>Discussion</h2><h3>6.1 Ce que nous avons appris</h3>
 <ol class="lecons">
@@ -226,8 +238,10 @@ cahier de recherche</a>.</p></div>
 <div class="encadre"><h3>B. Les films</h3>
 <p>Les meilleurs, le bêtisier et une journée en 45 secondes&nbsp;: <a href="/navitek/reseaux/">les films de Navitek</a>.</p></div>
 <div class="encadre"><h3>C. Les fichiers et le code</h3>
-<p>Les pièces à imprimer (STL, plateaux 3MF), le schéma électrique, le programme du robot et celui du banc&nbsp;: <a href="/navitek/#fichiers">sur la
-page du robot</a>. Le code de la simulation et de l'apprentissage est publié avec les cahiers.</p></div>
+<p><strong>Le modèle de marche et ses données</strong>, par version et par date (les poids en PyTorch et en ONNX, le robot pour MuJoCo,
+l'entraîneur, la configuration, les 90 départs du banc), et tous les cahiers en JSON et en CSV&nbsp;: <a href="/navitek/telechargements/">les
+téléchargements</a>. Les pièces à imprimer (STL, plateaux 3MF), le schéma électrique et le programme du robot&nbsp;: <a href="/navitek/#fichiers">sur
+la page du robot</a>.</p></div>
 <div class="encadre"><h3>D. Les autres robots</h3>
 <p><a href="/navitek/n1/">N1</a> (62&nbsp;cm), <a href="/navitek/n2/">N2</a> (un mètre, des actionneurs imprimés) et
 <a href="/navitek/n3/">N3</a> (1,5&nbsp;m)&nbsp;: les suites dessinées.</p></div>

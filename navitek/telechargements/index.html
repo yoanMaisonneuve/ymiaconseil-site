@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Navitek, les téléchargements : le modèle de marche et les données</title>
+<meta name="description" content="Télécharger le modèle de marche de N0.1 (poids PyTorch et ONNX, spécification, robot MuJoCo, code) et ses données de banc, par version et par date. Licences ouvertes.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="canonical" href="https://ymiaconseil.com/navitek/telechargements/">
+<link rel="alternate" type="application/json" href="versions.json" title="Le manifeste des versions">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=Lora:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--navy:#0b1f3a;--navy-3:#16355e;--gold:#d4a843;--gold-small:#8a6b18;--ink-body:#2a2620;--dim:#5c5c5c;--line:#e4e2dd;--paper:#fff;
+--tint:#f6f4f0;--orange:#f26b1d;--orange-texte:#b5490c;--display:'Newsreader',Georgia,serif;--body:'Lora',Georgia,serif;
+--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink-body);font-family:var(--body);font-size:17px;line-height:1.62}
+.bar{background:var(--navy);border-bottom:3px solid var(--gold);padding:16px 20px}
+.bar .in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.bar a.logo{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none}
+.bar a.logo span{color:var(--gold)}
+.bar a.autre{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#a8bad0;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.45)}
+main{padding:40px 20px 96px}.wrap{max-width:720px;margin:0 auto;width:100%}
+.code{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-small);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(30px,7vw,44px);line-height:1.1;margin:0 0 14px;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(23px,5vw,29px);line-height:1.2;margin:40px 0 12px;text-wrap:balance}
+p{margin:0 0 14px}a{color:var(--orange-texte)}
+.chapeau{font-size:18.5px;color:#3c3830}
+.cartes{display:grid;gap:14px}
+.carte{border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:6px;padding:16px;background:#fffdf8;display:grid;gap:8px;min-width:0}
+.carte .v{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-small)}
+.carte h3{font-family:var(--display);font-weight:600;color:var(--navy);font-size:21px;margin:0}
+.carte p{margin:0;font-size:15.5px}
+.boutons{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.bouton{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;border-radius:6px;padding:9px 14px;font-family:var(--mono);font-size:13px}
+.bouton.b2{background:var(--tint);color:var(--navy);border:1px solid var(--line)}
+.sha{font-family:var(--mono);font-size:11px;color:var(--dim);word-break:break-all}
+.score{font-family:var(--mono);font-size:13px;color:var(--navy)}
+label.choix{font-family:var(--mono);font-size:12.5px;color:var(--dim);display:grid;gap:6px;margin:8px 0 12px}
+select{font:15px var(--body);padding:8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--navy);max-width:100%}
+.note{font-size:14.5px;color:var(--dim)}
+ul.liste{padding-left:1.2em;display:grid;gap:6px}
+.citer{font-family:var(--mono);font-size:12.5px;background:var(--tint);padding:12px 14px;border-radius:6px;white-space:pre-wrap}
+footer{border-top:1px solid var(--line);padding:22px 20px 90px;font-size:14px;color:var(--dim)}footer .in{max-width:720px;margin:0 auto}
+</style>
+</head>
+<body>
+<div class="bar"><div class="in"><a class="logo" href="/">YM <span>IA</span> Conseil</a><a class="autre" href="/navitek/these/">La thèse</a></div></div>
+<main><div class="wrap">
+<p class="code">Navitek Robolabs &middot; téléchargements &middot; ouverts</p>
+<h1>Le modèle de marche et ses données</h1>
+<p class="chapeau">Pour un chercheur, un étudiant, un bricoleur ou une IA&nbsp;: le réseau qui fait marcher N0.1, le robot simulé qui va avec, le
+code pour le rejouer et toutes les mesures de son banc. Chaque version a sa date. Tout est <strong>simulé</strong>&nbsp;: rien n'est encore
+imprimé.</p>
+<h2>Les deux dernières versions</h2>
+<div class="cartes"><article class='carte' data-version='2026.11.18'><span class='v'>Version 2026.11.18 &middot; L18-suite-400</span><h3>La plus proche de la cible</h3><p>31,5° entre les jambes et le genou à 11° quand le talon touche (10 cm/s), sur un seul pied 85 % du temps ; 0,67 fois la vitesse demandée.</p><p class='score'>Score de la marche 0,803 &middot; les grands pas 0,869 &middot; la vitesse 0,744 &middot; la fluidité 0,703 &middot; la sûreté 0,857</p><div class='boutons'><a class='bouton' href='2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip' download>Le modèle de marche (0,93 Mo)</a><a class='bouton b2' href='2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip' download>Les données (4,17 Mo)</a></div><p class='sha'>sha256 du modèle a1f48f284ca976ebbbdb1bbe51296605ef2db7ac41839edd234a7409864a5cd7<br>sha256 des données 7e2b54c1f3ddcd1860c976f332a0c7cd8264aba0154cce51f465f961d860fdc2</p></article><article class='carte' data-version='2026.11.17'><span class='v'>Version 2026.11.17 &middot; PZ-zero-400</span><h3>La marche droite qui obéit</h3><p>Le tronc droit, 1,12 fois la vitesse demandée à 5 cm/s, 30 départs sur 30 debout ; de petits pas (11° entre les jambes).</p><p class='score'>Score de la marche 0,686 &middot; les grands pas 0,438 &middot; la vitesse 0,98 &middot; la fluidité 0,582 &middot; la sûreté 1,0</p><div class='boutons'><a class='bouton' href='2026.11.17/navitek-n0.1-marche-2026.11.17-modele.zip' download>Le modèle de marche (0,93 Mo)</a><a class='bouton b2' href='2026.11.17/navitek-n0.1-marche-2026.11.17-donnees.zip' download>Les données (4,16 Mo)</a></div><p class='sha'>sha256 du modèle bfd647b9c584de52b45eda10490660a7e39a252141e495f6e0c20080b87a5461<br>sha256 des données baad364b5260b469085e1d403579fa61a73563c1eceb29eb59d71095340e9e61</p></article></div>
+<h2>Une autre version</h2>
+<label class="choix">Choisir une version et une date
+<select id="choix"><option value="">Toutes les versions…</option><option value='2026.11.18'>2026.11.18, La plus proche de la cible</option><option value='2026.11.17'>2026.11.17, La marche droite qui obéit</option><option value='2026.11.16'>2026.11.16, La première marche droite</option></select></label>
+<div class="cartes" id="autres"><article class='carte autre' hidden data-version='2026.11.18'><span class='v'>Version 2026.11.18 &middot; L18-suite-400</span><h3>La plus proche de la cible</h3><p>31,5° entre les jambes et le genou à 11° quand le talon touche (10 cm/s), sur un seul pied 85 % du temps ; 0,67 fois la vitesse demandée.</p><p class='score'>Score de la marche 0,803 &middot; les grands pas 0,869 &middot; la vitesse 0,744 &middot; la fluidité 0,703 &middot; la sûreté 0,857</p><div class='boutons'><a class='bouton' href='2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip' download>Le modèle de marche (0,93 Mo)</a><a class='bouton b2' href='2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip' download>Les données (4,17 Mo)</a></div><p class='sha'>sha256 du modèle a1f48f284ca976ebbbdb1bbe51296605ef2db7ac41839edd234a7409864a5cd7<br>sha256 des données 7e2b54c1f3ddcd1860c976f332a0c7cd8264aba0154cce51f465f961d860fdc2</p></article><article class='carte autre' hidden data-version='2026.11.17'><span class='v'>Version 2026.11.17 &middot; PZ-zero-400</span><h3>La marche droite qui obéit</h3><p>Le tronc droit, 1,12 fois la vitesse demandée à 5 cm/s, 30 départs sur 30 debout ; de petits pas (11° entre les jambes).</p><p class='score'>Score de la marche 0,686 &middot; les grands pas 0,438 &middot; la vitesse 0,98 &middot; la fluidité 0,582 &middot; la sûreté 1,0</p><div class='boutons'><a class='bouton' href='2026.11.17/navitek-n0.1-marche-2026.11.17-modele.zip' download>Le modèle de marche (0,93 Mo)</a><a class='bouton b2' href='2026.11.17/navitek-n0.1-marche-2026.11.17-donnees.zip' download>Les données (4,16 Mo)</a></div><p class='sha'>sha256 du modèle bfd647b9c584de52b45eda10490660a7e39a252141e495f6e0c20080b87a5461<br>sha256 des données baad364b5260b469085e1d403579fa61a73563c1eceb29eb59d71095340e9e61</p></article><article class='carte autre' hidden data-version='2026.11.16'><span class='v'>Version 2026.11.16 &middot; photo-zero-genou</span><h3>La première marche droite</h3><p>Apprise de zéro en imitant la photo d'un pas humain : le tronc droit, la vitesse obéie à 2, 5 et 10 cm/s.</p><p class='score'>Score de la marche 0,637 &middot; les grands pas 0,442 &middot; la vitesse 0,97 &middot; la fluidité 0,336 &middot; la sûreté 1,0</p><div class='boutons'><a class='bouton' href='2026.11.16/navitek-n0.1-marche-2026.11.16-modele.zip' download>Le modèle de marche (0,93 Mo)</a><a class='bouton b2' href='2026.11.16/navitek-n0.1-marche-2026.11.16-donnees.zip' download>Les données (4,14 Mo)</a></div><p class='sha'>sha256 du modèle fb40cd5595eaa84e49f291a2abca5900508eb803106539cad784c3c7459bbaf3<br>sha256 des données 3a6a7fcfd7e793322b20b4a4bcb0ad4fc6335eb68ee102701d250a0c51d36060</p></article></div>
+<noscript><p class="note">Sans JavaScript, toutes les versions sont listées dans <a href="versions.json">versions.json</a>.</p></noscript>
+<h2>Ce qu'il y a dans un paquet</h2>
+<ul class="liste">
+<li><strong>Le modèle</strong>&nbsp;: les poids (PyTorch), le même réseau en ONNX (lisible sans notre code, la normalisation comprise), la
+spécification de ses entrées et de ses sorties (<code>spec.json</code>), N0.1 pour MuJoCo (le modèle, ses maillages, sa posture), la marche de
+référence imitée, l'entraîneur et le banc (<code>rl_n0.py</code>), les réglages de cet apprentissage, un mode d'emploi en français et en anglais.</li>
+<li><strong>Les données</strong>&nbsp;: les 90 départs du banc (2, 5 et 10&nbsp;cm/s, les trajectoires de chaque articulation à 50 images par
+seconde), la courbe d'apprentissage, notre juge de la marche et le score.</li>
+</ul>
+<h2>Tout le travail&nbsp;: les cahiers</h2>
+<p>161 cahiers et 844 prédictions, chacune écrite avant l'essai, avec sa crédence et son verdict (au 2026-11-18)&nbsp;:
+<a href="cahiers/navitek-cahiers-2026-11-18.json" download>le fichier JSON (0,5 Mo)</a> &middot; <a href="cahiers/navitek-hypotheses-2026-11-18.csv" download>le tableau CSV (0,28 Mo)</a>.</p>
+<h2>Pour une IA</h2>
+<p>Le manifeste des versions, lisible par une machine&nbsp;: <a href="versions.json">versions.json</a> (chaque version, son score, ses
+fichiers, leurs empreintes sha256). Le résumé du projet pour les modèles de langage&nbsp;: <a href="/navitek/llms.txt">/navitek/llms.txt</a>.</p>
+<h2>Licences et citation</h2>
+<p>Les modèles, les données et les textes&nbsp;: <a href="https://creativecommons.org/licenses/by/4.0/deed.fr">CC BY 4.0</a> (partager et adapter,
+pour tout usage, en citant Navitek Robolabs). Le code&nbsp;: licence MIT.</p>
+<p class="citer">Maisonneuve, Y. et Claude (2026). Navitek N0.1, le modèle de marche et ses données (version 2026.11.18). Navitek Robolabs.
+https://ymiaconseil.com/navitek/telechargements/</p>
+<p class="note">Une question, un résultat refait, une erreur repérée&nbsp;: <a href="mailto:yoan@ymiaconseil.com">yoan@ymiaconseil.com</a>. La méthode et les
+résultats&nbsp;: <a href="/navitek/these/">la thèse</a>.</p>
+</div></main>
+<footer><div class="in"><a href="/">YM IA Conseil</a> &middot; <a href="/navitek/">Navitek</a> &middot; <a href="/navitek/these/">La thèse</a></div></footer>
+<script>
+(function () {
+  var s = document.getElementById("choix"), cs = document.querySelectorAll("#autres .carte");
+  s.addEventListener("change", function () { cs.forEach(function (c) { c.hidden = !(s.value && c.getAttribute("data-version") === s.value); }); });
+})();
+</script>
+<script src="/navitek/menu.js" defer></script>
+</body>
+</html>
