@@ -9,6 +9,15 @@
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://ymiaconseil.com/navitek/these/">
+<meta name="citation_title" content="Apprendre à marcher à un humanoïde imprimé : N0.1, 37 cm, dix-sept servos SG90">
+<meta name="citation_author" content="Maisonneuve, Yoan">
+<meta name="citation_author" content="Claude">
+<meta name="citation_publication_date" content="2026/11/18">
+<meta name="citation_technical_report_institution" content="Navitek Robolabs">
+<meta name="citation_language" content="fr">
+<meta name="citation_fulltext_html_url" content="https://ymiaconseil.com/navitek/these/">
+<meta name="citation_keywords" content="robot humanoïde; marche bipède; apprentissage par renforcement; PPO; MuJoCo; servo SG90; impression 3D">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": "Apprendre à marcher à un humanoïde imprimé : N0.1, 37 cm, dix-sept servos SG90", "name": "Apprendre à marcher à un humanoïde imprimé : N0.1, 37 cm, dix-sept servos SG90", "description": "Une recherche ouverte : apprendre à N0.1, un humanoïde imprimé de 37 cm à dix-sept servos SG90, à marcher comme un humain, en simulation, sur une seule carte graphique. Les cahiers, les données, les films et les erreurs.", "inLanguage": "fr", "url": "https://ymiaconseil.com/navitek/these/", "datePublished": "2026-11-18", "dateModified": "2026-11-18", "author": [{"@type": "Person", "name": "Yoan Maisonneuve"}], "accountablePerson": {"@type": "Person", "name": "Yoan Maisonneuve"}, "creditText": "Maisonneuve, Y. et Claude (2026). Apprendre à marcher à un humanoïde imprimé : N0.1, 37 cm, dix-sept servos SG90. Navitek Robolabs, thèse ouverte.", "publisher": {"@type": "Organization", "name": "Navitek Robolabs", "url": "https://ymiaconseil.com/navitek/"}, "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true, "image": "https://ymiaconseil.com/navitek/these/fig/n01-pose-du-talon.jpg", "keywords": ["robot humanoïde", "marche bipède", "apprentissage par renforcement", "PPO", "MuJoCo", "servo SG90", "impression 3D"], "isPartOf": {"@type": "WebSite", "name": "Navitek Robolabs", "url": "https://ymiaconseil.com/navitek/"}, "citation": [{"@type": "CreativeWork", "name": "The gaits of bipedal and quadrupedal animals", "url": "https://doi.org/10.1177/027836498400300205"}, {"@type": "CreativeWork", "name": "On the analysis of movement smoothness", "url": "https://doi.org/10.1186/s12984-015-0090-9"}, {"@type": "CreativeWork", "name": "Energetic consequences of walking like an inverted pendulum: step-to-step transitions", "url": "https://doi.org/10.1097/00003677-200504000-00006"}, {"@type": "CreativeWork", "name": "Animal Locomotion", "url": "https://archive.org/details/animallocomotion00muyb"}, {"@type": "CreativeWork", "name": "DeepMimic: Example-guided deep reinforcement learning of physics-based character skills", "url": "https://doi.org/10.1145/3197517.3201311"}, {"@type": "CreativeWork", "name": "Proximal Policy Optimization Algorithms", "url": "https://arxiv.org/abs/1707.06347"}, {"@type": "CreativeWork", "name": "MuJoCo: A physics engine for model-based control", "url": "https://doi.org/10.1109/IROS.2012.6386109"}, {"@type": "CreativeWork", "name": "MuJoCo Playground", "url": "https://arxiv.org/abs/2502.08844"}, {"@type": "CreativeWork", "name": "Open Duck Mini", "url": "https://github.com/apirrone/Open_Duck_Mini"}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,600;1,6..72,600&family=Lora:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -61,6 +70,7 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
 td{font-variant-numeric:tabular-nums}
 .ref{font-size:14.5px;padding-left:1.2em}
 .ref li{margin-bottom:6px}
+.roles{display:grid;gap:12px;margin:14px 0 18px}.roles div{border-left:3px solid var(--gold);padding:2px 0 2px 12px}.roles dt{font-weight:600;color:var(--navy)}.roles dd{margin:2px 0 0}
 .citer{font-family:var(--mono);font-size:12.5px;background:var(--tint);padding:12px 14px;border-radius:6px;overflow-x:auto;white-space:pre-wrap}
 .bouton{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;border-radius:6px;padding:9px 14px;font-family:var(--mono);font-size:13px;margin:0 6px 6px 0}
 .bouton.b2{background:var(--tint);color:var(--navy);border:1px solid var(--line)}
@@ -90,19 +100,19 @@ nav.plan a{color:var(--navy)}
   <div class="chiffres">
     <div><b>161</b><span>cahiers de recherche, du 06.10 au 18 novembre 2026</span></div>
     <div><b>844</b><span>prédictions écrites avant l'essai</span></div>
-    <div><b>386</b><span>réfutées : on les publie aussi</span></div>
-    <div><b>6,0&nbsp;G</b><span>pas de simulation (84 apprentissages)</span></div>
-    <div><b>102</b><span>erreurs notées, chacune avec sa règle</span></div>
+    <div><b>388</b><span>réfutées : on les publie aussi</span></div>
+    <div><b>6,2&nbsp;G</b><span>pas de simulation (86 apprentissages)</span></div>
+    <div><b>103</b><span>erreurs notées, chacune avec sa règle</span></div>
   </div>
-  <div class='encadre' style='margin-top:18px'><h3>Télécharger, pour s'en servir</h3><p>Le modèle de marche le plus récent (version 2026.11.18, L18-suite-400) et ses données&nbsp;: les poids, le même réseau en ONNX, le robot pour MuJoCo, le code et les 90 départs du banc. Licences ouvertes.</p><p><a class='bouton' href='../telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip'>Le modèle (0,93&nbsp;Mo)</a> <a class='bouton b2' href='../telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip'>Les données (4,17&nbsp;Mo)</a> <a href='../telechargements/'>toutes les versions</a></p></div>
+  <div class='encadre' style='margin-top:18px'><h3>Télécharger, pour s'en servir</h3><p>Le modèle de marche le plus récent (version 2026.11.18, L18-suite-400) et ses données&nbsp;: les poids, le même réseau en ONNX, le robot pour MuJoCo, le code et les 90 départs du banc. Licences ouvertes.</p><p><a class='bouton' href='../telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip'>Le modèle (0,94&nbsp;Mo)</a> <a class='bouton b2' href='../telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip'>Les données (4,17&nbsp;Mo)</a> <a href='../telechargements/'>toutes les versions</a></p></div>
 </header>
-<nav aria-label='Table des matières'><p class='code' style='margin-top:4px'>Table des matières</p><ol class='toc'><li><a href='#resume'><span>·</span>Résumé</a></li><li><a href='#ch1'><span>1</span>Introduction</a></li><li><a href='#ch2'><span>2</span>Ce qui existe</a></li><li><a href='#ch3'><span>3</span>Le robot</a></li><li><a href='#ch4'><span>4</span>La méthode</a></li><li><a href='#ch5'><span>5</span>Les résultats</a></li><li><a href='#ch6'><span>6</span>Discussion</a></li><li><a href='#ch7'><span>7</span>Conclusion et suite</a></li><li><a href='#annexes'><span>·</span>Annexes</a></li><li><a href='#references'><span>·</span>Références</a></li></ol></nav><h2 id='resume' data-chapitre="Résumé"><span class='n'>Résumé</span>Résumé</h2><div class="resume">
+<nav aria-label='Table des matières'><p class='code' style='margin-top:4px'>Table des matières</p><ol class='toc'><li><a href='#resume'><span>·</span>Résumé</a></li><li><a href='#ch1'><span>1</span>Introduction</a></li><li><a href='#ch2'><span>2</span>Ce qui existe</a></li><li><a href='#ch3'><span>3</span>Le robot</a></li><li><a href='#ch4'><span>4</span>La méthode</a></li><li><a href='#ch5'><span>5</span>Les résultats</a></li><li><a href='#ch6'><span>6</span>Discussion</a></li><li><a href='#ch7'><span>7</span>Conclusion et suite</a></li><li><a href='#annexes'><span>·</span>Annexes</a></li><li><a href='#declaration'><span>·</span>Déclaration d'usage de l'IA</a></li><li><a href='#references'><span>·</span>Références</a></li></ol></nav><h2 id='resume' data-chapitre="Résumé"><span class='n'>Résumé</span>Résumé</h2><div class="resume">
 <p>Peut-on apprendre à un humanoïde de 37&nbsp;cm, imprimé en plastique et mû par dix-sept servomoteurs de modélisme de 9&nbsp;g (des SG90,
 0,18&nbsp;N·m chacun), à marcher comme un humain&nbsp;: de grands pas, la jambe tendue quand le talon touche, le corps qui bascule par-dessus
 le pied&nbsp;? Nous l'apprenons en simulation (MuJoCo), sur une seule carte graphique de bureau, par apprentissage par renforcement (PPO), en
 imitant une marche de référence tirée d'une photo d'un pas humain.</p>
 <p>La méthode est celle d'un cahier de laboratoire tenu en public&nbsp;: chaque essai écrit sa prédiction avant de tourner et son verdict
-après (844 prédictions dans 161 cahiers&nbsp;: 288 confirmées, 73 en partie, 386 réfutées)&nbsp;; toute mesure
+après (844 prédictions dans 161 cahiers&nbsp;: 288 confirmées, 73 en partie, 388 réfutées)&nbsp;; toute mesure
 nouvelle passe d'abord sur un cas dont on connaît la réponse&nbsp;; aucun résultat n'est annoncé avant d'avoir été vu en film. Un score de
 la marche, de 0 à 1, pèse quatre niveaux débloqués dans l'ordre&nbsp;: les grands pas, la vitesse, la fluidité, la sûreté.</p>
 <p>Résultats, à ce jour et en simulation&nbsp;: une marche droite qui obéit à 2, 5 et 10&nbsp;cm/s, un saut amorti depuis 6&nbsp;cm, un
@@ -166,13 +176,14 @@ talon, la bascule par-dessus le pied (le pivot, R-197), la douceur des commandes
 <li>Tout publié&nbsp;: le cahier, le film, la recette de la marche mise à jour.</li>
 </ol>
 <p class="note">Le détail&nbsp;: les outils, les réglages de PPO, les 80 réglages de l'entraîneur et le nombre de pas de chaque test sont
-dans <a href="/navitek/entrainement/">la méthode d'entraînement</a>.</p>
+dans <a href="/navitek/entrainement/">la méthode d'entraînement</a>. Qui fait quoi entre Yoan et Claude, et ce que nous
+vérifions&nbsp;: <a href="#declaration">la déclaration d'usage de l'IA</a>.</p>
 <h3>4.4 Le score de la marche</h3>
 <p>Un seul nombre de 0 à 1 par marche apprise, la somme de quatre niveaux pondérés, débloqués dans l'ordre&nbsp;: <strong>les grands
 pas</strong> (λ&nbsp;0,40&nbsp;: 33° entre les jambes et le genou sous 10° quand le talon touche), <strong>la vitesse</strong> (0,25&nbsp;:
 de 0,9 à 1,1 fois la vitesse demandée), <strong>la fluidité</strong> (0,20&nbsp;: les à-coups des articulations et la régularité du bassin,
 mesurée par le SPARC), <strong>la sûreté</strong> (0,15&nbsp;: 28 départs sur 30 debout). À côté du score, son coût&nbsp;: les millions de
-pas de simulation qu'il a fallu depuis zéro.</p><h2 id='ch5' data-chapitre="5. Les résultats"><span class='n'>Chapitre 5</span>Les résultats</h2><h3>5.1 Le score de chaque marche</h3><div class='tab'><table><thead><tr><th>La marche</th><th>N1 grands pas</th><th>N2 vitesse</th><th>N3 fluidité</th><th>N4 sûreté</th><th>Score</th><th>Millions de pas</th></tr></thead><tbody><tr><td>L18-suite-400</td><td>0,87</td><td>0,74</td><td>0,70</td><td>0,86</td><td><b>0,80</b></td><td>540</td></tr><tr><td>PZ-zero-400</td><td>0,44</td><td>0,98</td><td>0,58</td><td>1,00</td><td><b>0,69</b></td><td>400</td></tr><tr><td>PZ-tendu</td><td>0,44</td><td>0,78</td><td>0,70</td><td>1,00</td><td><b>0,66</b></td><td>100</td></tr><tr><td>tendu-zero-400</td><td>0,41</td><td>1,00</td><td>0,46</td><td>1,00</td><td><b>0,66</b></td><td>400</td></tr><tr><td>L19-pivot</td><td>0,75</td><td>0,41</td><td>0,46</td><td>1,00</td><td><b>0,65</b></td><td>220</td></tr><tr><td>photo-zero-genou</td><td>0,44</td><td>0,97</td><td>0,34</td><td>1,00</td><td><b>0,64</b></td><td>60</td></tr><tr><td>pivot-zero</td><td>0,38</td><td>0,96</td><td>0,34</td><td>1,00</td><td><b>0,61</b></td><td>120</td></tr><tr><td>L18b-tendue6</td><td>0,58</td><td>0,33</td><td>0,71</td><td>1,00</td><td><b>0,61</b></td><td>140</td></tr><tr><td>tendue-zero</td><td>0,28</td><td>0,88</td><td>0,31</td><td>1,00</td><td><b>0,54</b></td><td>120</td></tr></tbody></table></div><p class='note'>Aucune marche n'a encore franchi le premier niveau (un niveau est franchi quand il vaut 1). Les millions de pas comptent toute la lignée d'apprentissages.</p><h3>5.2 La marche droite, apprise de zéro</h3>
+pas de simulation qu'il a fallu depuis zéro.</p><h2 id='ch5' data-chapitre="5. Les résultats"><span class='n'>Chapitre 5</span>Les résultats</h2><h3>5.1 Le score de chaque marche</h3><div class='tab'><table><thead><tr><th>La marche</th><th>N1 grands pas</th><th>N2 vitesse</th><th>N3 fluidité</th><th>N4 sûreté</th><th>Score</th><th>Millions de pas</th></tr></thead><tbody><tr><td>L18-suite-400</td><td>0,87</td><td>0,74</td><td>0,70</td><td>0,86</td><td><b>0,80</b></td><td>540</td></tr><tr><td>L20a-pose</td><td>0,73</td><td>0,91</td><td>0,44</td><td>0,79</td><td><b>0,73</b></td><td>620</td></tr><tr><td>PZ-zero-400</td><td>0,44</td><td>0,98</td><td>0,58</td><td>1,00</td><td><b>0,69</b></td><td>400</td></tr><tr><td>PZ-tendu</td><td>0,44</td><td>0,78</td><td>0,70</td><td>1,00</td><td><b>0,66</b></td><td>100</td></tr><tr><td>tendu-zero-400</td><td>0,41</td><td>1,00</td><td>0,46</td><td>1,00</td><td><b>0,66</b></td><td>400</td></tr><tr><td>L19-pivot</td><td>0,75</td><td>0,41</td><td>0,46</td><td>1,00</td><td><b>0,65</b></td><td>220</td></tr><tr><td>photo-zero-genou</td><td>0,44</td><td>0,97</td><td>0,34</td><td>1,00</td><td><b>0,64</b></td><td>60</td></tr><tr><td>cible-zero</td><td>0,41</td><td>0,98</td><td>0,38</td><td>1,00</td><td><b>0,63</b></td><td>120</td></tr><tr><td>pivot-zero</td><td>0,38</td><td>0,96</td><td>0,34</td><td>1,00</td><td><b>0,61</b></td><td>120</td></tr><tr><td>L18b-tendue6</td><td>0,58</td><td>0,33</td><td>0,71</td><td>1,00</td><td><b>0,61</b></td><td>140</td></tr><tr><td>tendue-zero</td><td>0,28</td><td>0,88</td><td>0,31</td><td>1,00</td><td><b>0,54</b></td><td>120</td></tr></tbody></table></div><p class='note'>Aucune marche n'a encore franchi le premier niveau (un niveau est franchi quand il vaut 1). Les millions de pas comptent toute la lignée d'apprentissages.</p><h3>5.2 La marche droite, apprise de zéro</h3>
 <figure><video src="../recherche/film/n3-r150-N0.1-photo-zero-genou-final-5cms.mp4" controls playsinline preload="metadata"></video>
 <figcaption><b>Figure 3.</b> La première marche droite de N0.1 (R-190), apprise de zéro en imitant la photo&nbsp;: le tronc à +2°, la vitesse
 obéie à 2, 5 et 10&nbsp;cm/s, 30 départs sur 30 debout. Simulé.</figcaption></figure>
@@ -226,7 +237,7 @@ la simulation ne connaît qu'à moitié. La marche visée demande à la cheville
 cycle&nbsp;; l'inertie de ses rotors n'est pas mesurée. Et à 5&nbsp;cm/s, la marche n'est pas encore dynamique&nbsp;: l'élan seul ne
 porterait le corps par-dessus le pied qu'à 39&nbsp;cm/s.</p>
 <h3>6.3 Les erreurs, comme des données</h3>
-<p>Nous en avons noté 102, chacune avec la règle qu'elle a laissée. Quelques-unes&nbsp;: un saut de 25&nbsp;cm qui était un robot
+<p>Nous en avons noté 103, chacune avec la règle qu'elle a laissée. Quelques-unes&nbsp;: un saut de 25&nbsp;cm qui était un robot
 tombant à travers le sol (E85)&nbsp;; un escalier annoncé sans escalier dans la physique (E101)&nbsp;; un genou «&nbsp;tendu&nbsp;» mesuré
 au mauvais instant (E102)&nbsp;; des numéros de cahier pris deux fois (E103). Une erreur publiée coûte moins qu'une erreur cachée.</p><h2 id='ch7' data-chapitre="7. Conclusion et suite"><span class='n'>Chapitre 7</span>Conclusion et suite</h2><p>Un humanoïde de 37&nbsp;cm aux servos de 9&nbsp;g apprend, en simulation, une marche droite, encaisse une chute, monte de
 petites marches et approche la pose d'un vrai pas humain&nbsp;: 31,5° entre les jambes, le genou à 11° quand le talon touche. La cible
@@ -234,7 +245,7 @@ petites marches et approche la pose d'un vrai pas humain&nbsp;: 31,5° entre les
 <p><strong>En cours sur la tour</strong>&nbsp;: cinq références de formes différentes apprises de la même façon, pour voir ce que la
 référence apprend au robot (R-200)&nbsp;; et le départ déjà lancé dans le grand pas (R-201). <strong>Ensuite</strong>&nbsp;: imprimer le
 premier gabarit, mesurer un vrai SG90, et passer du jumeau simulé au robot sur la table.</p><h2 id='annexes' data-chapitre="Annexes"><span class='n'>Annexes</span>Annexes</h2><div class="encadre"><h3>A. Le cahier de recherche</h3>
-<p>161 cahiers et 844 prédictions&nbsp;: 288 confirmées, 73 en partie, 386 réfutées, 48 à revoir, 49 en
+<p>161 cahiers et 844 prédictions&nbsp;: 288 confirmées, 73 en partie, 388 réfutées, 48 à revoir, 47 en
 attente. Chacun&nbsp;: la question, la prédiction avec sa crédence, le dispositif, le verdict, les films. <a href="/navitek/recherche/">Le
 cahier de recherche</a>.</p></div>
 <div class="encadre"><h3>B. Les films</h3>
@@ -257,19 +268,57 @@ chaque test&nbsp;: <a href="/navitek/entrainement/">l'entraînement</a>.</p></di
 <p>Chaque figure des cahiers, dans l'ordre, avec sa légende&nbsp;: <a href="/navitek/figures/">les figures</a>.</p></div>
 <div class="encadre"><h3>H. Comment citer ce travail</h3>
 <p class="citer">Maisonneuve, Y. et Claude (2026). Apprendre à marcher à un humanoïde imprimé : N0.1, 37 cm, dix-sept servos SG90.
-Navitek Robolabs, thèse ouverte, version du 2026-11-18. https://ymiaconseil.com/navitek/these/</p></div><h2 id='references' data-chapitre="Références"><span class='n'>Références</span>Références</h2><ol class="ref">
-<li>Alexander, R. McN. (1984). The gaits of bipedal and quadrupedal animals. <i>The International Journal of Robotics Research</i>, 3(2).</li>
-<li>Balasubramanian, S., Melendez-Calderon, A., Roby-Brami, A. et Burdet, E. (2015). On the analysis of movement smoothness.
-<i>Journal of NeuroEngineering and Rehabilitation</i>, 12.</li>
-<li>Kuo, A. D., Donelan, J. M. et Ruina, A. (2005). Energetic consequences of walking like an inverted pendulum: step-to-step transitions.
-<i>Exercise and Sport Sciences Reviews</i>, 33(2).</li>
-<li>Muybridge, E. (1887). <i>Animal Locomotion</i>. Philadelphie&nbsp;: University of Pennsylvania.</li>
-<li>Peng, X. B., Abbeel, P., Levine, S. et van de Panne, M. (2018). DeepMimic: Example-guided deep reinforcement learning of physics-based
-character skills. <i>ACM Transactions on Graphics</i>, 37(4).</li>
-<li>Schulman, J., Wolski, F., Dhariwal, P., Radford, A. et Klimov, O. (2017). Proximal Policy Optimization Algorithms. arXiv:1707.06347.</li>
-<li>Todorov, E., Erez, T. et Tassa, Y. (2012). MuJoCo: A physics engine for model-based control. <i>IEEE/RSJ IROS</i>.</li>
-<li>Zakka, K. et al. (2025). MuJoCo Playground. arXiv:2502.08844.</li>
-<li>Open Duck Mini, un petit robot bipède ouvert à servos du commerce&nbsp;: github.com/apirrone/Open_Duck_Mini.</li>
+Navitek Robolabs, thèse ouverte, version du 2026-11-18. https://ymiaconseil.com/navitek/these/</p>
+<p class="note">En BibTeX&nbsp;:</p>
+<pre class="citer">@misc{navitek2026,
+  author = {Maisonneuve, Yoan and Claude},
+  title = {Apprendre à marcher à un humanoïde imprimé : N0.1, 37 cm, dix-sept servos SG90},
+  howpublished = {Navitek Robolabs, thèse ouverte},
+  year = {2026},
+  note = {Version du 2026-11-18},
+  url = {https://ymiaconseil.com/navitek/these/}
+}</pre></div><h2 id='declaration' data-chapitre="Déclaration d'usage de l'IA"><span class='n'>Déclaration</span>Déclaration d'usage de l'IA</h2><p>Ce travail est fait par un humain et une IA. Nous disons qui fait quoi, comme le demandent les éditeurs et les universités
+(<a href="https://group.springernature.com/gp/group/ai/ai-guidance-for-our-researchers-and-communities">Springer Nature</a>,
+<a href="https://www.icmje.org/recommendations/browse/artificial-intelligence/ai-use-by-authors.html">l'ICMJE</a>,
+<a href="https://neurips.cc/Conferences/2025/LLM">NeurIPS</a>,
+<a href="https://www.sgs.utoronto.ca/about/guidance-on-the-use-of-generative-artificial-intelligence/">l'Université de Toronto</a>), du
+premier cahier (06.10.2026) à aujourd'hui.</p>
+<dl class="roles">
+<div><dt>Yoan Maisonneuve, humain, responsable du travail</dt><dd>Choisit les questions et les cibles (33° entre les jambes et le genou
+sous 10°, ensemble&nbsp;; le départ déjà lancé dans le grand pas)&nbsp;; décide des dépenses, de la conception du robot à imprimer et de ce
+qui se publie&nbsp;; regarde les films et questionne les résultats. Une de ses questions a fait trouver une erreur de mesure (E102&nbsp;: le
+genou «&nbsp;tendu&nbsp;» mesuré au mauvais instant).</dd></div>
+<div><dt>Claude, un modèle de langage d'Anthropic, dans Claude Code</dt><dd>Écrit le code (le robot dessiné en code, l'entraîneur, le
+juge, le banc, ces pages)&nbsp;; conçoit et lance les essais sur la carte graphique&nbsp;; écrit chaque prédiction et sa crédence avant
+l'essai, puis le verdict&nbsp;; tient les cahiers et rédige cette thèse.</dd></div>
+<div><dt>Des agents de recherche, d'autres instances de Claude</dt><dd>Cherchent sur le web, sans aucune donnée personnelle&nbsp;: les
+robots ouverts, la marche humaine, l'usage de l'IA en recherche.</dd></div>
+<div><dt>La méditation, une séance de Claude chaque nuit</dt><dd>Relit les cahiers et le registre des erreurs, et signale ce qui cloche
+(elle a relevé les restes d'un numéro de cahier pris deux fois, E103).</dd></div>
+</dl>
+<h3>Ce que nous vérifions</h3>
+<ol class="lecons">
+<li>Chaque nombre de ces pages est calculé des données par un script, à chaque construction&nbsp;; rien n'est retouché à la main.</li>
+<li>Chaque prédiction est écrite avant l'essai, avec sa crédence&nbsp;; chaque verdict après, réfutations comprises.</li>
+<li>Chaque mesure ou récompense nouvelle passe d'abord sur un cas connu&nbsp;; chaque résultat se regarde en film avant d'être annoncé.</li>
+<li>Chaque erreur est publiée avec la règle qu'elle laisse&nbsp;: 103 à ce jour.</li>
+<li>Chaque référence est vérifiée à sa source&nbsp;: le DOI ou le numéro arXiv mène à l'article cité, avec les auteurs, le volume et
+les pages écrits ici (le 18 novembre 2026).</li>
+<li>Aucune image n'est produite par un modèle génératif&nbsp;: les figures et les films sont des rendus de la simulation ou des graphiques
+tirés des données&nbsp;; aucune photo de personne n'est publiée, seulement des squelettes mesurés.</li>
+</ol>
+<p class="note">Les traces sont publiques&nbsp;: les cahiers (la date de chaque prédiction), le registre des erreurs et les fichiers de
+chaque version. Elles tiennent lieu des brouillons et des requêtes que des universités demandent de garder (<a
+href="https://www.auckland.ac.nz/en/about-us/about-the-university/policy-hub/research-innovation/doctoral-study/undertaking-research/generative-artificial-intelligence-in-doctoral-research-guidelines.html">Auckland</a>).</p><h2 id='references' data-chapitre="Références"><span class='n'>Références</span>Références</h2><ol class="ref">
+<li>Alexander, R. McN. (1984). The gaits of bipedal and quadrupedal animals. <i>The International Journal of Robotics Research</i>, 3(2), 49–59. <a href="https://doi.org/10.1177/027836498400300205">doi:10.1177/027836498400300205</a></li>
+<li>Balasubramanian, S., Melendez-Calderon, A., Roby-Brami, A. et Burdet, E. (2015). On the analysis of movement smoothness. <i>Journal of NeuroEngineering and Rehabilitation</i>, 12, 112. <a href="https://doi.org/10.1186/s12984-015-0090-9">doi:10.1186/s12984-015-0090-9</a></li>
+<li>Kuo, A. D., Donelan, J. M. et Ruina, A. (2005). Energetic consequences of walking like an inverted pendulum: step-to-step transitions. <i>Exercise and Sport Sciences Reviews</i>, 33(2), 88–97. <a href="https://doi.org/10.1097/00003677-200504000-00006">doi:10.1097/00003677-200504000-00006</a></li>
+<li>Muybridge, E. (1887). <i>Animal Locomotion: An Electro-Photographic Investigation of Consecutive Phases of Animal Movements</i>. Philadelphie&nbsp;: University of Pennsylvania. Le prospectus et le catalogue des planches&nbsp;: <a href="https://archive.org/details/animallocomotion00muyb">archive.org</a></li>
+<li>Peng, X. B., Abbeel, P., Levine, S. et van de Panne, M. (2018). DeepMimic: Example-guided deep reinforcement learning of physics-based character skills. <i>ACM Transactions on Graphics</i>, 37(4). <a href="https://doi.org/10.1145/3197517.3201311">doi:10.1145/3197517.3201311</a></li>
+<li>Schulman, J., Wolski, F., Dhariwal, P., Radford, A. et Klimov, O. (2017). Proximal Policy Optimization Algorithms. <a href="https://arxiv.org/abs/1707.06347">arXiv:1707.06347</a></li>
+<li>Todorov, E., Erez, T. et Tassa, Y. (2012). MuJoCo: A physics engine for model-based control. <i>2012 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)</i>, 5026–5033. <a href="https://doi.org/10.1109/IROS.2012.6386109">doi:10.1109/IROS.2012.6386109</a></li>
+<li>Zakka, K., Tabanpour, B., Liao, Q., Haiderbhai, M., Holt, S., Luo, J. Y. et al. (2025). MuJoCo Playground. <a href="https://arxiv.org/abs/2502.08844">arXiv:2502.08844</a></li>
+<li>Open Duck Mini, un petit robot bipède ouvert à servos du commerce (consulté le 18 novembre 2026)&nbsp;: <a href="https://github.com/apirrone/Open_Duck_Mini">github.com/apirrone/Open_Duck_Mini</a></li>
 </ol>
 </article></main>
 <footer><div class="in">

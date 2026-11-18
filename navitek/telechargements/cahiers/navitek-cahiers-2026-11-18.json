@@ -11804,8 +11804,8 @@
      "code": "H718",
      "enonce": "cible-zero (de zéro : la référence refaite, l'imitation à 1, la pose de la photo payée à chaque pose du talon, le pivot) à 5 cm/s : le genou à la pose sous 10°, 30° ou plus entre les jambes, 28 sur 30, 0,9 à 1,1 fois la vitesse.",
      "pronostic": "crédence 0,25",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : cible-zero (120 M, de zéro) : à 5 cm/s, 30 sur 30 debout et 0,90 fois la vitesse, mais 6,6° entre les jambes et le genou à 25,9° quand le talon touche ; à 10 cm/s, 30 sur 30, 1,12 fois, 12,9° et le genou à 15,2°. Les petits pas de nos autres départs de zéro, et la marche la moins fluide de toutes (les à-coups à 1 724 rad/s³, le tremblement à 0,98). Score 0,634. La paie de la pose ne se gagne qu'en faisant déjà un grand pas jambe tendue : un petit pas n'en touche rien, rien ne l'y tire (l'argument de R-201, partir dans la pose).",
+     "verdict": "réfutée",
      "mesures": []
     },
     {
@@ -11863,8 +11863,8 @@
      "code": "H724",
      "enonce": "L20a (L18-suite-400 et la pose payée, un seul bouton de plus) franchit le niveau des grands pas : 33° ou plus et le genou sous 10° à 5 et 10 cm/s, la sûreté gardée (24 sur 28 ou plus).",
      "pronostic": "crédence 0,3",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : L20a (80 M depuis L18-suite-400) : à 10 cm/s, 38,8° entre les jambes (L18-suite-400 : 31,5°), la première au-dessus de 33° ; mais le genou à 18,2° quand le talon touche (11,2°), 22 sur 30 debout (24) et 0,82 fois la vitesse (0,67). À 5 cm/s : 32,7° (26,9°), le genou à 25,0° (12,3°), 24 sur 30 (26). N1 0,73 (0,87), N4 0,79 : le score tombe de 0,803 à 0,726. La paie a ouvert le pas et le genou s'est plié ; L20b (la référence refaite, le genou à 3,2° à la pose) dira si c'est la vieille référence (45° à la pose, E102) qui le tire.",
+     "verdict": "réfutée",
      "mesures": []
     },
     {

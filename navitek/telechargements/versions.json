@@ -72,13 +72,13 @@
    "onnx": 6.556510925292969e-07,
    "modele": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip",
-    "mo": 0.93,
-    "sha256": "a1f48f284ca976ebbbdb1bbe51296605ef2db7ac41839edd234a7409864a5cd7"
+    "mo": 0.94,
+    "sha256": "f026076ab5994b58c037556218844af185378fd85a830ef39774ac0526a747d9"
    },
    "donnees": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip",
     "mo": 4.17,
-    "sha256": "7e2b54c1f3ddcd1860c976f332a0c7cd8264aba0154cce51f465f961d860fdc2"
+    "sha256": "bc39d87bb450552cc7b53e7ab60ba756b553469fd350b6491133a192e596b05c"
    }
   },
   {
@@ -139,16 +139,16 @@
    "lignee": [
     "N0.1-PZ-zero-400"
    ],
-   "onnx": 7.152557373046875e-07,
+   "onnx": 1.0132789611816406e-06,
    "modele": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-modele.zip",
-    "mo": 0.93,
-    "sha256": "bfd647b9c584de52b45eda10490660a7e39a252141e495f6e0c20080b87a5461"
+    "mo": 0.94,
+    "sha256": "3883926fa618a0fa203129204697a0b03dc7e09231957032b7425018af62c0a7"
    },
    "donnees": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-donnees.zip",
     "mo": 4.16,
-    "sha256": "baad364b5260b469085e1d403579fa61a73563c1eceb29eb59d71095340e9e61"
+    "sha256": "b7a06275c9c5c28deff64ab58a155a093698c716435c99bfb6cf5f139c45ca60"
    }
   },
   {
@@ -212,13 +212,13 @@
    "onnx": 8.344650268554688e-07,
    "modele": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-modele.zip",
-    "mo": 0.93,
-    "sha256": "fb40cd5595eaa84e49f291a2abca5900508eb803106539cad784c3c7459bbaf3"
+    "mo": 0.94,
+    "sha256": "172d2edd8f0295024c0c6f005d789d0cdc0d34f2681fc2f7bccf85681e95c630"
    },
    "donnees": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-donnees.zip",
     "mo": 4.14,
-    "sha256": "3a6a7fcfd7e793322b20b4a4bcb0ad4fc6335eb68ee102701d250a0c51d36060"
+    "sha256": "a99d249d1f960457270b56f9a1e8f16132cc82980b7a698141c08a4a984f47c9"
    }
   }
  ],
