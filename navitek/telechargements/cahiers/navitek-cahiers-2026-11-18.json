@@ -11925,16 +11925,16 @@
      "code": "H729",
      "enonce": "L21c (le contact court et la vitesse) passe sous 17 % du temps sur les deux pieds à 10 cm/s, et à 15 cm/s obéit à 0,85 fois ou plus, 24 sur 30 debout, 33° ou plus entre les jambes.",
      "pronostic": "crédence 0,35",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : L21c : à 10 cm/s, 20,3 % du temps sur les deux pieds (L20c-elan : 24,2 %), pas sous 17 % ; à 15 cm/s, 1,05 fois la vitesse, 26 sur 30, 46,8° entre les jambes (la part déjà remplie par la base).",
+     "verdict": "réfutée",
      "mesures": []
     },
     {
      "code": "H730",
      "enonce": "L21a (le contact court seul) passe sous 18 % à 10 cm/s en gardant les grands pas et 27 sur 30 debout.",
      "pronostic": "crédence 0,45",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : L21a (le contact court seul, depuis L20c-elan, 80 M) : à 10 cm/s, 24,2 % du temps sur les deux pieds, comme la base ; mais 1,19 fois la vitesse demandée (1,27 à 5 cm/s), 49,9° entre les jambes, le genou à 3,9°, 28 sur 30 : la paie le fait aller plus vite que demandé au lieu de lever le pied plus tôt (l'imitation des appuis de la référence tient le contact).",
+     "verdict": "réfutée",
      "mesures": []
     },
     {
@@ -11965,22 +11965,97 @@
      "code": "H734",
      "enonce": "(ajoutée avant les essais, après le banc rapide de la base) À 20 cm/s, L21c obéit à 0,95 fois ou plus (la base : 0,83) avec 27 départs sur 30 debout ou plus.",
      "pronostic": "crédence 0,35",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : L21c à 20 cm/s : 1,03 fois la vitesse (la base : 0,83), la vitesse atteinte ; mais 22 départs sur 30 debout (visé 27, la base : 25).",
+     "verdict": "partielle",
      "mesures": []
     },
     {
      "code": "H735",
      "enonce": "À 20 cm/s, L21c passe sous 12 % du temps sur les deux pieds (la base : 16,8 %).",
      "pronostic": "crédence 0,45",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : L21c à 20 cm/s : 19,3 % du temps sur les deux pieds (100 ms par double appui), pas sous 12 % ; la base : 16,8 % (80 ms), mais à 16,5 cm/s au lieu de 20,6.",
+     "verdict": "réfutée",
      "mesures": []
     },
     {
      "code": "H736",
      "enonce": "À 20 cm/s, L21b (la vitesse seule) obéit à 0,95 fois ou plus.",
      "pronostic": "crédence 0,4",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H737",
+     "enonce": "(écrite après L21c, avant L21d) L21d, le même que L21c sans la paie des appuis de la référence : à 20 cm/s, sous 12 % du temps sur les deux pieds, 0,95 fois la vitesse ou plus, 24 sur 30 debout ou plus.",
+     "pronostic": "crédence 0,4",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H738",
+     "enonce": "L21d passe sous 17 % du temps sur les deux pieds à 10 cm/s (L21c : 20,3 %).",
+     "pronostic": "crédence 0,5",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H739",
+     "enonce": "Sans les appuis de la référence, L21d garde les grands pas (N1 = 1).",
+     "pronostic": "crédence 0,6",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    }
+   ]
+  },
+  {
+   "id": "R-203",
+   "date": "2026-11-18",
+   "robot": "N0.1",
+   "titre": "Jusqu'à quelle vitesse N0.1 peut-il marcher, et peut-il courir, avec des SG90 ?",
+   "question": "Yoan, en regardant le film de L21c à 20 cm/s : « Enfin, ça fonctionne ! Comment tu as fait ? Essaie 25 cm/s et 30 cm/s : jusqu'à quelle vitesse on peut courir ? »",
+   "methode": "Le modèle des servos borne le couple, pas la vitesse : la vitesse des articulations mesurée sur les bancs, contre les 8,8 rad/s d'un SG90 en charge. À l'échelle (la hanche à 19,9 cm), la marche humaine devient course vers 1 m/s (Froude 0,5) ; 30 cm/s n'est qu'un Froude de 0,05. L21c au banc à 20, 25 et 30 cm/s sans rien apprendre ; puis L22a, la vitesse demandée et les départs lancés jusqu'à 30 cm/s.",
+   "fichier": "R-203-2026-11-18-n0.1-jusqu-a-quelle-vitesse.md",
+   "hypotheses": [
+    {
+     "code": "H740",
+     "enonce": "Sans nouvel apprentissage, L21c tient 25 cm/s (0,9 fois ou plus, 20 sur 30) mais pas 30.",
+     "pronostic": "crédence 0,4",
+     "resultat": "Simulé : L21c au banc : à 25 cm/s, 0,87 fois la vitesse (21,9 cm/s) et 23 sur 30 debout, juste sous 0,9 ; à 30 cm/s, 0,74 fois et 3 sur 30 : il casse. Il plafonne vers 22 cm/s en allongeant le pas (50° entre les jambes) au lieu de presser la cadence.",
+     "verdict": "partielle",
+     "mesures": []
+    },
+    {
+     "code": "H741",
+     "enonce": "À 30 cm/s, les servos des jambes de L21c restent sous 8,8 rad/s au 99e centile.",
+     "pronostic": "crédence 0,5",
+     "resultat": "Simulé : 7,3 rad/s au 99e centile, 7,7 au plus, à 30 comme à 20 cm/s : les servos ne sont pas la limite ; le record de 20 cm/s tient pour un vrai SG90.",
+     "verdict": "confirmée",
+     "mesures": []
+    },
+    {
+     "code": "H742",
+     "enonce": "Aucun temps en l'air au banc, même à 30 cm/s.",
+     "pronostic": "crédence 0,8",
+     "resultat": "Simulé : 0 % du temps en l'air à 20, 25 et 30 cm/s ; les doubles appuis de 90 à 100 ms.",
+     "verdict": "confirmée",
+     "mesures": []
+    },
+    {
+     "code": "H743",
+     "enonce": "L22a (depuis L21c, la vitesse demandée et les départs lancés jusqu'à 30 cm/s) obéit à 0,9 fois ou plus à 30 cm/s, 20 sur 30 debout, les servos sous 8,8 rad/s.",
+     "pronostic": "crédence 0,3",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H744",
+     "enonce": "L22a a un temps en l'air (2 % ou plus) à 30 cm/s.",
+     "pronostic": "crédence 0,2",
      "resultat": "dans la file de la carte graphique de la tour",
      "verdict": "en attente",
      "mesures": []

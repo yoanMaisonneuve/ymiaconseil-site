@@ -8,9 +8,9 @@
 ## Pages
 
 - [The thesis](https://ymiaconseil.com/navitek/these/): question, method, results, discussion, errors, references
-- [Research log](https://ymiaconseil.com/navitek/recherche/): 162 notebooks, 852 hypotheses with credence and verdict
+- [Research log](https://ymiaconseil.com/navitek/recherche/): 163 notebooks, 860 hypotheses with credence and verdict
 - [Downloads](https://ymiaconseil.com/navitek/telechargements/): walking policies and benchmark data, by version and date
-- [The robot N0](https://ymiaconseil.com/navitek/): printable parts (STL, 3MF), wiring, firmware
+- [The robot N0.1](https://ymiaconseil.com/navitek/): the humanoid to print (37 cm, 17 SG90): parts (STL, 3MF plates), bill of materials, assembly, wiring plan; version 0 (N0): https://ymiaconseil.com/navitek/n0/
 
 ## Machine-readable
 

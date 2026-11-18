@@ -151,7 +151,7 @@ footer p{margin:0;max-width:none}
 
 <div class="bar"><div class="in">
   <a class="logo" href="/">YM <span>IA</span> Conseil</a>
-  <a class="autre" href="/navitek/">Navitek N0</a>
+  <a class="autre" href="/navitek/">Navitek N0.1</a>
 </div></div>
 
 <main>
@@ -235,7 +235,7 @@ footer p{margin:0;max-width:none}
     <div class="defile"><table><thead><tr><th>Graine</th><th>Avance, 12 s</th><th>Fin</th><th>Hanche, côté</th><th>Hanche, avant</th><th>Genou</th><th>Cheville, avant</th><th>Cheville, côté</th></tr></thead><tbody><tr><td class="n">1</td><td class="n">159&nbsp;cm</td><td class="n">debout</td><td class="n">4&nbsp;/&nbsp;15</td><td class="n">25&nbsp;/&nbsp;50</td><td class="n">15&nbsp;/&nbsp;37</td><td class="n">13&nbsp;/&nbsp;72</td><td class="n">5&nbsp;/&nbsp;19</td></tr><tr><td class="n">2</td><td class="n">156&nbsp;cm</td><td class="n">debout</td><td class="n">3&nbsp;/&nbsp;11</td><td class="n">26&nbsp;/&nbsp;51</td><td class="n">18&nbsp;/&nbsp;37</td><td class="n">15&nbsp;/&nbsp;35</td><td class="n">3&nbsp;/&nbsp;12</td></tr><tr><td class="n">3</td><td class="n">147&nbsp;cm</td><td class="n">debout</td><td class="n">7&nbsp;/&nbsp;16</td><td class="n">7&nbsp;/&nbsp;22</td><td class="n">9&nbsp;/&nbsp;26</td><td class="n">12&nbsp;/&nbsp;46</td><td class="n">4&nbsp;/&nbsp;16</td></tr></tbody></table></div>
     <p class="sources">Les bras demandent au plus 8&nbsp;N·m. La hanche de côté ne demande que 11 à 16&nbsp;N·m au pic&nbsp;: ces marches balancent peu (1 à 3° commandés à la hanche). <strong>L'articulation la plus chargée est la cheville d'avant</strong>, 35 à 72&nbsp;N·m au pic, au-delà du réducteur imprimé le plus fort trouvé (55&nbsp;N·m de pointe, cahier R-039). Les marches sont réglées sur le modèle lui-même, avec des actionneurs qui n'ont pas de limite&nbsp;: un robot réel marcherait autrement.
       Elles vont à peu près droit, sans que leur réglage le demande&nbsp;: en 12&nbsp;s, leur cap finit à 1 à 13° de celui du départ (la graine 1, celle de la vidéo, à 13°&nbsp;; cahier R-050). <strong>Mais 1 sur 3 se traverse</strong>&nbsp;: rejouée sur les géométries exactes, elle fait passer une main dans la hanche ou un pied dans l'autre 30&nbsp;% du temps (cahier R-050)&nbsp;; les autres presque jamais (moins de 1&nbsp;% du temps). Ce robot est N1 version 1 agrandi, dont les jambes avaient ce défaut.
-      Deux erreurs de N1, trouvées le 9 novembre, faussaient la version précédente de ces marches&nbsp;: la cheville de côté commandée à l'envers (cahier R-052), et le côté droit qui faisait le geste inverse du gauche (ERREURS E29)&nbsp;; elles avançaient de 29 à 117&nbsp;cm, tournaient jusqu'à 119°, et la hanche de côté y montait à 130&nbsp;N·m. <strong>Elles sont refaites sur le modèle corrigé (cahier R-056).</strong> Ces couples, réglés avec des actionneurs sans limite, restent&nbsp;: un ordre de grandeur, pas un budget.</p>
+      Et leur balancement couche les pieds sur la tranche&nbsp;: la cheville de côté y est commandée à l'envers, une erreur de N1 trouvée le 9 novembre (cahier R-052)&nbsp;; et son côté droit fait le geste inverse du gauche, les deux jambes balancées du même côté (une autre erreur de N1, trouvée le même jour, ERREURS E29&nbsp;: corrigée dans le modèle, ces marches restent à refaire). Ces couples sont donc ceux de mouvements impossibles&nbsp;: un ordre de grandeur, pas un budget.</p>
 
     <h2>Ce que N3 ne prouve pas</h2>
     <ul class="liste">
@@ -246,14 +246,14 @@ footer p{margin:0;max-width:none}
     </ul>
 
     <h2>Et avant tout ça</h2>
-    <p>Le chemin passe par <a class="lien" href="/navitek/">N0</a> (à imprimer, 33&nbsp;cm), <a class="lien" href="/navitek/n1/">N1</a> (62&nbsp;cm, servos à bus, à mesurer puis imprimer) et <a class="lien" href="/navitek/n2/">N2</a> (un mètre, un actionneur imprimé à
+    <p>Le chemin passe par <a class="lien" href="/navitek/">N0.1</a> (à imprimer, 37&nbsp;cm), <a class="lien" href="/navitek/n1/">N1</a> (62&nbsp;cm, servos à bus, à mesurer puis imprimer) et <a class="lien" href="/navitek/n2/">N2</a> (un mètre, un actionneur imprimé à
       mesurer sur un banc). Chaque version ne sort que si la précédente a tenu en simulation, puis sur le banc.</p>
 
     <h2 id="fichiers">Les fichiers</h2>
     <p class="sous">Licence CC BY 4.0&nbsp;: refaites les essais chez vous</p>
     <div class="fichiers">
       <a class="fichier" href="fichiers/navitek-n3-simulation.zip" download><span class="n">La simulation simplifiée</span>
-        <span class="d">Le modèle (le robot de N1 agrandi), les scripts des essais et leurs résultats en JSON.</span><span class="u">24&nbsp;ko &middot; ZIP</span></a>
+        <span class="d">Le modèle (le robot de N1 agrandi), les scripts des essais et leurs résultats en JSON.</span><span class="u">0,7&nbsp;Mo &middot; ZIP</span></a>
     </div>
   </div>
 
@@ -264,7 +264,7 @@ footer p{margin:0;max-width:none}
       <p>Dites-nous ce que vous savez des limites de couple et de vitesse d'un robot qui marche près de gens, ou des durées de vie de réducteurs imprimés. Ce sont deux trous de ce document.</p>
       <a class="btn" href="mailto:yoan@ymiaconseil.com?subject=Navitek%20N3&amp;body=Bonjour%20Yoan%2C%0A%0ACe%20que%20je%20sais%20%3A%20%0A%0AMerci.">Écrire à Yoan</a>
       <a class="tel" href="tel:+15149268633">ou appelez&nbsp;: 514 926-8633</a>
-      <p class="apres"><a class="lien" href="/navitek/">Navitek N0</a> &middot; <a class="lien" href="/navitek/n1/">Navitek N1</a> &middot; <a class="lien" href="/navitek/n2/">Navitek N2</a> &middot;
+      <p class="apres"><a class="lien" href="/navitek/">Navitek N0.1</a> &middot; <a class="lien" href="/navitek/n1/">Navitek N1</a> &middot; <a class="lien" href="/navitek/n2/">Navitek N2</a> &middot;
         <a class="lien" href="/methode/">La méthode</a> &middot; <a class="lien" href="/">Retour à l'accueil</a></p>
     </div>
   </div>

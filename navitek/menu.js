@@ -9,7 +9,8 @@
 
   var PAGES = [
     ["/navitek/these/", "La thèse", "Apprendre à marcher à un humanoïde imprimé"],
-    ["/navitek/", "Le robot N0", "À imprimer : les pièces, le montage, le programme"],
+    ["/navitek/", "Le robot N0.1", "À imprimer : les pièces, les achats, le montage, le câblage"],
+    ["/navitek/n0/", "N0, la version 0", "La première version (8 novembre), gardée telle quelle"],
     ["/navitek/recherche/", "Le cahier de recherche", "Chaque essai : la prédiction avant, le verdict après"],
     ["/navitek/telechargements/", "Téléchargements", "Le modèle de marche et ses données, par version et par date"],
     ["/navitek/tests/", "Les tests", "Classés par catégorie et par bénéfice pour l'apprentissage"],
