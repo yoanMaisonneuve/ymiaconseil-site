@@ -8,6 +8,82 @@
  "licence": "CC BY 4.0 (modèles, données, textes) ; MIT (code)",
  "versions": [
   {
+   "version": "2026.11.18.1",
+   "date": "2026-11-18",
+   "run": "N0.1-L20c-elan",
+   "titre": "La première qui atteint la cible",
+   "description": "44° entre les jambes et la jambe de devant posée tendue (le genou à 4,7°) à 10 cm/s, 0,93 fois la vitesse, 29 départs sur 30 debout ; elle marche aussi à 15 et 20 cm/s (0,90 et 0,83 fois). Partie lancée dans le grand pas, l'idée de Yoan (R-201).",
+   "score": {
+    "N1": 1.0,
+    "N2": 1.0,
+    "N3": 0.753,
+    "N4": 1.0,
+    "score": 0.951,
+    "millions_depuis_zero": 620,
+    "lignee": [
+     "N0.1-L20c-elan",
+     "N0.1-L18-suite-400",
+     "N0.1-L18-jambe-tendue",
+     "N0.1-photo-zero-genou"
+    ]
+   },
+   "juge_10cms": {
+    "debout_10s": 29,
+    "vitesse_cm_s": 9.33,
+    "rapport_commande": 0.93,
+    "tronc_deg": 0.3,
+    "entre_les_jambes_p95": 44.0,
+    "entre_les_jambes_mediane": 23.0,
+    "pied_devant_deg": 38.8,
+    "pied_derriere_deg": -0.7,
+    "bassin_devant_cheville_arriere": 0.119,
+    "vrais_pas_s": 0.81,
+    "bout_releve_mm": 11.9,
+    "pied_haut_mm": 23.5,
+    "genou_a_la_pose_deg": 4.7,
+    "pointe_a_la_pose_deg": 13.9,
+    "talon_arriere_a_la_pose_deg": 8.0,
+    "poses_n": 238,
+    "appui_simple_pc": 77
+   },
+   "juge_5cms": {
+    "debout_10s": 28,
+    "vitesse_cm_s": 4.86,
+    "rapport_commande": 0.97,
+    "tronc_deg": 2.0,
+    "entre_les_jambes_p95": 41.4,
+    "entre_les_jambes_mediane": 20.9,
+    "pied_devant_deg": 41.6,
+    "pied_derriere_deg": -2.0,
+    "bassin_devant_cheville_arriere": 0.111,
+    "vrais_pas_s": 0.38,
+    "bout_releve_mm": 11.9,
+    "pied_haut_mm": 21.7,
+    "genou_a_la_pose_deg": 4.9,
+    "pointe_a_la_pose_deg": 13.7,
+    "talon_arriere_a_la_pose_deg": 10.1,
+    "poses_n": 116,
+    "appui_simple_pc": 78
+   },
+   "lignee": [
+    "N0.1-L20c-elan",
+    "N0.1-L18-suite-400",
+    "N0.1-L18-jambe-tendue",
+    "N0.1-photo-zero-genou"
+   ],
+   "onnx": 5.364418029785156e-07,
+   "modele": {
+    "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-modele.zip",
+    "mo": 0.94,
+    "sha256": "e814bcd3f4f4038e72c8e7c87a8caa1c5a986bbc1c0a5d7956ee8a7f95982dfe"
+   },
+   "donnees": {
+    "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-donnees.zip",
+    "mo": 8.28,
+    "sha256": "3bd18af7b9c50083e422b08b1e97fab1ec04003e89f0b829607c9a2d40703c0b"
+   }
+  },
+  {
    "version": "2026.11.18",
    "date": "2026-11-18",
    "run": "N0.1-L18-suite-400",
@@ -73,12 +149,12 @@
    "modele": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip",
     "mo": 0.94,
-    "sha256": "f026076ab5994b58c037556218844af185378fd85a830ef39774ac0526a747d9"
+    "sha256": "000c1cc02e9ad0e2bf74bcf79e2390cc561af9a6418e0ef671192c30701d834f"
    },
    "donnees": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip",
     "mo": 4.17,
-    "sha256": "bc39d87bb450552cc7b53e7ab60ba756b553469fd350b6491133a192e596b05c"
+    "sha256": "f6f8e5af5178429e7b394930b8d0967c6b8908256c6d750046f20f6704a52b06"
    }
   },
   {
@@ -143,12 +219,12 @@
    "modele": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-modele.zip",
     "mo": 0.94,
-    "sha256": "3883926fa618a0fa203129204697a0b03dc7e09231957032b7425018af62c0a7"
+    "sha256": "3665e9be4f958b48afa66077e32904024c104d108da68db771f4b9e64d04d7ad"
    },
    "donnees": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-donnees.zip",
     "mo": 4.16,
-    "sha256": "b7a06275c9c5c28deff64ab58a155a093698c716435c99bfb6cf5f139c45ca60"
+    "sha256": "ebd63c7ec02aa3ebd129d828e64310d79565e66369b1d642f62208bccf919d1f"
    }
   },
   {
@@ -213,12 +289,12 @@
    "modele": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-modele.zip",
     "mo": 0.94,
-    "sha256": "172d2edd8f0295024c0c6f005d789d0cdc0d34f2681fc2f7bccf85681e95c630"
+    "sha256": "09d95dd66b99e00b20e77e2800784dab6a928c15f1172b8f26508a1d05caa95f"
    },
    "donnees": {
     "url": "https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-donnees.zip",
     "mo": 4.14,
-    "sha256": "a99d249d1f960457270b56f9a1e8f16132cc82980b7a698141c08a4a984f47c9"
+    "sha256": "2bdb4d3d5725cde42c7e446132c23c48e4d6f74cd45a0b41a342c2620d14cbb0"
    }
   }
  ],
@@ -226,13 +302,13 @@
   "date": "2026-11-18",
   "json": {
    "url": "https://ymiaconseil.com/navitek/telechargements/cahiers/navitek-cahiers-2026-11-18.json",
-   "mo": 0.5
+   "mo": 0.51
   },
   "csv": {
    "url": "https://ymiaconseil.com/navitek/telechargements/cahiers/navitek-hypotheses-2026-11-18.csv",
    "mo": 0.28
   },
-  "journaux": 161,
-  "hypotheses": 844
+  "journaux": 162,
+  "hypotheses": 852
  }
 }

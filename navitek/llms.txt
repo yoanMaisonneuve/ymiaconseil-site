@@ -8,7 +8,7 @@
 ## Pages
 
 - [The thesis](https://ymiaconseil.com/navitek/these/): question, method, results, discussion, errors, references
-- [Research log](https://ymiaconseil.com/navitek/recherche/): 161 notebooks, 844 hypotheses with credence and verdict
+- [Research log](https://ymiaconseil.com/navitek/recherche/): 162 notebooks, 852 hypotheses with credence and verdict
 - [Downloads](https://ymiaconseil.com/navitek/telechargements/): walking policies and benchmark data, by version and date
 - [The robot N0](https://ymiaconseil.com/navitek/): printable parts (STL, 3MF), wiring, firmware
 
@@ -21,6 +21,7 @@
 
 Each package has a model card or a datasheet (intended use, evaluation, known limits, compute), pinned versions and CITATION.cff.
 
+- [2026.11.18.1, N0.1-L20c-elan](https://ymiaconseil.com/navitek/telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-modele.zip): walking score 0.951; data: https://ymiaconseil.com/navitek/telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-donnees.zip
 - [2026.11.18, N0.1-L18-suite-400](https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-modele.zip): walking score 0.803; data: https://ymiaconseil.com/navitek/telechargements/2026.11.18/navitek-n0.1-marche-2026.11.18-donnees.zip
 - [2026.11.17, N0.1-PZ-zero-400](https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-modele.zip): walking score 0.686; data: https://ymiaconseil.com/navitek/telechargements/2026.11.17/navitek-n0.1-marche-2026.11.17-donnees.zip
 - [2026.11.16, N0.1-photo-zero-genou](https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-modele.zip): walking score 0.637; data: https://ymiaconseil.com/navitek/telechargements/2026.11.16/navitek-n0.1-marche-2026.11.16-donnees.zip

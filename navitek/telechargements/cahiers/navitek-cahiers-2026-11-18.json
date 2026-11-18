@@ -11812,8 +11812,8 @@
      "code": "H719",
      "enonce": "cible-PZ (la même chose depuis PZ-zero-400, la marche droite qui obéit à petits pas) : les mêmes critères.",
      "pronostic": "crédence 0,2",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : cible-PZ (80 M depuis PZ-zero-400) : à 5 cm/s, 30 sur 30 debout, mais 0,32 fois la vitesse (PZ-zero-400 : 1,12), 12,4° entre les jambes et le genou à 37,8° quand le talon touche.",
+     "verdict": "réfutée",
      "mesures": []
     }
    ]
@@ -11871,8 +11871,8 @@
      "code": "H725",
      "enonce": "L20b (et la référence refaite) fait mieux que L20a sur les grands pas.",
      "pronostic": "crédence 0,5",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : L20b (la même chose que L20a, avec la référence refaite) : à 10 cm/s, 29,6° entre les jambes (L20a : 38,8°), le genou à 27,8° quand le talon touche (18,2°), 26 sur 30 debout, 0,69 fois la vitesse ; à 5 cm/s, 27,0° et le genou à 27,3°. Pire que L20a sur les grands pas : la référence refaite, mise en cours de route, n'a pas tendu le genou. Le deuxième échec de la pose payée : la paie et le juge passent le cas connu, le geste demande 133 % du couple du SG90 à la cheville (R-198).",
+     "verdict": "réfutée",
      "mesures": []
     }
    ]
@@ -11890,22 +11890,97 @@
      "code": "H726",
      "enonce": "elan-zero a un sous-score des grands pas plus grand que cible-zero de 0,10 ou plus.",
      "pronostic": "crédence 0,4",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : elan-zero (de zéro, la moitié des départs lancés à 10 à 20 cm/s dans le grand pas ; 120 M) : N1 0,24 (cible-zero : 0,41). Debout 30 sur 30 et à la vitesse (1,02 et 0,96 fois), mais à petits pas (7,1° entre les jambes à 5 cm/s, 4,6° à 10 cm/s), le genou à 29 à 37° quand le talon touche. De zéro, partir lancé n'a pas suffi.",
+     "verdict": "réfutée",
      "mesures": []
     },
     {
      "code": "H727",
      "enonce": "L20c-elan a un sous-score des grands pas plus grand que L20a de 0,05 ou plus.",
      "pronostic": "crédence 0,4",
-     "resultat": "dans la file de la carte graphique de la tour",
-     "verdict": "en attente",
+     "resultat": "Simulé : L20c-elan (80 M depuis L18-suite-400, les départs lancés) : N1 1,00 (L20a : 0,73). À 10 cm/s, 44,0° entre les jambes et le genou à 4,7° quand le talon touche, 0,93 fois la vitesse, 29 sur 30 debout, sur un seul pied 77 % ; à 5 cm/s, 41,4° et 4,9°, 0,97 fois, 28 sur 30. Score 0,951 : la première marche qui franchit les grands pas, la vitesse et la sûreté. Vue en film.",
+     "verdict": "confirmée",
      "mesures": []
     },
     {
      "code": "H728",
      "enonce": "elan-zero obéit mieux à 10 cm/s que cible-zero (le rapport plus grand de 0,1 ou plus).",
      "pronostic": "crédence 0,35",
+     "resultat": "Simulé : elan-zero à 10 cm/s : 0,96 fois la vitesse (cible-zero : 1,12) : plus près de la vitesse demandée, mais le rapport n'est pas plus grand de 0,1.",
+     "verdict": "réfutée",
+     "mesures": []
+    }
+   ]
+  },
+  {
+   "id": "R-202",
+   "date": "2026-11-18",
+   "robot": "N0.1",
+   "titre": "Quitter le sol plus vite, puis aller plus vite, jusqu'à courir ?",
+   "question": "Yoan, en regardant le film de L20a : « Pénalise le temps de contact avec le sol : une fois que le talon de la jambe avant touche le sol, on veut lever la jambe arrière le plus vite possible. On s'en fout que le corps se jette en avant, c'est parfait ; le manque de couple fait partie de l'absorption et du transfert de poids. Maintenant, on doit le faire plus, et plus vite, jusqu'à arriver à courir. »",
+   "methode": "La mesure d'abord, sur les bancs connus (contact_n01.py, le contact de l'entraîneur : 1,5 mm) : à 10 cm/s, L18-suite-400 18 % du temps sur les deux pieds, L20c-elan 24 % (240 ms par double appui), L20a 30 %, la référence 35 % ; personne en l'air. Puis une paie négative sur les deux pieds, plus chère plus on va vite, et la vitesse demandée jusqu'à 20 cm/s, depuis L20c-elan : les deux ensemble (L21c), le contact seul (L21a), la vitesse seule (L21b) ; un banc rapide à 10, 15 et 20 cm/s.",
+   "fichier": "R-202-2026-11-18-n0.1-le-contact-court-plus-vite.md",
+   "hypotheses": [
+    {
+     "code": "H729",
+     "enonce": "L21c (le contact court et la vitesse) passe sous 17 % du temps sur les deux pieds à 10 cm/s, et à 15 cm/s obéit à 0,85 fois ou plus, 24 sur 30 debout, 33° ou plus entre les jambes.",
+     "pronostic": "crédence 0,35",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H730",
+     "enonce": "L21a (le contact court seul) passe sous 18 % à 10 cm/s en gardant les grands pas et 27 sur 30 debout.",
+     "pronostic": "crédence 0,45",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H731",
+     "enonce": "L21b (la vitesse seule) obéit à 0,85 fois à 15 cm/s, mais garde 21 % ou plus du temps sur les deux pieds à 10 cm/s.",
+     "pronostic": "crédence 0,4",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H732",
+     "enonce": "À 15 cm/s, L21c passe moins de temps sur les deux pieds que L21b, de 20 % ou plus.",
+     "pronostic": "crédence 0,55",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H733",
+     "enonce": "Pas encore de course : aucun des trois n'a 1 % du temps en l'air, même à 20 cm/s.",
+     "pronostic": "crédence 0,8",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H734",
+     "enonce": "(ajoutée avant les essais, après le banc rapide de la base) À 20 cm/s, L21c obéit à 0,95 fois ou plus (la base : 0,83) avec 27 départs sur 30 debout ou plus.",
+     "pronostic": "crédence 0,35",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H735",
+     "enonce": "À 20 cm/s, L21c passe sous 12 % du temps sur les deux pieds (la base : 16,8 %).",
+     "pronostic": "crédence 0,45",
+     "resultat": "dans la file de la carte graphique de la tour",
+     "verdict": "en attente",
+     "mesures": []
+    },
+    {
+     "code": "H736",
+     "enonce": "À 20 cm/s, L21b (la vitesse seule) obéit à 0,95 fois ou plus.",
+     "pronostic": "crédence 0,4",
      "resultat": "dans la file de la carte graphique de la tour",
      "verdict": "en attente",
      "mesures": []
