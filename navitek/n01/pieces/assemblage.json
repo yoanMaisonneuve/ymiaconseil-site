@@ -1834,6 +1834,56 @@
    ]
   },
   {
+   "nom": "piles",
+   "piece": "boitier-piles",
+   "couleur": "#23262b",
+   "groupe": "torse",
+   "imprimee": false,
+   "matrice": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    37.25,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "nom": "pico",
+   "piece": "pico",
+   "couleur": "#2e7d32",
+   "groupe": "torse",
+   "imprimee": false,
+   "matrice": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    37.25,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  {
    "nom": "dos",
    "piece": "dos",
    "couleur": "#7d838c",
@@ -2023,7 +2073,7 @@
    "x": 74.0,
    "y": 144.0,
    "z": 46.0,
-   "volume_cm3": 62.42
+   "volume_cm3": 67.62
   },
   {
    "piece": "dos",
