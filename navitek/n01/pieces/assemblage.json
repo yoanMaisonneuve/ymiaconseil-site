@@ -3,9 +3,9 @@
  "date": "2026-11-08",
  "unites": "mm",
  "encombrement": [
-  68.0,
+  66.0,
   163.6,
-  371.4
+  381.5
  ],
  "instances": [
   {
@@ -2068,18 +2068,18 @@
   {
    "piece": "pied-gauche",
    "quantite": 1,
-   "x": 68.0,
-   "y": 40.5,
-   "z": 4.5,
-   "volume_cm3": 9.29
+   "x": 66.0,
+   "y": 24.3,
+   "z": 40.5,
+   "volume_cm3": 18.2
   },
   {
    "piece": "pied-droit",
    "quantite": 1,
-   "x": 68.0,
-   "y": 40.5,
-   "z": 4.5,
-   "volume_cm3": 9.29
+   "x": 66.0,
+   "y": 24.3,
+   "z": 40.5,
+   "volume_cm3": 18.2
   }
  ]
 }
