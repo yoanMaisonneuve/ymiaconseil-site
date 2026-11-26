@@ -118,7 +118,7 @@ nav.plan a{color:var(--navy)}
 <div class="lh" role="region" aria-label="Lecture à voix haute">
 <button id="lh-btn" type="button"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path id="lh-ico" d="M4 2l12 7-12 7z" fill="currentColor"/></svg><span id="lh-lbl" style="color:inherit;font-weight:600;font-size:16px">Lecture à voix haute</span></button>
 <select id="lh-vit" aria-label="Vitesse"><option value="1">1 ×</option><option value="1.25">1,25 ×</option><option value="1.5">1,5 ×</option><option value="1.75">1,75 ×</option></select>
-<span id="lh-temps">environ 2 min</span>
+<span id="lh-temps">environ 3 min</span>
 <audio id="lh-audio" src="index-lecture.mp3" preload="none"></audio>
 </div>
 <script>
@@ -142,7 +142,7 @@ v.addEventListener('change',function(){a.playbackRate=parseFloat(v.value);});})(
     <div><b>189</b><span>cahiers de recherche, du 06.10 au 25 novembre 2026</span></div>
     <div><b>1 256</b><span>prédictions écrites avant l'essai</span></div>
     <div><b>620</b><span>réfutées : on les publie aussi</span></div>
-    <div><b>24,8&nbsp;G</b><span>pas de simulation (633 apprentissages)</span></div>
+    <div><b>24,8&nbsp;G</b><span>pas de simulation (635 apprentissages)</span></div>
     <div><b>118</b><span>erreurs notées, chacune avec sa règle</span></div>
   </div>
   <div class='encadre' style='margin-top:18px'><h3>Télécharger, pour s'en servir</h3><p>Le modèle de marche le plus récent (version 2026.11.18.1, L20c-elan) et ses données&nbsp;: les poids, le même réseau en ONNX, le robot pour MuJoCo, le code et les 90 départs du banc. Licences ouvertes.</p><p><a class='bouton' href='../telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-modele.zip'>Le modèle (0,94&nbsp;Mo)</a> <a class='bouton b2' href='../telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-donnees.zip'>Les données (8,28&nbsp;Mo)</a> <a href='../telechargements/'>toutes les versions</a></p></div>
@@ -161,9 +161,10 @@ escalier de cinq marches de 1&nbsp;cm, et une marche qui atteint la cible&nbsp;:
 (le genou à 4,7°) à 10&nbsp;cm/s, à la vitesse demandée, partie lancée dans le grand pas (score 0,95)&nbsp;; elle marche aussi à 15 et
 20&nbsp;cm/s. Nous
 montrons aussi pourquoi notre première référence ne posait pas le talon jambe tendue (la cheville de N0.1 est près de l'avant de son
-pied) et comment la corriger. Vers la course, il tient 28,8&nbsp;cm/s en ligne droite&nbsp;; le robot suit la cadence de sa référence et
-choisit son pas, et c'est la longueur du pas, pas la cadence des SG90, qui plafonne la course. Rien n'est encore imprimé&nbsp;: c'est la
-suite.</p>
+pied) et comment la corriger. Vers la course, notre record est de 34,2&nbsp;cm/s en ligne droite (26 robots debout sur 30)&nbsp;;
+rapporté à sa taille par le nombre de Froude, c'est encore une marche lente, 2,5&nbsp;km/h pour un humain de mêmes proportions. Quand on
+lui laisse monter la cadence, son pas raccourcit d'autant&nbsp;: c'est probablement la puissance des SG90 qui plafonne, et c'est ce que
+nous mesurons maintenant. Rien n'est encore imprimé&nbsp;: c'est la suite.</p>
 <p class="motscles">Mots-clés&nbsp;: humanoïde imprimé, marche bipède, apprentissage par renforcement, imitation, MuJoCo, servomoteurs SG90,
 science ouverte.</p>
 </div><h2 id='ch1' data-chapitre="1. Introduction"><span class='n'>Chapitre 1</span>Introduction</h2><p><strong>La question.</strong> Un humanoïde qu'on imprime chez soi, avec les servos les moins chers du commerce, peut-il
@@ -271,7 +272,7 @@ l'humain. De zéro, l'élan ne suffit pas (elan-zero reste à petits pas)&nbsp;:
 jambes, le tronc droit. La première marche qui atteint la cible (33° et le genou sous 10°, ensemble). Simulé, aux SG90&nbsp;; le robot du milieu des trente départs.</figcaption></figure>
 <figure><video src="film/these-l18-suite-400-10cms.mp4" poster="film/these-l18-suite-400-10cms.jpg" controls playsinline preload="metadata"></video>
 <figcaption><b>Figure 11.</b> Sa marche de départ, L18-suite-400 (540 millions de pas)&nbsp;: à 10&nbsp;cm/s, 31,5° entre les jambes et le
-genou à 11° quand le talon touche, 0,67 fois la vitesse. Simulé&nbsp;; le robot du milieu des trente départs.</figcaption></figure><h3>5.8 La course&nbsp;: de 21,8 à 28,8&nbsp;cm/s, et ce qui la plafonne</h3>
+genou à 11° quand le talon touche, 0,67 fois la vitesse. Simulé&nbsp;; le robot du milieu des trente départs.</figcaption></figure><h3>5.8 La course&nbsp;: de 21,8 à 34,2&nbsp;cm/s, et ce qui la plafonne</h3>
 <p>Le but posé par Yoan le 19 novembre&nbsp;: courir à deux fois sa taille par seconde (R-217). Le départ, L22a, tenait 21,8&nbsp;cm/s.
 Trois jours et une cinquantaine d'apprentissages plus tard, le meilleur coureur propre, <strong>L41t</strong>, tient 28,8&nbsp;cm/s pour
 28 demandés, 28 départs sur 30 debout, en ligne droite (0,32&nbsp;m de dérive en 10&nbsp;s)&nbsp;: 0,77 fois sa taille par seconde. Le plus
@@ -296,7 +297,33 @@ rien corrigé&nbsp;; bien codé (une pente partout), il a tenu sa ligne et couru
 graines, ce record ne s'est pas refait&nbsp;: une chance sur trois (§&nbsp;43.1). Le principe tient&nbsp;; sa preuve, pas encore.</p>
 <p><strong>Le penché.</strong> Pencher le tronc plus en avant ne l'a pas fait courir plus vite en régime (deux départs)&nbsp;; au plafond,
 à 30&nbsp;cm/s, le plus penché restait le plus souvent debout. Un penché qui grandit avec l'accélération demandée rend la marche lente
-qu'un penché fixe enlevait (§&nbsp;38.1).</p><h2 id='ch6' data-chapitre="6. Discussion"><span class='n'>Chapitre 6</span>Discussion</h2><h3>6.1 Ce que nous avons appris</h3>
+qu'un penché fixe enlevait (§&nbsp;38.1).</p>
+<p><strong>Penché comme l'avion, et des chasses neuves.</strong> L'idée de Yoan (R-217 §&nbsp;60)&nbsp;: courir le tronc incliné vers
+l'avant, comme un avion qui décolle. Repris tel quel, notre meilleur coureur perdait sa course&nbsp;; penché, il la gardait. La
+nuit du 24 au 25 novembre a donné 33,25&nbsp;cm/s tenus pour 28 demandés, 26 robots debout sur 30 (L73-avion-150109, §&nbsp;61.1). La
+bonne usine s'est révélée être la chasse neuve&nbsp;: quatre minutes d'apprentissage par graine, la moitié des graines à 20 robots
+debout ou plus, aucune perdue sur 48. Elle a donné le record actuel, <strong>34,19&nbsp;cm/s pour 27 demandés, 26 debout sur 30</strong>
+(L76-chasse-150150, §&nbsp;62.1), encore fragile (11 debout seulement à 28). Et une règle&nbsp;: ne pas continuer une course qui a trouvé
+son grand pas. Au deuxième tour, l'apprentissage la ramène vers un petit pas sûr (de 13,8 à 8,1&nbsp;cm).</p>
+<figure><video src="film/n01-record-34cms.mp4" poster="film/n01-record-34cms.jpg" controls playsinline preload="metadata"></video>
+<figcaption><b>Figure 14.</b> Le record, 34,2&nbsp;cm/s (L76-chasse-150150, 27&nbsp;cm/s demandés), au studio&nbsp;: le robot du milieu des
+trente départs. Simulé, aux SG90.</figcaption></figure>
+<p><strong>À l'échelle humaine.</strong> Personne ne publie la vitesse d'un humanoïde rapportée à sa taille. La règle des animaux à
+pattes est le nombre de Froude, v²&nbsp;/&nbsp;(g&nbsp;×&nbsp;jambe)&nbsp;; la jambe de N0.1 mesure 21,8&nbsp;cm, celle d'un humain de
+mêmes proportions, 90&nbsp;cm (R-217 §&nbsp;64).</p>
+<div class='tab'><table><thead><tr><th></th><th>N0.1</th><th>Froude</th><th>Humain à l'échelle</th></tr></thead><tbody>
+<tr><td>Le record (L76-chasse-150150)</td><td>34,2&nbsp;cm/s</td><td>0,055</td><td>2,5&nbsp;km/h</td></tr>
+<tr><td>L'objectif (Yoan, 19 novembre)</td><td>60&nbsp;cm/s</td><td>0,168</td><td>4,4&nbsp;km/h</td></tr>
+<tr><td>Là où un humain se met à courir</td><td>103&nbsp;cm/s</td><td>0,5</td><td>7,6&nbsp;km/h</td></tr>
+</tbody></table></div>
+<p>La règle le dit sans détour&nbsp;: 60&nbsp;cm/s n'est pas une course, c'est une marche normale. Le pas y est presque (13,8&nbsp;cm,
+contre environ 16,5 pour la marche humaine mise à l'échelle)&nbsp;; c'est la cadence qui manque (2,4 pas par seconde, contre environ
+3,7).</p>
+<p><strong>Ce qui plafonne maintenant.</strong> Desserrer peu à peu la borne de l'horloge (R-217 §&nbsp;63 et 64) apprend au robot à
+rester debout sous une commande plus haute, et sa cadence monte (2,87 pas par seconde contre 2,5 au record), mais son pas raccourcit
+d'autant (10,1&nbsp;cm contre 13)&nbsp;: il tient 28&nbsp;cm/s, pas plus. Ce n'était pas l'horloge&nbsp;; c'est probablement la
+puissance des SG90. Et le pied se pose trop loin (R-234)&nbsp;: 22&nbsp;% au-delà du point de capture chez les records, 54&nbsp;% sous
+l'horloge en rampe, si bien que chaque pas freine&nbsp;; une gravité plus basse, essayée de 1 à 10&nbsp;m/s², n'allonge pas le pas.</p><h2 id='ch6' data-chapitre="6. Discussion"><span class='n'>Chapitre 6</span>Discussion</h2><h3>6.1 Ce que nous avons appris</h3>
 <ol class="lecons">
 <li><strong>Une mesure se prend au moment que la question nomme.</strong> Notre «&nbsp;genou tendu à 3°&nbsp;» était la médiane sur tout
 l'appui&nbsp;; à l'instant où le talon touche, il était plié à 17°.</li>
@@ -331,10 +358,11 @@ tombant à travers le sol (E85)&nbsp;; un escalier annoncé sans escalier dans l
 au mauvais instant (E102)&nbsp;; des numéros de cahier pris deux fois (E103). Une erreur publiée coûte moins qu'une erreur cachée.</p><h2 id='ch7' data-chapitre="7. Conclusion et suite"><span class='n'>Chapitre 7</span>Conclusion et suite</h2><p>Un humanoïde de 37&nbsp;cm aux servos de 9&nbsp;g apprend, en simulation, une marche droite, encaisse une chute, monte de
 petites marches et pose le talon comme un vrai pas humain&nbsp;: 44° entre les jambes, la jambe de devant tendue (le genou à 4,7°), à la
 vitesse demandée. La cible (33° et le genou sous 10°, ensemble) est atteinte à 5 et 10&nbsp;cm/s (L20c-elan, R-201), et la même marche
-tient jusqu'à 20&nbsp;cm/s. Vers la course, il tient 28,8&nbsp;cm/s en ligne droite (0,77 fois sa taille par seconde), plafonné par la
-longueur de son pas, pas par la cadence de ses servos.</p>
-<p><strong>En cours sur la tour</strong>&nbsp;: la sélection (R-217 §&nbsp;44)&nbsp;: plusieurs apprentissages courts, le meilleur gardé et
-continué, pour changer en méthode la chance qui fait trouver le grand pas. <strong>Ensuite</strong>&nbsp;: imprimer le premier gabarit,
+tient jusqu'à 20&nbsp;cm/s. Vers la course, il tient 34,2&nbsp;cm/s en ligne droite (0,91 fois sa taille par seconde, 2,5&nbsp;km/h à
+l'échelle humaine), plafonné, probablement, par la puissance de ses servos&nbsp;: quand sa cadence monte, son pas raccourcit d'autant.</p>
+<p><strong>En cours sur la tour</strong>&nbsp;: la puissance (les SG90 alimentés à 6&nbsp;V, un quart de couple en plus, R-217
+§&nbsp;65), le pied payé pour se poser près du point de capture (R-234), et un tendon d'Achille, mou quand le robot marche sur place,
+tendu quand le tibia roule sur le pied (R-235). <strong>Ensuite</strong>&nbsp;: imprimer le premier gabarit,
 mesurer un vrai SG90, et passer du jumeau simulé au robot sur la table.</p><h2 id='annexes' data-chapitre="Annexes"><span class='n'>Annexes</span>Annexes</h2><div class="encadre"><h3>A. Le cahier de recherche</h3>
 <p>189 cahiers et 1 256 prédictions&nbsp;: 416 confirmées, 104 en partie, 620 réfutées, 62 à revoir, 54 en
 attente. Chacun&nbsp;: la question, la prédiction avec sa crédence, le dispositif, le verdict, les films. <a href="/navitek/recherche/">Le
