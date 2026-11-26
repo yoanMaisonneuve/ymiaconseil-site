@@ -142,7 +142,7 @@ v.addEventListener('change',function(){a.playbackRate=parseFloat(v.value);});})(
     <div><b>189</b><span>cahiers de recherche, du 06.10 au 25 novembre 2026</span></div>
     <div><b>1 256</b><span>prédictions écrites avant l'essai</span></div>
     <div><b>620</b><span>réfutées : on les publie aussi</span></div>
-    <div><b>24,8&nbsp;G</b><span>pas de simulation (635 apprentissages)</span></div>
+    <div><b>24,9&nbsp;G</b><span>pas de simulation (637 apprentissages)</span></div>
     <div><b>118</b><span>erreurs notées, chacune avec sa règle</span></div>
   </div>
   <div class='encadre' style='margin-top:18px'><h3>Télécharger, pour s'en servir</h3><p>Le modèle de marche le plus récent (version 2026.11.18.1, L20c-elan) et ses données&nbsp;: les poids, le même réseau en ONNX, le robot pour MuJoCo, le code et les 90 départs du banc. Licences ouvertes.</p><p><a class='bouton' href='../telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-modele.zip'>Le modèle (0,94&nbsp;Mo)</a> <a class='bouton b2' href='../telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-donnees.zip'>Les données (8,28&nbsp;Mo)</a> <a href='../telechargements/'>toutes les versions</a></p></div>
@@ -277,9 +277,9 @@ genou à 11° quand le talon touche, 0,67 fois la vitesse. Simulé&nbsp;; le rob
 Trois jours et une cinquantaine d'apprentissages plus tard, le meilleur coureur propre, <strong>L41t</strong>, tient 28,8&nbsp;cm/s pour
 28 demandés, 28 départs sur 30 debout, en ligne droite (0,32&nbsp;m de dérive en 10&nbsp;s)&nbsp;: 0,77 fois sa taille par seconde. Le plus
 droit, <strong>L42d</strong>, tient 27,8&nbsp;cm/s, 29 sur 30, avec 6&nbsp;cm de dérive.</p>
-<figure><video src="../recherche/film/n3-r150-N0.1-L42d-correction-horloge-rapide-banc-fin-26-28-28cms.mp4" controls playsinline preload="metadata"></video>
+<figure><video src="film/these-l42d-28cms.mp4" poster="film/these-l42d-28cms.jpg" controls playsinline preload="metadata"></video>
 <figcaption><b>Figure 12.</b> L42d à 28&nbsp;cm/s demandés&nbsp;: 27,8&nbsp;cm/s, 6&nbsp;cm de dérive en 10&nbsp;secondes, le coureur le plus droit
-de la course. Simulé, aux SG90.</figcaption></figure>
+de la course. Simulé, aux SG90&nbsp;; le robot du milieu des trente départs.</figcaption></figure>
 <p><strong>La fiche de l'athlète.</strong> Découpée comme un entraîneur découpe une course (R-217 §&nbsp;35)&nbsp;: à 28&nbsp;cm/s, 2,5 pas
 par seconde, des pas de 12&nbsp;cm, 451&nbsp;ms au sol, 335 en l'air, jamais les deux pieds en l'air. La marche d'un humain mise à
 l'échelle de sa jambe (le même nombre de Froude) demanderait, à 60&nbsp;cm/s, 3,8 pas par seconde et des pas de 16&nbsp;cm&nbsp;: une
@@ -288,9 +288,10 @@ marche, pas encore une course.</p>
 lui-même la longueur de son pas (R-217 §&nbsp;37). Une horloge plus rapide est suivie (jusqu'à 3,2 pas par seconde&nbsp;: les SG90 le
 peuvent), mais le pas raccourcit d'autant, jusqu'à piétiner (3,7&nbsp;cm par pas à 35&nbsp;cm/s, figure&nbsp;13). Ce qui plafonne la
 course n'est ni la cadence ni la foulée de la référence&nbsp;: c'est la longueur du pas que l'apprentissage trouve.</p>
-<figure><video src="../recherche/film/n3-r150-N0.1-L42d-correction-horloge-rapide-banc-30-40-35cms.mp4" controls playsinline preload="metadata"></video>
+<figure><video src="film/these-l42d-piege-35cms.mp4" poster="film/these-l42d-piege-35cms.jpg" controls playsinline preload="metadata"></video>
 <figcaption><b>Figure 13.</b> Le piège de l'horloge&nbsp;: à 35&nbsp;cm/s demandés, il suit une cadence de 3,24 pas par seconde avec des
-pas de 3,7&nbsp;cm, piétine et fait demi-tour. Simulé.</figcaption></figure>
+pas de 3,7&nbsp;cm, piétine, tourne et quitte sa ligne&nbsp;; 4 robots sur 30 restent debout. Simulé&nbsp;; le robot du milieu des
+quatre, filmé de plus haut pour le garder dans l'image.</figcaption></figure>
 <p><strong>Corriger par le vecteur, pas par la direction.</strong> Le principe de Yoan (R-217 §&nbsp;34)&nbsp;: ne pas payer le robot
 d'être sur la ligne, mais de la vitesse de côté qui l'y ramène. Mal codé (une cloche étroite, plate loin de la bonne correction), il n'a
 rien corrigé&nbsp;; bien codé (une pente partout), il a tenu sa ligne et couru à 32,7&nbsp;cm/s, notre record. Refait sur deux autres
