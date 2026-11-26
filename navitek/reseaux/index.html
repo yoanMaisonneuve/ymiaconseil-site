@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Les films de Navitek</title>
-<meta name="description" content="Les films de Navitek en simulation : N3, l'humanoïde de 1,5 m, et N0, le petit de 33 cm qu'on imprime à la maison, apprennent à marcher, courir, tourner, sauter. Les réussites et le bêtisier.">
+<title>Les films de N0.1</title>
+<meta name="description" content="N0.1, un humanoïde de 37,5 cm et 645 g à imprimer soi-même, mû par dix-sept servos SG90 : ses meilleures courses en simulation, dont le record à 34,2 cm/s.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0b1f3a">
-<meta property="og:title" content="Les films de Navitek">
-<meta property="og:description" content="Hier matin : 142 secondes au T-test. Ce matin : 10,6. Tout est simulé, tout est publié.">
+<meta property="og:title" content="Les films de N0.1">
+<meta property="og:description" content="N0.1, un humanoïde de 37,5 cm et 645 g à imprimer soi-même, mû par dix-sept servos SG90 : ses meilleures courses en simulation, dont le record à 34,2 cm/s.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ymiaconseil.com/navitek/reseaux/">
-<meta property="og:image" content="https://ymiaconseil.com/navitek/n0-carte.png">
+<meta property="og:image" content="https://ymiaconseil.com/navitek/reseaux/vignette.jpg">
 <link rel="canonical" href="https://ymiaconseil.com/navitek/reseaux/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,90 +40,97 @@ h2{font-family:var(--display);font-weight:600;color:var(--navy);font-size:clamp(
 p{margin:0 0 15px;max-width:34em}
 .chapeau{font-size:18.5px;color:#3c3830}
 .lien{color:var(--navy);border-bottom:1px solid rgba(212,168,67,.6);text-decoration:none}
-.montage{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px;align-items:start;margin-top:26px}
-.montage video{display:block;width:100%;aspect-ratio:9/16;background:#000;border:1px solid var(--line)}
-.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:22px}
+.vedette{margin-top:30px;display:grid;gap:16px}
+.vedette video,.studio video{display:block;width:100%;aspect-ratio:16/9;background:#0b1f3a;border-radius:6px}
+.vedette video{box-shadow:0 18px 44px rgba(11,31,58,.28)}
+.vedette h2{margin:6px 0 0}
+.chiffres{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
+.chiffres li{padding:6px 13px;border:1px solid var(--line);border-radius:999px;background:var(--tint);font-size:15px;color:var(--navy)}
+.chiffres b{color:var(--orange-texte);font-weight:600}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(380px,100%),1fr));gap:30px}
+.grille.archive{grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:22px}
 figure{margin:0}
 .film video{display:block;width:100%;aspect-ratio:4/3;background:#000;border:1px solid var(--line)}
-figcaption{display:grid;gap:3px;margin-top:8px;font-size:15px;line-height:1.45}
-figcaption b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:18px}
+figcaption{display:grid;gap:3px;margin-top:10px;font-size:15.5px;line-height:1.5}
+figcaption b{font-family:var(--display);font-weight:600;color:var(--navy);font-size:19px}
 figcaption em{font-family:var(--mono);font-style:normal;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-small)}
+.lire{margin-top:46px;padding-top:22px;border-top:1px solid var(--line)}
+.lire h2{margin-top:0;font-size:22px}
+.lire ul{margin:0;padding-left:1.1em;max-width:40em;display:grid;gap:6px}
+.lire li::marker{color:var(--gold)}
 .portes{display:flex;flex-wrap:wrap;gap:12px 28px;margin:44px 0 0;padding:18px 0;border-top:1px solid var(--line)}
 footer{background:var(--navy);color:#8ea4c0;font-family:var(--mono);font-size:12px;padding:20px;border-top:3px solid var(--gold);margin-top:34px}
 footer a{color:#c9d4e4;text-decoration:none;border-bottom:1px solid rgba(212,168,67,.4)}
 footer .plan{margin:0 0 10px;line-height:2}
 footer .plan b{color:var(--gold);font-weight:400}
 footer p{margin:0;max-width:none}
+.montage{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px;align-items:start;margin-top:26px}
+.montage video{display:block;width:100%;aspect-ratio:9/16;background:#000;border:1px solid var(--line)}
 @media (max-width:640px){.montage{grid-template-columns:1fr}.montage video{max-width:340px;margin:0 auto}}
 </style>
+<!-- lecture-haute -->
+<style>
+.lh{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:var(--lh-fond);border-bottom:1px solid var(--lh-bord);font:600 16px/1.2 system-ui,sans-serif}
+.lh button{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:24px;background:var(--lh-btn);color:var(--lh-btn-txt);font:inherit;cursor:pointer}
+.lh select{min-height:40px;border-radius:8px;border:1px solid var(--lh-bord);background:var(--lh-fond);color:var(--lh-txt);font:inherit;padding:0 8px}
+.lh span{color:var(--lh-txt2);font-weight:400;font-size:14px}
+:root{--lh-fond:#f4f1ea;--lh-bord:#d8d2c4;--lh-btn:#0b1f3a;--lh-btn-txt:#ffffff;--lh-txt:#1f2430;--lh-txt2:#5d6270}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--lh-fond:#1a2029;--lh-bord:#2c3440;--lh-btn:#e0b44a;--lh-btn-txt:#11151c;--lh-txt:#e8e6e1;--lh-txt2:#a3a8b3}}
+:root[data-theme="dark"]{--lh-fond:#1a2029;--lh-bord:#2c3440;--lh-btn:#e0b44a;--lh-btn-txt:#11151c;--lh-txt:#e8e6e1;--lh-txt2:#a3a8b3}
+</style>
+<div class="lh" role="region" aria-label="Lecture à voix haute">
+<button id="lh-btn" type="button"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path id="lh-ico" d="M4 2l12 7-12 7z" fill="currentColor"/></svg><span id="lh-lbl" style="color:inherit;font-weight:600;font-size:16px">Lecture à voix haute</span></button>
+<select id="lh-vit" aria-label="Vitesse"><option value="1">1 ×</option><option value="1.25">1,25 ×</option><option value="1.5">1,5 ×</option><option value="1.75">1,75 ×</option></select>
+<span id="lh-temps">environ 1 min</span>
+<audio id="lh-audio" src="index-lecture.mp3" preload="none"></audio>
+</div>
+<script>
+(function(){var a=document.getElementById('lh-audio'),b=document.getElementById('lh-btn'),l=document.getElementById('lh-lbl'),i=document.getElementById('lh-ico'),v=document.getElementById('lh-vit'),t=document.getElementById('lh-temps');
+function m(s){s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+' min '+('0'+s%60).slice(-2)+' s';}
+b.addEventListener('click',function(){if(a.paused){a.playbackRate=parseFloat(v.value);a.play().catch(function(){l.textContent='Touchez encore pour lire';});}else{a.pause();}});
+a.addEventListener('play',function(){l.textContent='Pause';i.setAttribute('d','M4 2h4v14H4zM10 2h4v14h-4z');});
+a.addEventListener('pause',function(){l.textContent='Reprendre la lecture';i.setAttribute('d','M4 2l12 7-12 7z');});
+a.addEventListener('ended',function(){l.textContent='Lecture à voix haute';i.setAttribute('d','M4 2l12 7-12 7z');});
+a.addEventListener('timeupdate',function(){t.textContent=m(a.currentTime)+' sur '+m(a.duration);});
+v.addEventListener('change',function(){a.playbackRate=parseFloat(v.value);});})();
+</script>
+<!-- lecture-haute-fin -->
+
 </head>
 <body>
 <header class="bar"><div class="in"><a class="logo" href="/">YM <span>IA</span> Conseil</a><a class="autre" href="../recherche/">La recherche</a></div></header>
 <main>
 <div class="large">
-  <p class="code">Navitek · N3 et N0 en simulation</p>
-  <h1>Les films de Navitek</h1>
-  <p class="chapeau">Deux robots en simulation. N3, un humanoïde de 1,5 m, apprend à bouger : marcher, tourner, courir, passer des obstacles ; le 13 novembre au matin, il mettait 142 secondes au T-test, le lendemain 10,6. N0, le petit de 33 cm qu'on imprime à la maison, apprend avec ses vrais servos. Chaque film vient d'un essai écrit avant, avec son verdict, dans le cahier de recherche.</p>
+  <p class="code">Navitek · N0.1 · simulation</p>
+  <h1>N0.1 en mouvement</h1>
+  <p class="chapeau">Un humanoïde de 37,5 cm et 645 g, mû par dix-sept servomoteurs SG90 de 9 g, à imprimer soi-même. Il apprend seul à marcher, puis à courir, dans le simulateur MuJoCo. Voici ses meilleures courses.</p>
 
-  <section class="montage" aria-label="Le montage">
-    <video src="../recherche/film/montage-v2.mp4" controls playsinline preload="metadata"></video>
-    <div>
-      <h2 style="margin-top:0">Une journée en 45 secondes</h2>
-      <p>Le matin, il patine. Il imite une sprinteuse filmée et tombe. À midi, il se penche pour tourner. Le soir, un réseau de neurones apprend seul sur une carte graphique. La nuit, le T-test en 15 secondes.</p>
-      <p>Tout est simulé (MuJoCo). Le code et les données sont libres.</p>
-    </div>
+  <section class="vedette" aria-label="Le record">
+    <video src="../recherche/film/n01-record-34cms.mp4" autoplay muted loop playsinline preload="metadata" aria-label="N0.1 court à 34,2 cm/s, simulation"></video>
+    <h2>Le record : 34,2 cm/s</h2>
+    <ul class="chiffres"><li><b>34,2 cm/s</b> tenus</li><li><b>26</b> robots sur 30 debout</li><li><b>3,4 m</b> en 10 secondes</li></ul>
+    <p>Commandé à 27 cm/s, il en tient 34. Le pas s'allonge quand le corps prend de la vitesse ; le pied se pose devant, le tronc penché vers l'avant. Une seule chasse de quatre minutes d'apprentissage, le 25 novembre 2026.</p>
   </section>
 
-  <h2>Les meilleurs films</h2>
+  <h2>Les autres courses</h2>
   <div class="grille">
-<figure class="film"><video src="../recherche/film/n3-r163-N0.1-sg90-cap-final-ttest.mp4" controls playsinline preload="metadata"></video><figcaption><b>N0.1, le robot qu&#x27;on imprime, réussit le T-test</b><span>17 servos à 2 $ (SG90), la vraie physique : la ligne de droite, un vrai demi-tour, la ligne de gauche, un demi-tour, le centre. 30 courses sur 30, aucune chute ; 27 secondes. Vu d&#x27;en haut, accéléré deux fois.</span><em>Simulé · R-163</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r150-N0.1-sg90-marche-b-final-5cms.mp4" controls playsinline preload="metadata"></video><figcaption><b>N0.1 marche à la vitesse demandée</b><span>La hanche et l&#x27;épaule en deux servos croisés, la semelle arrondie à 15° : on lui demande 10 cm/s, il fait 10,7. 30 départs sur 30 debout, même avec le retard du Wi-Fi.</span><em>Simulé · R-163</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r167-gp-pente.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il monte les rampes</b><span>Appris en une heure sur une carte graphique, avec des servos à 2 $ : toutes les rampes de 3 à 12°, 30 fois sur 30. En montée, la hanche et le genou plient beaucoup plus qu&#x27;à plat, comme chez l&#x27;humain.</span><em>Simulé · R-167</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r170-flow-2.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le flow</b><span>Une idée de Yoan : un robot ne devrait pas être saccadé ; tout le corps doit bouger en même temps, fluide comme de l&#x27;eau. Rendue fluide, la marche de N0.1 fait 45 % d&#x27;à-coups en moins, avec des servos à 2 $.</span><em>Simulé · R-170</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r172-marche.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le talon d&#x27;abord</b><span>Comme un humain qui marche : la jambe tendue, le talon se pose en premier, le pied roule à plat, puis le talon arrière se lève. Trois pas sur trois, 20 fois sur 20, avec des servos à 2 $ (SG90).</span><em>Simulé · R-172</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r171-pointe-un-pied.mp4" controls playsinline preload="metadata"></video><figcaption><b>La pointe d&#x27;un seul pied</b><span>Tout le poids sur une jambe, l&#x27;autre genou levé, la cheville tournée, puis le genou redescend jusqu&#x27;à ce que les orteils touchent le sol. Avec des servos à 2 $, 17 fois sur 20. Le truc : la jambe d&#x27;appui reste droite, et on s&#x27;arrête au contact.</span><em>Simulé · R-171</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r168-fente-lente.mp4" controls playsinline preload="metadata"></video><figcaption><b>N0.1 fait la fente</b><span>Trois fentes sur trois, sans tomber, avec ses servos à 2 $ (SG90). Avant, il tombait en posant le pied : il levait le genou avant d&#x27;avoir porté son poids sur l&#x27;autre jambe. Porter son poids d&#x27;abord, puis lever : la leçon.</span><em>Simulé · R-168</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r168-genou-alterne.mp4" controls playsinline preload="metadata"></video><figcaption><b>Les genoux hauts, sur place</b><span>Le poids sur une jambe, l&#x27;autre genou monte, redescend ; puis l&#x27;autre côté. Trois fois chacun, sans tomber, avec des servos à 2 $.</span><em>Simulé · R-168</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r168-avion.mp4" controls playsinline preload="metadata"></video><figcaption><b>L&#x27;avion</b><span>Du yoga avec des servos à 2 $ : sur une jambe, le tronc penché, l&#x27;autre jambe tendue derrière, 10 secondes. Le secret : aller lentement, et porter son poids avant de lever.</span><em>Simulé · R-168</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r168-une-jambe.mp4" controls playsinline preload="metadata"></video><figcaption><b>Sur une jambe, 10 secondes</b><span>Le genou haut, tenu sur une seule jambe avec des servos à 2 $. Le truc : porter son poids sur la jambe d&#x27;appui d&#x27;abord, puis lever, et corriger sans arrêt avec les chevilles.</span><em>Simulé · R-168</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r168-squat-70.mp4" controls playsinline preload="metadata"></video><figcaption><b>N0.1 fait le squat</b><span>Les pieds à plat, il plie les genoux jusqu&#x27;à 70° et remonte, trois fois de suite, sans tomber. Ses servos à 2 $ (SG90) au plus à 77 % de leur force ; il tient même jusqu&#x27;à 80°.</span><em>Simulé · R-168</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r156-lente-n0.mp4" controls playsinline preload="metadata"></video><figcaption><b>Genou haut, fente, l&#x27;autre jambe : trois fois sur trois</b><span>N0, 33 cm, avec ses servos à 2 $ : il lève le genou à sa butée, pose le pied, descend en fente, passe le poids devant et repart de l&#x27;autre jambe. Trois fentes sur trois sans tomber. Le grand N3 (1,5 m) n&#x27;y arrive pas encore.</span><em>Simulé · R-156</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r158-pistol-remontee-90.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le pistol squat sur une jambe</b><span>Assez fort pour se relever sur une seule jambe, le genou plié à 90° ? Oui, mais tout juste : le servo du genou donne 100 % de sa force.</span><em>Simulé · R-158</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r150-N0d-final-5cms.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il va à la vitesse qu&#x27;on lui demande</b><span>On lui dit 2, 5 ou 10 cm/s : il fait 1,9, 4,1 et 8,8. Et il garde le pas avec 40 ms de retard sur ses ordres, comme par Wi-Fi : 30 départs sur 30.</span><em>Simulé · R-150</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r150-N0c-final-5cms.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le petit marche : N0, 33 cm, ses vrais servos</b><span>N0, le robot qu&#x27;on imprime à la maison, avec ses servos à 2 $ (SG90) : il a appris à marcher en simulation, 30 départs sur 30, et il tient même quand ses ordres arrivent avec 80 ms de retard, comme par Wi-Fi.</span><em>Simulé · R-150</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r152-verif-t2.00-w80.mp4" controls playsinline preload="metadata"></video><figcaption><b>Pour sauter, il faut ça</b><span>Le même petit robot, avec des moteurs 11 fois plus forts et 9 fois plus rapides que ses servos : il s&#x27;accroupit, pousse et vole 7,6 cm. C&#x27;est le moteur qu&#x27;il lui faut pour sauter.</span><em>Simulé · R-152</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-ttest-F200-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il court : le T-test en 10,6 secondes</b><span>Les pieds alternent, avec une phase de vol ; il accélère son rythme en allant vite, comme un coureur. 30 fois sur 30.</span><em>Simulé · R-141</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r147-saut-reference-strict-reel-petit.mp4" controls playsinline preload="metadata"></video><figcaption><b>Aux vrais moteurs : 31 cm</b><span>Les mêmes lois, mais des moteurs du commerce (40 N·m au genou, leur vraie vitesse) au lieu de moteurs imaginaires : il ne saute plus 1,6 m, mais 31 cm, et il garde le geste d&#x27;un humain : les bras lancés, les genoux ramenés.</span><em>Simulé · R-149</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r147-L4-20M-sans-elan.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le saut en longueur sans élan : 94 cm, reçu debout</b><span>Pour un robot, pas de bac à sable : un saut qui ne tient pas debout vaut zéro. Il se penche, pousse, vole et se reçoit immobile, 24 fois sur 30. (Moteurs imaginaires : voir le film suivant.)</span><em>Simulé · R-147</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-droit-K3-cote.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le genou à la hauteur de la hanche</b><span>La marche « high knee » apprise : la hanche plie jusqu&#x27;à 85°, 30 départs sur 30 debout. Et genou haut, il fait le T-test plus vite.</span><em>Simulé · R-143</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-ttest-C150-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le T-test en 15,5 secondes</b><span>On lui dit « vers la ligne », puis « demi-tour » : il se retourne en marchant, sans s&#x27;arrêter. Le matin même : 142,6 s.</span><em>Simulé · R-140</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-barres-E150-6cm.mp4" controls playsinline preload="metadata"></video><figcaption><b>Les cônes du football</b><span>Des barres de 6 cm en travers du chemin : il les passe 28 fois sur 30. Sans cet apprentissage, il tombait sur la première.</span><em>Simulé · R-142</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-rl-gpu-B-final.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il lève les pieds et ne patine plus</b><span>Appris en 36 minutes sur une carte graphique, 4 096 robots à la fois : le pied levé de 9,5 cm, presque aucun glissement.</span><em>Simulé · R-139</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-rl-marche-10M.mp4" controls playsinline preload="metadata"></video><figcaption><b>Un réseau de neurones apprend à marcher</b><span>Personne ne lui a montré les bras : il les balance à l&#x27;opposé des jambes, comme un humain.</span><em>Simulé · R-137</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-ttest-bras-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Les bras qui balancent</b><span>Le T-test avec les bras du même côté que les jambes : 29 courses sur 30 (sans les bras : 22).</span><em>Simulé · R-136</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-vrille-complete.mp4" controls playsinline preload="metadata"></video><figcaption><b>La vrille</b><span>La tête d&#x27;abord, puis les bras, l&#x27;avion, le saut : l&#x27;intuition d&#x27;athlète de Yoan, apprise.</span><em>Simulé · R-128</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-rotation-arabesque-x4.mp4" controls playsinline preload="metadata"></video><figcaption><b>Se retourner sur un pied</b><span>Sans rotation de hanche : le pied d&#x27;appui pivote quand la jambe libre se lève. Quatre arabesques, un demi-tour.</span><em>Simulé · R-128</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-reflexe-tete.mp4" controls playsinline preload="metadata"></video><figcaption><b>La tête sent la chute</b><span>À gauche sans réflexe, il tombe. À droite, les bras réagissent à l&#x27;orientation de la tête : il finit.</span><em>Simulé · R-134</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-plie-danseuse.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le plié de la danseuse</b><span>Il suit la courbe du genou d&#x27;une danseuse filmée : son centre de masse descend comme le sien.</span><em>Simulé · R-131</em></figcaption></figure>
+<figure class="studio"><video src="../recherche/film/n01-penche-33cms.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Penché comme un avion, simulation"></video><figcaption><b>Penché comme un avion</b><span>L&#x27;idée de Yoan : courir le tronc incliné vers l&#x27;avant, comme un avion qui décolle. Ce robot tient 33,3 cm/s, 26 sur 30 debout, avec un pas de près de 14 cm.</span><em>Simulé · R-217</em></figcaption></figure>
+<figure class="studio"><video src="../recherche/film/n01-marche-10cms.mp4" autoplay muted loop playsinline preload="metadata" aria-label="La marche, simulation"></video><figcaption><b>La marche</b><span>Apprise sur la photo d&#x27;un homme qui marche : le talon d&#x27;abord, la jambe tendue. À 10 cm/s, 27 robots sur 30 la tiennent.</span><em>Simulé · R-172</em></figcaption></figure>
   </div>
 
-  <h2>Le bêtisier</h2>
-  <p>Les essais ratés restent. On apprend des deux.</p>
-  <div class="grille">
-<figure class="film"><video src="../recherche/film/n01-r172-humain.mp4" controls playsinline preload="metadata"></video><figcaption><b>La photo, tenue immobile</b><span>Le talon devant, la pointe derrière, comme sur la photo d&#x27;un homme qui marche… mais tenu immobile, sur deux rouleaux de semelle : il roule de côté. Chez l&#x27;humain, ce moment dure un dixième de seconde.</span><em>Simulé · R-172</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n01-r166-monter-essai4.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le pied sur la marche… et il recule</b><span>L&#x27;escalier écrit pose par pose : il porte son poids, lève le genou, pose le pied sur la marche, puis tombe à la renverse en voulant monter dessus. Chaque pose tient ; c&#x27;est le passage qui manque.</span><em>Simulé · R-166</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r166-N0.1-esc-a-40M-1cm.mp4" controls playsinline preload="metadata"></video><figcaption><b>Un pied sur la marche… et il attend</b><span>N0.1 à mi-chemin de son apprentissage de l&#x27;escalier : il marche jusqu&#x27;à la première marche (1 cm), y pose le pied, et n&#x27;ose pas mettre son poids dessus. L&#x27;apprentissage continue.</span><em>Simulé · R-166</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r154-lente-H110-p0.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le grand frère essaie la fente…</b><span>…N3, 1,5 m, aux vrais moteurs : le genou haut, la fente les bras en avion, tenue. Puis il lève l&#x27;autre genou et tombe de côté. Le petit N0 fait l&#x27;exercice au complet.</span><em>Simulé · R-154</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r163-N0.1-sg90-marche-b-final-ttest.mp4" controls playsinline preload="metadata"></video><figcaption><b>Avant : il reculait au lieu de se retourner</b><span>La même marche, sans la paie du cap : au T-test, il atteint la ligne, puis il recule de côté. Payé pour se tourner vers le cap sur tout le cercle, il a appris le demi-tour.</span><em>Simulé · R-163</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r152-verif-t2.00-w40.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le faux record</b><span>L&#x27;ordinateur a trouvé un « saut » de 25 cm. En vrai, le robot tombe, passe à travers le sol, et le simulateur le recrache vers le haut. On l&#x27;a attrapé avant de le publier comme un résultat.</span><em>Simulé · R-152</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-temoin-sprinteuse-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il imite une sprinteuse filmée…</b><span>…et tombe en 2,7 secondes. C&#x27;est de là que le réseau de neurones est parti.</span><em>Simulé · R-137</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-ttest-D200-pres.mp4" controls playsinline preload="metadata"></video><figcaption><b>Il triche</b><span>La récompense payait les pieds en l&#x27;air : il a appris à sautiller sur un pied au lieu de courir. Vite, et faux.</span><em>Simulé · R-141</em></figcaption></figure>
-<figure class="film"><video src="../recherche/film/n3-r146-S80-20M-course-a-trois.mp4" controls playsinline preload="metadata"></video><figcaption><b>Le kangourou</b><span>Le départ du sprint, à 2, 3 et 4 appuis : 1,5 m en 0,88 s… en bondissant à deux pieds, puis en plongeant après la ligne. La récompense payait la vitesse, pas la course.</span><em>Simulé · R-146</em></figcaption></figure>
-  </div>
+  <section class="lire">
+    <h2>Comment lire ces films</h2>
+    <ul>
+      <li>Tout est simulé ; rien n'est encore imprimé. La physique est celle du moteur MuJoCo, avec les vrais couples des SG90.</li>
+      <li>Chaque carré du sol mesure 10 cm. Les films passent en temps réel, à 50 images par seconde.</li>
+      <li>Le robot filmé n'est pas le meilleur : c'est celui du milieu parmi les robots restés debout, sur 30 départs.</li>
+    </ul>
+  </section>
 
   <nav class="portes" aria-label="Aller plus loin">
     <a class="lien" href="../recherche/">Toutes les hypothèses, écrites avant chaque essai</a>
-    <a class="lien" href="../">Imprimer N0, le petit frère de 33 cm</a>
+    <a class="lien" href="../">Imprimer N0.1</a>
+    <a class="lien" href="archives/">Les archives des films (N3 et N0, le bêtisier)</a>
   </nav>
 </div>
 </main>

@@ -16,7 +16,7 @@
     ["/navitek/tests/", "Les tests", "Classés par catégorie et par bénéfice pour l'apprentissage"],
     ["/navitek/entrainement/", "L'entraînement", "Les outils, les réglages, le nombre de pas"],
     ["/navitek/figures/", "Les figures", "Tous les graphiques des cahiers"],
-    ["/navitek/reseaux/", "Les films", "Les meilleurs, le bêtisier, une journée en 45 s"],
+    ["/navitek/reseaux/", "Les films", "Les meilleures courses de N0.1, en studio"],
     ["/navitek/n1/", "N1", "62 cm, des servos qui parlent"],
     ["/navitek/n2/", "N2", "Un mètre, des actionneurs imprimés (concept)"],
     ["/navitek/n3/", "N3", "1,5 m : ce qui s'imprime, ce qui ne s'imprime pas"]
