@@ -140,10 +140,10 @@ v.addEventListener('change',function(){a.playbackRate=parseFloat(v.value);});})(
   </figure>
   <div class="chiffres">
     <div><b>194</b><span>cahiers de recherche, du 06.10 au 27 novembre 2026</span></div>
-    <div><b>1 372</b><span>prédictions écrites avant l'essai</span></div>
-    <div><b>697</b><span>réfutées : on les publie aussi</span></div>
-    <div><b>32,6&nbsp;G</b><span>pas de simulation (1136 apprentissages)</span></div>
-    <div><b>127</b><span>erreurs notées, chacune avec sa règle</span></div>
+    <div><b>1 386</b><span>prédictions écrites avant l'essai</span></div>
+    <div><b>703</b><span>réfutées : on les publie aussi</span></div>
+    <div><b>34,5&nbsp;G</b><span>pas de simulation (1237 apprentissages)</span></div>
+    <div><b>129</b><span>erreurs notées, chacune avec sa règle</span></div>
   </div>
   <div class='encadre' style='margin-top:18px'><h3>Télécharger, pour s'en servir</h3><p>Le modèle de marche le plus récent (version 2026.11.18.1, L20c-elan) et ses données&nbsp;: les poids, le même réseau en ONNX, le robot pour MuJoCo, le code et les 90 départs du banc. Licences ouvertes.</p><p><a class='bouton' href='../telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-modele.zip'>Le modèle (0,94&nbsp;Mo)</a> <a class='bouton b2' href='../telechargements/2026.11.18.1/navitek-n0.1-marche-2026.11.18.1-donnees.zip'>Les données (8,28&nbsp;Mo)</a> <a href='../telechargements/'>toutes les versions</a></p></div>
 </header>
@@ -153,7 +153,7 @@ v.addEventListener('change',function(){a.playbackRate=parseFloat(v.value);});})(
 le pied&nbsp;? Nous l'apprenons en simulation (MuJoCo), sur une seule carte graphique de bureau, par apprentissage par renforcement (PPO), en
 imitant une marche de référence tirée d'une photo d'un pas humain.</p>
 <p>La méthode est celle d'un cahier de laboratoire tenu en public&nbsp;: chaque essai écrit sa prédiction avant de tourner et son verdict
-après (1 372 prédictions dans 194 cahiers&nbsp;: 446 confirmées, 112 en partie, 697 réfutées)&nbsp;; toute mesure
+après (1 386 prédictions dans 194 cahiers&nbsp;: 451 confirmées, 113 en partie, 703 réfutées)&nbsp;; toute mesure
 nouvelle passe d'abord sur un cas dont on connaît la réponse&nbsp;; aucun résultat n'est annoncé avant d'avoir été vu en film. Un score de
 la marche, de 0 à 1, pèse quatre niveaux débloqués dans l'ordre&nbsp;: les grands pas, la vitesse, la fluidité, la sûreté.</p>
 <p>Résultats, à ce jour et en simulation&nbsp;: une marche droite qui obéit à 2, 5 et 10&nbsp;cm/s, un saut amorti depuis 6&nbsp;cm, un
@@ -346,6 +346,21 @@ apprennent à tenir debout, pas à marcher, en 60 millions de pas&nbsp;; un rés
 s'effondre à la première mise à jour&nbsp;: nos réglages d'apprentissage ne se transportent pas d'une taille à l'autre. Et le banc n'est
 pas parfaitement répétable (la même politique&nbsp;: 19, 23 ou 21 robots debout sur 30). Le rapport complet&nbsp;:
 <a href="https://navitekrobolabs.com/recherche/reseau">Pourquoi ce réseau&nbsp;?</a></p>
+<h3>5.10 La nuit du 28 novembre&nbsp;: ce que paie la récompense, la commande qui suit, le départ doux</h3>
+<p><strong>La commande qui suit le robot (R-243 §&nbsp;6.1).</strong> La commande la plus haute ne monte que lorsque les robots la
+suivent&nbsp;: plus de prudence, 2&nbsp;cm/s de plus à 28&nbsp;cm/s demandés et un pas plus long d'un centimètre. Mais elle n'est montée
+que de 30 à 33&nbsp;cm/s, et les robots, jamais commandés plus haut, tombent à 32 et 36&nbsp;cm/s. Elle mesure surtout la vitesse que la
+lignée sait vraiment tenir&nbsp;: environ 28&nbsp;cm/s pour N0.2.</p>
+<p><strong>Ce que paie la récompense (R-243 §&nbsp;8).</strong> Le compte, terme par terme&nbsp;: la posture (le tronc penché, le centre
+de masse bas, l'imitation, les bras) peut payer jusqu'à 19 par pas, la vitesse 3 au plus, et mesurée, 8 à 10&nbsp;% de la
+récompense&nbsp;; une chute coûte environ 1&nbsp;600, tout ce qui restait à gagner. À 36&nbsp;cm/s demandés, aller 4&nbsp;cm/s plus vite
+ne rapporte que 0,33 par pas&nbsp;: ça ne vaut le risque que si la chute ne devient pas plus probable d'un pour cent par seconde. La
+prudence de nos robots est le calcul juste de cette récompense. L'essai suivant paie la vitesse trois fois plus.</p>
+<p><strong>Le réseau, suite (R-242 §&nbsp;7.1 et §&nbsp;8).</strong> Avec un premier pas d'apprentissage dix fois plus petit, les réseaux
+plus larges (1&nbsp;024 neurones) et à 3 ou 4 couches ne s'effondrent plus, et les plus gros vont un peu plus vite que le nôtre
+(+2,2 et +1,9&nbsp;cm/s, sur six paires, à confirmer)&nbsp;; à 6 et 10 couches, tout s'effondre encore. Partis de zéro sur 200 millions de
+pas, aucun réseau n'apprend à marcher&nbsp;: tous tiennent debout, immobiles&nbsp;; 4 couches de 256 apprennent l'équilibre deux fois plus
+vite que le nôtre, pour 8&nbsp;% de calcul de plus. Le premier frein de la vitesse n'est pas le réseau, c'est la récompense.</p>
 <h2 id='ch6' data-chapitre="6. Discussion"><span class='n'>Chapitre 6</span>Discussion</h2><h3>6.1 Ce que nous avons appris</h3>
 <ol class="lecons">
 <li><strong>Une mesure se prend au moment que la question nomme.</strong> Notre «&nbsp;genou tendu à 3°&nbsp;» était la médiane sur tout
@@ -376,7 +391,7 @@ la simulation ne connaît qu'à moitié. La marche visée demande à la cheville
 cycle&nbsp;; l'inertie de ses rotors n'est pas mesurée. Et à 5&nbsp;cm/s, la marche n'est pas encore dynamique&nbsp;: l'élan seul ne
 porterait le corps par-dessus le pied qu'à 39&nbsp;cm/s.</p>
 <h3>6.3 Les erreurs, comme des données</h3>
-<p>Nous en avons noté 127, chacune avec la règle qu'elle a laissée. Quelques-unes&nbsp;: un saut de 25&nbsp;cm qui était un robot
+<p>Nous en avons noté 129, chacune avec la règle qu'elle a laissée. Quelques-unes&nbsp;: un saut de 25&nbsp;cm qui était un robot
 tombant à travers le sol (E85)&nbsp;; un escalier annoncé sans escalier dans la physique (E101)&nbsp;; un genou «&nbsp;tendu&nbsp;» mesuré
 au mauvais instant (E102)&nbsp;; des numéros de cahier pris deux fois (E103). Une erreur publiée coûte moins qu'une erreur cachée.</p><h2 id='ch7' data-chapitre="7. Conclusion et suite"><span class='n'>Chapitre 7</span>Conclusion et suite</h2><p>Un humanoïde de 37&nbsp;cm aux servos de 9&nbsp;g apprend, en simulation, une marche droite, encaisse une chute, monte de
 petites marches et pose le talon comme un vrai pas humain&nbsp;: 44° entre les jambes, la jambe de devant tendue (le genou à 4,7°), à la
@@ -387,7 +402,7 @@ l'échelle humaine), plafonné, probablement, par la puissance de ses servos&nbs
 §&nbsp;65), le pied payé pour se poser près du point de capture (R-234), et un tendon d'Achille, mou quand le robot marche sur place,
 tendu quand le tibia roule sur le pied (R-235). <strong>Ensuite</strong>&nbsp;: imprimer le premier gabarit,
 mesurer un vrai SG90, et passer du jumeau simulé au robot sur la table.</p><h2 id='annexes' data-chapitre="Annexes"><span class='n'>Annexes</span>Annexes</h2><div class="encadre"><h3>A. Le cahier de recherche</h3>
-<p>194 cahiers et 1 372 prédictions&nbsp;: 446 confirmées, 112 en partie, 697 réfutées, 65 à revoir, 52 en
+<p>194 cahiers et 1 386 prédictions&nbsp;: 451 confirmées, 113 en partie, 703 réfutées, 65 à revoir, 54 en
 attente. Chacun&nbsp;: la question, la prédiction avec sa crédence, le dispositif, le verdict, les films. <a href="/navitek/recherche/">Le
 cahier de recherche</a>.</p></div>
 <div class="encadre"><h3>B. Les films</h3>
@@ -443,7 +458,7 @@ robots ouverts, la marche humaine, l'usage de l'IA en recherche.</dd></div>
 <li>Chaque nombre de ces pages est calculé des données par un script, à chaque construction&nbsp;; rien n'est retouché à la main.</li>
 <li>Chaque prédiction est écrite avant l'essai, avec sa crédence&nbsp;; chaque verdict après, réfutations comprises.</li>
 <li>Chaque mesure ou récompense nouvelle passe d'abord sur un cas connu&nbsp;; chaque résultat se regarde en film avant d'être annoncé.</li>
-<li>Chaque erreur est publiée avec la règle qu'elle laisse&nbsp;: 127 à ce jour.</li>
+<li>Chaque erreur est publiée avec la règle qu'elle laisse&nbsp;: 129 à ce jour.</li>
 <li>Chaque référence est vérifiée à sa source&nbsp;: le DOI ou le numéro arXiv mène à l'article cité, avec les auteurs, le volume et
 les pages écrits ici (le 18 novembre 2026).</li>
 <li>Aucune image n'est produite par un modèle génératif&nbsp;: les figures et les films sont des rendus de la simulation ou des graphiques
